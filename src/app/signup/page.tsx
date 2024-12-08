@@ -1,7 +1,7 @@
 "use client";
 
-import { SignUpForm } from "@/components/sign-up";
-import { signInWithGithub,  signInWithDiscord } from "@/lib/auth-client";
+import { SignUpForm } from "../components/sign-up";
+import { signInWithGithub, signInWithDiscord } from "../lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function Page() {

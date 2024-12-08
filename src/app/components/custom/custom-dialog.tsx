@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { useState } from "react";
 import Tiptap from "../Tiptap";
 import { EditorContent } from "@tiptap/react";
+import Spacebanner from "@/app/example-uploader/page";
 
 const formSchema = z.object({
   spacename: z.string().min(2, {
@@ -30,6 +31,7 @@ const formSchema = z.object({
 });
 
 export function ProfileForm() {
+
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,18 +82,31 @@ export function ProfileForm() {
                   <FormControl>
                     <Textarea placeholder="space name  " {...field2} />
                   </FormControl>
-                  <FormDescription>This is your Space name</FormDescription>
+                  <FormDescription>Tell about your space</FormDescription>
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              onClick={() => {
-                submitvalues();
-              }}
-            >
-              Submit
-            </Button>
+            <div>
+              <Spacebanner />
+            </div>
+            <div className="flex justify-end gap-x-2">
+              <Button
+                className="w-24"
+                disabled={!form.formState.isValid}
+                type="submit"
+                onClick={() => {
+                  submitvalues();
+                }}
+              >
+                Submit
+              </Button>{" "}
+              <Button
+                className="bg-red-500 hover:bg-red-700 text-white w-24"
+                type="button"
+              >
+              Close
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

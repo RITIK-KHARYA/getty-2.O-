@@ -1,12 +1,13 @@
+import prisma from "@/app/lib";
 import { getSession } from "./session";
-
 
 export const createSpace = async () => {
   const session = await getSession();
+  const user = session?.user;
   try {
-    if (!session) {
+    if (!user) {
       console.log("Not logged in");
-      throw new Error("mahol pura wavyyy o dede mujhe chcuchi ");
+      throw new Error("unauthorized");
     }
   } catch (error) {
     console.log(error);

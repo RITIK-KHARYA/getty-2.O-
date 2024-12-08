@@ -20,6 +20,7 @@ model User {
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
+
   accounts      Account[]
   likes         Like[]
   spaces        SpaceUser[] // Many-to-Many relationship
@@ -101,18 +102,22 @@ model Like{
   @@map("likes")
 
   }
-  model Space {
-    id String @id  @default(cuid())
-    title String
-    spaceId String @default(cuid())
-    description String
-    createdAt DateTime @default(now())
-    updatedAt DateTime
-    userid String
-   users       SpaceUser[] // Many-to-Many relationship
-    likes Like[]
-    @@map("space")
-  }
+ model Space {
+  id               String       @id @default(cuid())
+  title            String
+  description      String
+  banner           String?      // Optional additional field for banners
+  spaceId          String       @default(cuid())
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime
+  userid           String
+  users            SpaceUser[]  // Many-to-Many relationship
+  likes            Like[]
+  backgroundMediaId String?      @unique    // Field for referencing the background media
+  backgroundMedia   Media?       @relation("SpaceBackground", fields: [backgroundMediaId], references: [id], onDelete: SetNull)
+
+  @@map("space")
+}
   model SpaceUser {
   id        String   @id @default(cuid())
   userId    String
@@ -125,4 +130,21 @@ model Like{
 
   @@unique([userId, spaceId]) // Ensure no duplicate user-space pair
   @@map("space_user")
+}
+model Media {
+  id        String   @id @default(cuid())
+  type      MediaType
+  url       String
+  spaceId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  space     Space?    @relation("SpaceBackground") // Define the inverse relation
+
+  @@unique([spaceId, type, url])
+  @@map("media")
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
 }
