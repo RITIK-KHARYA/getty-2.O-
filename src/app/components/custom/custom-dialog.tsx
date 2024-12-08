@@ -103,6 +103,7 @@ export function ProfileForm() {
               <Button
                 className="bg-red-500 hover:bg-red-700 text-white w-24"
                 type="button"
+                onClick={(open) => setOpen(!open)}
               >
               Close
               </Button>
