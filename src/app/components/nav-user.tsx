@@ -30,6 +30,7 @@ import { Skeleton } from "./ui/skeleton";
 import { signOut, useSession } from "./../lib/auth-client";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import { getSession } from "@/actions/session";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -75,44 +76,22 @@ export function NavUser() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            
-          </DropdownMenuContent>
-          {/* <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={data?.user?.image || ""}
-                    alt={data?.user?.name || ""}
+            <div className="h-[400px] w-[300px] flex flex-col">
+              <DropdownMenuLabel className="h-[80px] w-full flex flex-col gap-2 justify-center items-start"  >
+                <Avatar>
+                  <AvatarFallback></AvatarFallback>
+                  <AvatarImage 
+                    className="rounded-full"
+                    src={data?.user.image || "https://github.com/shadcn.png"}
                   />
-                  <AvatarFallback className="rounded-full">
-                    <Skeleton className="h-8 w-8 rounded-full" />
-                  </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {data?.user?.name || ""}
-                  </span>
-                  <span className="truncate text-xs">
-                    {data?.user?.email || ""}
-                  </span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                handleSignout();
-              }}
-            >
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent> */}
+              </DropdownMenuLabel>
+              <DropdownMenuLabel>{ data?.user.name || ""}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+          
+              
+            </div>
+          </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>

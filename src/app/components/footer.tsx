@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="relative w-full bg-gradient-to-b from-[#020817] to-[#031c52] text-white py-12 px-6 overflow-hidden">
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-800/20 to-transparent"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-800/20 to-transparent"></div>
 
       {/* Footer Content */}
       <div className="relative z-10">

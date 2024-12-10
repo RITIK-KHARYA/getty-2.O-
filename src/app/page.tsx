@@ -78,7 +78,7 @@ export default function Home() {
         </div>
 
         {/* Video Section */}
-        <div className="relative w-[1000px] mx-auto pointer-events-auto z-10 mt-20">
+        <div className="relative w-[1000px] mx-auto  z-10 mt-20">
           <div className="shadow-[0px_0px_300px_0px_#5b21b6] top-full left-0 bg-black absolute -z-10 flex max-w-screen-lg w-full aspect-video flex-col items-center justify-center overflow-hidden rounded- border bg-background">
             <HeroVideoDialog
               videoSrc="https://www.youtube.com/embed/U14GpQ5K03g"

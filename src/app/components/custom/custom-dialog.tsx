@@ -17,9 +17,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { useState } from "react";
-import Tiptap from "../Tiptap";
-import { EditorContent } from "@tiptap/react";
-import Spacebanner from "@/app/example-uploader/page";
+import MultiUploader from "@/app/example-uploader/page";
 
 const formSchema = z.object({
   spacename: z.string().min(2, {
@@ -31,7 +29,6 @@ const formSchema = z.object({
 });
 
 export function ProfileForm() {
-
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -86,8 +83,8 @@ export function ProfileForm() {
                 </FormItem>
               )}
             />
-            <div>
-              <Spacebanner />
+            <div className="">
+              <MultiUploader />
             </div>
             <div className="flex justify-end gap-x-2">
               <Button
@@ -105,7 +102,7 @@ export function ProfileForm() {
                 type="button"
                 onClick={(open) => setOpen(!open)}
               >
-              Close
+                Close
               </Button>
             </div>
           </form>

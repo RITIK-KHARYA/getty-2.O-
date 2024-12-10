@@ -11,13 +11,14 @@ export async function Userboard() {
     const user = await prisma.user.findUnique({
       where: {
         email: session?.user?.email,
+        
       },
       select: {
         email: true,
         name: true,
         image: true,
         id: true,
-
+        bio: true,
       },
     });
     return user;
