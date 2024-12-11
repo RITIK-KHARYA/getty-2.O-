@@ -10,34 +10,13 @@ import {
 
 export default function AttachmentButton() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [attachment, setAttachment] = useState<any>([]);
-  const [uploadProgress, setuploadProgress] = useState<number>();
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setUploadedFiles((files) => [...acceptedFiles, ...files]);
     await startUpload(acceptedFiles);
   }, []);
-  const { startUpload, routeConfig } = useUploadThing("media", {
-    onBeforeUploadBegin: (files) => {
-      const renamedfiles = files.map((file) => {
-        const extension = file.name.split(".").pop();
-        return new File(
-          [file],
-          `attachment_${crypto.randomUUID()}.${extension}`,
-          {
-            type: file.type,
-          }
-        );
-      });
-      setAttachment((prev: any) => [
-        ...prev,
-        ...renamedfiles.map((file) => ({ file, isUploading: true })),
-      ]);
-
-      return renamedfiles;
-    },
-    onUploadProgress: setuploadProgress,
-    onClientUploadComplete: async (uploadResult) => {
-      console.log("upload complete laddle", uploadResult);
+  const { startUpload, routeConfig } = useUploadThing("imageUploader", {
+    onClientUploadComplete: async () => {
+      console.log("upload complete laddle");
     },
     onUploadError: () => {
       alert("error occurred while uploading");
@@ -47,7 +26,7 @@ export default function AttachmentButton() {
     },
   });
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: startUpload,
+    onDrop,
     accept: generateClientDropzoneAccept(
       generatePermittedFileTypes(routeConfig).fileTypes
     ),

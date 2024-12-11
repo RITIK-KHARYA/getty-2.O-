@@ -1,43 +1,43 @@
-import { getSession } from "@/actions/session";
 import prisma from "@/app/lib";
-import { MediaType } from "@prisma/client";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
-const auth = async (req: Request) => {
-  const session = await getSession();
-  const user = session?.user;
-  return { user };
-};
+const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
 
+// FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  media: f({
-    image: {
-      maxFileSize: "4MB",
-      maxFileCount: 5,
-    },
+  // Define as many FileRoutes as you like, each with a unique routeSlug
+  imageUploader: f({
+    image: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 4 },
+    pdf: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 4 },
   })
+    // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
+      // This code runs on your server before upload
       const user = await auth(req);
+
+      // If you throw, the user will not be able to upload
       if (!user) throw new UploadThingError("Unauthorized");
-      console.log("user", user);
-      return { user };
+
+      // Whatever is returned here is accessible in onUploadComplete as `metadata`
+      return { userId: user.id };
     })
-    .onUploadComplete(async ({ file }) => {
+    .onUploadComplete(async ({ metadata, file }) => {
+      // This code RUNS ON YOUR SERVER after upload
       const media = await prisma.media.create({
         data: {
-          type: file.type.startsWith("image")
-            ? MediaType.IMAGE
-            : MediaType.VIDEO,
-
+          type: "IMAGE",
           url: file.url,
           updatedAt: new Date(),
         },
-      });
-      console.log("file", media);
-      return { file };
+      })
+
+      console.log("new media created",  media);
+
+
+      return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
 
