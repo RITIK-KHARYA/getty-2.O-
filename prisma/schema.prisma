@@ -22,7 +22,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   likes         Like[]
-  spaces        SpaceUser[] // Many-to-Many relationship
+  spaces        SpaceUser[] 
   
 
   @@unique([email])
@@ -105,14 +105,13 @@ model Like{
   id               String       @id @default(cuid())
   title            String
   description      String
-  banner           String?      // Optional additional field for banners
-  spaceId          String       @default(cuid())
+  banner           String?     
   createdAt        DateTime     @default(now())
   updatedAt        DateTime
   userid           String
-  users            SpaceUser[]  // Many-to-Many relationship
+  users            SpaceUser[]  
   likes            Like[]
-  backgroundMediaId String?      @unique    // Field for referencing the background media
+  backgroundMediaId String?      @unique  
   backgroundMediaUrl   String?
   media              Media[]
 
@@ -122,13 +121,13 @@ model Like{
   id        String   @id @default(cuid())
   userId    String
   spaceId   String
-  role      String? // Optional field to define roles like "owner", "collaborator", etc.
+  role      String? 
   joinedAt  DateTime @default(now())
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, spaceId]) // Ensure no duplicate user-space pair
+  @@unique([userId, spaceId])
   @@map("space_user")
 }
 model Media {
@@ -138,7 +137,7 @@ model Media {
   spaceId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime
-  space     Space?    @relation(fields: [spaceId], references: [id], onDelete: SetNull) // Define the inverse relation
+  space     Space?    @relation(fields: [spaceId], references: [id], onDelete: SetNull) 
 
   @@unique([spaceId, type, url])
   @@map("media")

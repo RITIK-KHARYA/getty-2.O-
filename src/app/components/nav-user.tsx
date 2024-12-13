@@ -77,19 +77,17 @@ export function NavUser() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <div className="h-[400px] w-[300px] flex flex-col">
-              <DropdownMenuLabel className="h-[80px] w-full flex flex-col gap-2 justify-center items-start"  >
+              <DropdownMenuLabel className="h-[80px] w-full flex flex-col gap-2 justify-center items-start">
                 <Avatar>
                   <AvatarFallback></AvatarFallback>
-                  <AvatarImage 
+                  <AvatarImage
                     className="rounded-full"
                     src={data?.user.image || "https://github.com/shadcn.png"}
                   />
                 </Avatar>
               </DropdownMenuLabel>
-              <DropdownMenuLabel>{ data?.user.name || ""}</DropdownMenuLabel>
+              <DropdownMenuLabel>{data?.user.name || ""}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-          
-              
             </div>
           </DropdownMenuContent>
         </DropdownMenu>

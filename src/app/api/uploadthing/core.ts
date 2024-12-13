@@ -1,4 +1,5 @@
 import prisma from "@/app/lib";
+import { MediaType } from "@prisma/client";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -28,14 +29,15 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       const media = await prisma.media.create({
         data: {
-          type: "IMAGE",
+          type: file.type.startsWith("image")
+            ? MediaType.IMAGE
+            : MediaType.VIDEO,
           url: file.url,
           updatedAt: new Date(),
         },
-      })
+      });
 
-      console.log("new media created",  media);
-
+      console.log("new media created", media);
 
       return { uploadedBy: metadata.userId };
     }),
