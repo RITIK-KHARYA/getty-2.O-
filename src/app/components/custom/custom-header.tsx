@@ -16,20 +16,11 @@ export default function Header() {
           <div className="flex">
             <SearchDemo />
           </div>
-          <Button
-            className="bg-neutral-800 text-white rounded-lg h-9 w-24 text-xs hover:bg-neutral-700 "
-          >
-            <ProfileForm/>
-          </Button>
+          <ProfileForm />
+          <FindSpaceDialog/>
      
         </div>
       </div>
     </div>
   );
 }
-    //  <Button
-    //    className="bg-blue-500 text-white rounded-lg h-9 w-24 text-xs hover:bg-blue-600"
-    //    onClick={() => handlespacetag()}
-    //  >
-    //    Join Space
-    //  </Button>;

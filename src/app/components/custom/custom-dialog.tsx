@@ -51,7 +51,9 @@ import { CreateSpace } from "@/actions/space";
           setOpen((open) => !open);
         }}
       >
-        <DialogTrigger>Create Space</DialogTrigger>
+        <DialogTrigger asChild>
+          <Button className="bg-blue-700/60 text-white hover:bg-blue-900">Create space</Button>
+        </DialogTrigger>
         <DialogContent>
           <Form {...form}>
             <form
