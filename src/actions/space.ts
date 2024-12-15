@@ -1,28 +1,34 @@
 "use server";
 import prisma from "@/app/lib";
-import { useSession } from "@/app/lib/auth-client";
 import { getSession } from "./session";
+import { revalidatePath } from "next/cache";
 
-export default async function GetSpace(spaceId: string) {
+export default async function GetSpace() {
   const session = await getSession();
   const user = session?.user;
   try {
     const space = await prisma.space.findMany({
       where: {
-        id: user?.id,
+        userid:user?.id
       },
+      select: {
+        title: true,
+        description: true, //which is ultimatily bio lol 
+       
+      }
     });
     console.log(space);
     console.log("there you go space");
     if (space.length === 0) {
       console.log(" this specific user does not have any space");
     }
+    return space;
   } catch (error) {
     console.log("error in finding space", error);
   }
 }
 
-export async function CreateSpace(spacetitle: string) {
+export async function CreateSpace(spacetitle: string, spacebio: string) {
   const session = await getSession();
   const user = session?.user;
   try {
@@ -32,15 +38,15 @@ export async function CreateSpace(spacetitle: string) {
     }
     const space = await prisma.space.create({
       data: {
-        id: user?.id,
         userid: user?.id,
         title: spacetitle,
         updatedAt: new Date(),
-        description: spacetitle,
+        description: spacebio,
       },
     });
     console.log(space, spacetitle);
     console.log("there you go space");
+    revalidatePath("/dashboard");
   } catch (error) {
     console.log("error in creating space", error);
   }
