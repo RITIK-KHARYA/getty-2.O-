@@ -32,7 +32,7 @@ export const ourFileRouter = {
           type: file.type.startsWith("image")
             ? MediaType.IMAGE
             : MediaType.VIDEO,
-          url: file.url,
+          url: file.url.replace("/f/", `/a/${process.env.UPLOADTHING_API_ID}`),
           updatedAt: new Date(),
         },
       });

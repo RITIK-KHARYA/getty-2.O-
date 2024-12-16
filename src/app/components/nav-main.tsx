@@ -17,6 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "./ui/sidebar";
+import { Skeleton } from "./ui/skeleton";
 
 export function   NavMain({
   items,
@@ -40,7 +41,7 @@ export function   NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={false}
             className="group/collapsible"
           >
             <SidebarMenuItem>
@@ -57,7 +58,11 @@ export function   NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <a href={subItem.url}>
-                          <span>{subItem.title}</span>
+                          <span>{subItem.title ? subItem.title : (
+                            <div>
+                              <Skeleton className="h-4 w-32 rounded-md"/>
+                            </div>
+                          )}</span>
                         </a>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

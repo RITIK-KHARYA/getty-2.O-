@@ -7,6 +7,8 @@ import {
   generateClientDropzoneAccept,
   generatePermittedFileTypes,
 } from "uploadthing/client";
+import AttachmentPreviews from "../components/preview/previewcard";
+import useMediaUpload from "@/actions/preview";
 
 export default function AttachmentButton() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -14,12 +16,24 @@ export default function AttachmentButton() {
     setUploadedFiles((files) => [...acceptedFiles, ...files]);
     await startUpload(acceptedFiles);
   }, []);
+  const {
+    startUpload: handleStartUpload,
+    attachment,
+    isUploading,
+    uploadProgress,
+    removeAttachment,
+    reset,
+} = useMediaUpload();
   const { startUpload, routeConfig } = useUploadThing("imageUploader", {
     onClientUploadComplete: async () => {
+ 
       console.log("upload complete laddle");
+      
     },
     onUploadError: () => {
-      alert("error occurred while uploading");
+     
+      
+       alert("error occurred while uploading");
     },
     onUploadBegin: () => {
       alert("upload has begun");
@@ -48,6 +62,12 @@ export default function AttachmentButton() {
               <span className="text-md text-neutral-600">or drag and drop</span>
             </div>
             <span className="text-md text-neutral-600">
+              {!!attachment.length && (
+                <AttachmentPreviews
+                  attachments={attachment}
+                  onremoveclick={removeAttachment}
+                />
+              )}
               PNG,JPF,PDF(max 800 x 400 px)
             </span>
           </div>

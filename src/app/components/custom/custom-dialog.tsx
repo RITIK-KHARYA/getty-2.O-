@@ -17,7 +17,7 @@
   import { z } from "zod";
   import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
   import { useState } from "react";
-  import MultiUploader from "@/app/example-uploader/page";
+  import  AttachmentButton  from "@/app/example-uploader/page";
 import { CreateSpace } from "@/actions/space";
 
   const formSchema = z.object({
@@ -91,7 +91,7 @@ import { CreateSpace } from "@/actions/space";
                 )}
               />
               <div>
-                <MultiUploader />
+                <AttachmentButton/>
               </div>
               <div className="flex justify-end gap-x-2">
                 <Button type="submit">Submit</Button>
