@@ -15,12 +15,10 @@ export default function useMediaUpload() {
   const { toast } = useToast();
   const [uploadProgress, setuploadProgress] = useState<number>();
   const [attachment, setAttachment] = useState<attachment[]>([]);
-  console.log(attachment);
   const { startUpload, isUploading, routeConfig } = useUploadThing(
     "imageUploader",
     {
       onBeforeUploadBegin: (files) => {
-        console.log("files", files);
         const renamedfiles = files.map((file) => {
           const extension = file.name.split(".").pop();
           return new File(
@@ -35,7 +33,6 @@ export default function useMediaUpload() {
           ...prev,
           ...renamedfiles.map((file) => ({ file, isUploading: true })),
         ]);
-        console.log(renamedfiles);
 
         return renamedfiles;
       },
@@ -89,7 +86,6 @@ export default function useMediaUpload() {
     startUpload(files);
   }
   async function removeAttachment(fileName: string) {
-    console.log("attachment",attachment);
     setAttachment((prev) => prev.filter((a) => a.file.name !== fileName));
     await deleteAttachment(fileName)
   }

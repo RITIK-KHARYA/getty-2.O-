@@ -12,14 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex w-full justify-between">
           <div className="gap-x-2">
             <SidebarTrigger className="mt-3" />
-            <Breadcrumbdemo
-              classname="inline-flex "
-              link1="/dashboard"
-              link2="/components"
-              link3="/components/breadcrumb"
-            />
           </div>
-
           <Header />
         </div>
         {children}
@@ -27,3 +20,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+{/* <Breadcrumbdemo
+  classname="inline-flex "
+  link1="/dashboard"
+  link2="/components"
+  link3="/components/breadcrumb"
+/>; */}

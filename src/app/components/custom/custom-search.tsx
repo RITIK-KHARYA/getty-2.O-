@@ -1,15 +1,12 @@
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 
 export default function SearchDemo() {
   return (
     <div className="space-y-2">
-
       <div className="relative">
-              <Input
-                  
+        <Input
           id="input-25"
-          className="pe-11 rounded-full border-[1px] border-neutral-400 w-full "
+          className="pe-11 rounded-lg border-[1px] border-neutral-700 w-full "
           placeholder="Search..."
           type="search"
         />
