@@ -1,21 +1,23 @@
-import { attachment } from "@/actions/preview";
+import { attachment } from "@/actions/cardmediaupload";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn } from "@/app/lib/utils";
 import { X } from "lucide-react";
-import attachmentpreview from "../preview";
+
 
 interface AttachmentPreviewProps {
   Attachment: attachment;
-  onRemoveclick: () => void;
+  onRemoveclick: (fileName:string) => void;
   key: string;
 }
-function AttachmentPreview({
+export default function AttachmentPreview({
   Attachment: { file, mediaId, isUploading },
   onRemoveclick,
   key,
 }: AttachmentPreviewProps) {
+  console.log("attachment",file);
   const src = URL.createObjectURL(file);
+  console.log("src",src);
   return (
     <>
       <div
@@ -41,7 +43,7 @@ function AttachmentPreview({
         {!isUploading && (
           <Button
             className=" absolute right-3 top-3 rounded-full bg-foreground p-1.5 transition-colors hover:bg-muted "
-            onClick={onRemoveclick}
+            onClick={()=> onRemoveclick(file.name)}
           >
             <X size={20} className="hover:text-foreground" />
           </Button>
@@ -54,7 +56,7 @@ interface Attachmentpreviewsprops {
   attachments: attachment[];
   onremoveclick: (filename: string) => void;
 }
-export default function AttachmentPreviews({
+ function AttachmentPreviews({
   attachments,
   onremoveclick,
 }: Attachmentpreviewsprops) {

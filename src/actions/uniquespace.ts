@@ -13,7 +13,7 @@ export default async function GetUniqueSpace(
     });
     return space;
   } catch (error) {
-    console.log("errror in finding space bhari mistake hogaya bhaiya", error);
+    console.log("error in finding space bhari mistake hogaya bhaiya", error);
     }
     
 }

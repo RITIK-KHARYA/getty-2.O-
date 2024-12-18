@@ -12,7 +12,6 @@ export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   imageUploader: f({
     image: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 4 },
-    pdf: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 4 },
   })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
@@ -29,15 +28,19 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       const media = await prisma.media.create({
         data: {
+          filename: file.name,
+          originalurl: file.url,
           type: file.type.startsWith("image")
             ? MediaType.IMAGE
             : MediaType.VIDEO,
           url: file.url.replace("/f/", `/a/${process.env.UPLOADTHING_API_ID}`),
+
           updatedAt: new Date(),
         },
       });
 
       console.log("new media created", media);
+      console.log("media id", media.id);
 
       return { uploadedBy: metadata.userId };
     }),

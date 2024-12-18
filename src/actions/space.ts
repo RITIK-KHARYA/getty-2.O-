@@ -13,12 +13,11 @@ export default async function GetSpace() {
       },
       select: {
         title: true,
-        description: true, //which is ultimatily bio lol 
+        description: true,  
        
       }
     });
-    console.log(space);
-    console.log("there you go space");
+    console.log(space[0],"only first space");
     if (space.length === 0) {
       console.log(" this specific user does not have any space");
     }
@@ -45,7 +44,6 @@ export async function CreateSpace(spacetitle: string, spacebio: string) {
       },
     });
     console.log(space, spacetitle);
-    console.log("there you go space");
     revalidatePath("/dashboard");
   } catch (error) {
     console.log("error in creating space", error);
