@@ -19,3 +19,4 @@ export default function SearchDemo() {
     </div>
   );
 }
+//useeffect use krke we have to add the event listener

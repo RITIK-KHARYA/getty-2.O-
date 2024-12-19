@@ -39,13 +39,13 @@ export function NavProjects({
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>App</SidebarGroupLabel>
-      <SidebarMenu> 
+      <SidebarMenu>
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <a href={item.url} className="flex items-center space-x-2">
                 <item.icon />
-                <span>{item.name}</span>
+                {!isMobile && <span>{item.name}</span>}
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

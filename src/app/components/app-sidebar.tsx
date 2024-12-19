@@ -7,6 +7,7 @@ import {
   Command,
   GalleryVerticalEnd,
   House,
+  HouseIcon,
   Settings,
   SquareTerminal,
 } from "lucide-react";
@@ -23,6 +24,7 @@ import {
   SidebarRail,
 } from "./ui/sidebar";
 import GetSpace from "@/actions/space";
+import { isActive } from "@tiptap/react";
 
 async function GetSpacevalue() {
   const data = await GetSpace();
@@ -47,54 +49,54 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       email: "m@example.com",
       avatar: "/avatars/shadcn.jpg",
     },
-    teams: [
-      {
-        name: "Acme Inc",
-        logo: GalleryVerticalEnd,
-        plan: "Enterprise",
-      },
-      {
-        name: "Acme Corp.",
-        logo: AudioWaveform,
-        plan: "Startup",
-      },
-      {
-        name: "Evil Corp.",
-        logo: Command,
-        plan: "Free",
-      },
-    ],
     navMain: [
       {
-        title: "Platform",
-        url: "#",
-        icon: SquareTerminal,
-        isActive: true,
-        items: spaces,
-      },
-    ],
-    projects: [
-      {
-        name: "Home",
+        title: "Home",
         url: "/dashboard",
+        isActive: false,
         icon: House,
       },
       {
-        name: "Notification",
+        title: "Notification",
         url: "/notifications",
+        isActive: false,
         icon: Bell,
       },
       {
-        name: "Orbits",
+        title: "Orbits",
+        isActive: false,
         url: "/orbits",
         icon: Bell,
       },
       {
-        name: "Settings",
+        title: "Settings",
         url: "/settings",
+        isActive: false,
         icon: Settings,
       },
     ],
+    // projects: [
+    //   {
+    //     name: "Home",
+    //     url: "/dashboard",
+    //     icon: House,
+    //   },
+    //   {
+    //     name: "Notification",
+    //     url: "/notifications",
+    //     icon: Bell,
+    //   },
+    //   {
+    //     name: "Orbits",
+    //     url: "/orbits",
+    //     icon: Bell,
+    //   },
+    //   {
+    //     name: "Settings",
+    //     url: "/settings",
+    //     icon: Settings,
+    //   },
+    // ],
   };
 
   return (
@@ -105,12 +107,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </h1>
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.projects} />
         <NavMain items={data.navMain} />
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
-        {/* need to make profile dialog box like discord */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

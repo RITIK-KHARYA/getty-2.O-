@@ -38,10 +38,9 @@ export const ourFileRouter = {
           updatedAt: new Date(),
         },
       });
-
+      console.log("originalurl ", media.originalurl);
       console.log("new media created", media);
       console.log("media id", media.id);
-
       return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
