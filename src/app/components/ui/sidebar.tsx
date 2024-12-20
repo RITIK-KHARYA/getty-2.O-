@@ -23,7 +23,7 @@ const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
-const SIDEBAR_WIDTH_ICON = "3rem"
+const SIDEBAR_WIDTH_ICON = "5rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 type SidebarContext = {
@@ -175,7 +175,7 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
 
     if (collapsible === "none") {
       return (
@@ -189,8 +189,22 @@ const Sidebar = React.forwardRef<
         >
           {children}
         </div>
-      )
+      );
     }
+    //  if (collapsible === "icon") {
+    //    return (
+    //      <div
+    //        className={cn(
+    //          "flex h-full w-[10px] flex-col bg-sidebar text-sidebar-foreground",
+    //          className
+    //        )}
+    //        ref={ref}
+    //        {...props}
+    //      >
+    //        {children}
+    //      </div>
+    //    );
+    //  }
 
     if (isMobile) {
       return (
@@ -209,7 +223,7 @@ const Sidebar = React.forwardRef<
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
-      )
+      );
     }
 
     return (
@@ -254,7 +268,7 @@ const Sidebar = React.forwardRef<
           </div>
         </div>
       </div>
-    )
+    );
   }
 )
 Sidebar.displayName = "Sidebar"
@@ -404,12 +418,12 @@ const SidebarContent = React.forwardRef<
       ref={ref}
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden group-data-[collapsible=icon]:flex-row group-data-[collapsible=icon]:ml-5 group-data-[collapsible=icon]:mr-2 group-data-[collapsible=icon]:mt-7 group-data-[collapsible=icon]:mb-2 ",
         className
       )}
-      {...props}
+      {...props} //here the admin edited the sidebarcontent
     />
-  )
+  );
 })
 SidebarContent.displayName = "SidebarContent"
 
@@ -421,11 +435,11 @@ const SidebarGroup = React.forwardRef<
     <div
       ref={ref}
       data-sidebar="group"
-      className={cn("relative flex w-full min-w-0 flex-col p-2 ", className)}
+      className={cn("relative flex w-full min-w-0 flex-col ", className)}
       {...props}
     />
   )
-})
+}) //edited here to 
 SidebarGroup.displayName = "SidebarGroup"
 
 const SidebarGroupLabel = React.forwardRef<
@@ -523,15 +537,15 @@ const sidebarMenuButtonVariants = cva(
       size: {
         default: "h-10 text-base",
         sm: "h-7 text-xs",
-        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0",
+        lg: "h-12 text-sm group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!ml-4 group-data-[collapsible=icon]:!mb-3",
       },
-    },
+    }, //edited here to 
     defaultVariants: {
       variant: "default",
       size: "default",
     },
   }
-)
+);
 
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,

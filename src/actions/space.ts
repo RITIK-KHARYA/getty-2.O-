@@ -14,11 +14,6 @@ export default async function GetSpace() {
       select: {
         title: true,
         description: true,
-        media: {
-          where: {
-            originalurl: { startsWith: "https://utfs.io/f/" },
-          },
-        },
       },
     });
 

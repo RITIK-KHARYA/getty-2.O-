@@ -15,12 +15,7 @@ export default async function Page() {
                   <div className=" gap-x-2 space-auto ">
                     <SpaceCard
                       spacename={item.title}
-                      media={item.media.originalurl}
                     />
-                    <pre className="text-white">
-                      {" "}
-                      {data?.map((item: any) => item.media.originalurl)}
-                    </pre>
                   </div>
                 </div>
               ))}

@@ -42,13 +42,13 @@ export function NavUser() {
   };
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground bg-neutral-700/40 rounded-lg"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
@@ -72,7 +72,6 @@ export function NavUser() {
                   </div>
                 )}
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

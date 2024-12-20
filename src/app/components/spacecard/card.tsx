@@ -7,17 +7,16 @@ import GetSpace from "@/actions/space";
 
 interface SpaceCardProps {
   spacename: string;
-  media: string;
 }
 
 
-export default function SpaceCard({ spacename,media }: SpaceCardProps) {
+export default function SpaceCard({ spacename}: SpaceCardProps) {
 
   return (
     <Card className="w-[300px] overflow-hidden bg-black text-white border border-gray-800">
       <div className="relative w-full h-48">
         <Image
-          src={media}
+          src="nothing.png"
           alt="Space image"
           fill
           className="object-cover"
