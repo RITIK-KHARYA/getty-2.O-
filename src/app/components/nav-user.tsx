@@ -31,6 +31,7 @@ import { signOut, useSession } from "./../lib/auth-client";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 import { getSession } from "@/actions/session";
+import ProfileInterface from "./profile-dialog";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -74,20 +75,8 @@ export function NavUser() {
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <div className="h-[400px] w-[300px] flex flex-col">
-              <DropdownMenuLabel className="h-[80px] w-full flex flex-col gap-2 justify-center items-start">
-                <Avatar>
-                  <AvatarFallback></AvatarFallback>
-                  <AvatarImage
-                    className="rounded-full"
-                    src={data?.user.image || "https://github.com/shadcn.png"}
-                  />
-                </Avatar>
-              </DropdownMenuLabel>
-              <DropdownMenuLabel>{data?.user.name || ""}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-            </div>
+          <DropdownMenuContent className=" bg-neutral-900 text-white border-neutral-600">
+            <ProfileInterface />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
