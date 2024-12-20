@@ -1,6 +1,7 @@
 import { Input } from "../ui/input";
 
 export default function SearchDemo() {
+  
   return (
     <div className="space-y-2">
       <div className="relative">
@@ -19,4 +20,3 @@ export default function SearchDemo() {
     </div>
   );
 }
-//useeffect use krke we have to add the event listener

@@ -16,7 +16,7 @@ export default function SpaceCard({ spacename}: SpaceCardProps) {
     <Card className="w-[300px] overflow-hidden bg-black text-white border border-gray-800">
       <div className="relative w-full h-48">
         <Image
-          src="nothing.png"
+          src="/thumbnail.jpg"
           alt="Space image"
           fill
           className="object-cover"
