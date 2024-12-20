@@ -105,7 +105,7 @@ model Like{
   id               String       @id @default(cuid())
   title            String
   description      String
-  banner           String?     
+  banner           String?     //admin is himself confused what the fuck is banner
   createdAt        DateTime     @default(now())
   updatedAt        DateTime
   userid           String
@@ -113,7 +113,8 @@ model Like{
   likes            Like[]
   backgroundMediaId String?      @unique  
   backgroundMediaUrl   String?
-  media              Media[]
+  backgroundMedia   Media?      @relation(name: "mediagayamaachudane",fields: [backgroundMediaId], references: [id])
+  media              Media[]      @relation(name: "SpaceMediaRelation")
 
   @@map("space")
 }
@@ -131,21 +132,29 @@ model Like{
   @@map("space_user")
 }
 model Media {
-  id        String   @id @default(cuid())
-  type      MediaType
-  url       String
-  spaceId   String?
-  filename  String   @unique
-  originalurl String
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  space     Space?    @relation(fields: [spaceId], references: [id], onDelete: SetNull) 
+  id           String     @id @default(cuid())
+  Mediatypo    MediaType
+  role         MediaRole
+  url          String
+  spaceId      String?
+  filename     String     @unique
+  originalurl  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime
+ space              Space?     @relation(name: "SpaceMediaRelation", fields: [spaceId], references: [id], onDelete: SetNull) 
+ usedAsBackground Space?     @relation(name: "mediagayamaachudane")
 
-  @@unique([spaceId, type, url])
+  @@unique([spaceId, Mediatypo, url])
   @@map("media")
 }
 
 enum MediaType {
   IMAGE
   VIDEO
+}
+
+enum MediaRole {
+  PROFILE
+  BANNER
+  SPACEENTITY
 }

@@ -75,28 +75,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: Settings,
       },
     ],
-    // projects: [
-    //   {
-    //     name: "Home",
-    //     url: "/dashboard",
-    //     icon: House,
-    //   },
-    //   {
-    //     name: "Notification",
-    //     url: "/notifications",
-    //     icon: Bell,
-    //   },
-    //   {
-    //     name: "Orbits",
-    //     url: "/orbits",
-    //     icon: Bell,
-    //   },
-    //   {
-    //     name: "Settings",
-    //     url: "/settings",
-    //     icon: Settings,
-    //   },
-    // ],
   };
 
   return (

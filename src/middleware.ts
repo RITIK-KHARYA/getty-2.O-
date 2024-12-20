@@ -4,7 +4,6 @@ import { NextResponse, type NextRequest } from "next/server";
 
 export default async function authMiddleware(
   request: NextRequest,
-  response: NextResponse
 ) {
 
   const { data: session } = await betterFetch<Session>(
@@ -17,9 +16,9 @@ export default async function authMiddleware(
     }
   );
 
-
   if (!session) {
     return NextResponse.redirect(new URL("/signin", request.url));
+
   }
   return NextResponse.next();
 }

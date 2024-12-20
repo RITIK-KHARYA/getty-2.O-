@@ -65,19 +65,7 @@ export default function FindSpaceDialog() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field: anotherfield }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input placeholder="password" {...anotherfield}  type="password"/>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
               <div className="flex justify-end">
                 <Button type="submit">Find Space</Button>
               </div>

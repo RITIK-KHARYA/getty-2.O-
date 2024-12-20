@@ -16,7 +16,7 @@ export default function useMediaUpload() {
   const [uploadProgress, setuploadProgress] = useState<number>();
   const [attachment, setAttachment] = useState<attachment[]>([]);
   const { startUpload, isUploading, routeConfig } = useUploadThing(
-    "imageUploader",
+    "bannerUploader",
     {
       onBeforeUploadBegin: (files) => {
         const renamedfiles = files.map((file) => {
