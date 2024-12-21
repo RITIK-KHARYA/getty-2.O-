@@ -1,5 +1,3 @@
-import prisma from "@/app/lib";
-import { MediaType } from "@prisma/client";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
@@ -10,8 +8,8 @@ const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  bannUploader: f({
-    image: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 4 },
+  bannerUploader: f({
+    image: { maxFileSize: "4MB", minFileCount: 1, maxFileCount: 1 },
   })
     // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
@@ -26,23 +24,13 @@ export const ourFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
-      const spae = await prisma.media.create({
-        data: {
-          filename: file.name,
-          originalurl: file.url,
-          type: file.type.startsWith("image")
-            ? MediaType.IMAGE
-            : MediaType.VIDEO,
-          url: file.url.replace("/f/", `/a/${process.env.UPLOADTHING_API_ID}`),
 
-          updatedAt: new Date(),
-        },
-      });
-      console.log("originalurl ", media.originalurl);
-      console.log("new media created", media);
-      console.log("media id", media.id);
-      return { uploadedBy: metadata.userId };
+      //the space is already begin created by the forms
+      console.log(file.url);
+      return { uploadedBy: metadata.userId, url: file.url };
     }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+
+//all we want is to update using the uploadthing and create space using form but keeping in mind about the async tasks

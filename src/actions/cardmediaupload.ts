@@ -11,7 +11,7 @@ export interface attachment {
   file: File;
 }
 
-export default function useMediaUpload() {
+export default function useMediaUpload(onChange:(value:string)=> void) {
   const { toast } = useToast();
   const [uploadProgress, setuploadProgress] = useState<number>();
   const [attachment, setAttachment] = useState<attachment[]>([]);
@@ -41,7 +41,7 @@ export default function useMediaUpload() {
         setAttachment((prev) =>
           prev.map((a) => {
             const uploadResult = res.find((r) => r.name === a.file.name);
-           console.log("upload result",uploadResult);
+            console.log("upload result", uploadResult);
             if (!uploadResult) return a;
 
             return {
@@ -51,6 +51,7 @@ export default function useMediaUpload() {
             };
           })
         );
+        onChange(res.map((r) => r.url).toString());
       },
       onUploadError(e) {
         setAttachment((prev) => prev.filter((a) => !a.isUploading)); //this is for the checking so that no file is getting uploaded

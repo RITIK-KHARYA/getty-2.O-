@@ -1,6 +1,4 @@
-"use client";
 import { UploadCloud } from "lucide-react";
-import { useUploadThing } from "@/utils/uploadthing";
 import { useDropzone } from "@uploadthing/react";
 import { useCallback, useState } from "react";
 import {
@@ -9,9 +7,15 @@ import {
 } from "uploadthing/client";
 import AttachmentPreview from "../components/preview/previewcard";
 import useMediaUpload from "@/actions/cardmediaupload";
-
-export default function AttachmentButton() {
-    const { startUpload, attachment, routeConfig, removeAttachment } = useMediaUpload();
+interface Attachmentpreviewsprops {
+  onChange: (value: string) => void;
+  value: string | undefined;
+}
+export default function AttachmentButton({
+  onChange,
+}: Attachmentpreviewsprops) {
+  const { startUpload, attachment, routeConfig, removeAttachment } =
+    useMediaUpload(onChange);
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     startUpload(acceptedFiles);
   }, []);

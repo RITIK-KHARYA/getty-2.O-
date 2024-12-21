@@ -1,29 +1,27 @@
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String   @id
-  name          String
-  email         String
-  bio           String?
-  emailVerified Boolean
-  image         String?
+  id                   String         @id
+  name                 String
+  email                String
+  bio                  String?
+  emailVerified        Boolean
+  image                String?
   receivedNotification Notification[] @relation("receipent")
-  issuednotification Notification[] @relation("issuer")
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  likes         Like[]
-  spaces        SpaceUser[] 
-  
+  issuednotification   Notification[] @relation("issuer")
+  createdAt            DateTime
+  updatedAt            DateTime
+  sessions             Session[]
+  accounts             Account[]
+  likes                Like[]
+  spaces               SpaceUser[]
 
   @@unique([email])
   @@map("user")
@@ -64,19 +62,19 @@ model Account {
 }
 
 model Notification {
-  id         String    @id @default(cuid())
-  type       NotificationType
-  read Boolean @default(false)
-  createdAt  DateTime
-  updatedAt  DateTime @default(now())
+  id          String           @id @default(cuid())
+  type        NotificationType
+  read        Boolean          @default(false)
+  createdAt   DateTime
+  updatedAt   DateTime         @default(now())
   receipentid String
-  receipient User @relation("receipent",fields: [receipentid], references: [id], onDelete: Cascade)
-  issuerid String
-  issuer User @relation("issuer",fields: [issuerid], references: [id], onDelete: Cascade)
+  receipient  User             @relation("receipent", fields: [receipentid], references: [id], onDelete: Cascade)
+  issuerid    String
+  issuer      User             @relation("issuer", fields: [issuerid], references: [id], onDelete: Cascade)
 
   @@map("notification")
-
 }
+
 enum NotificationType {
   LIKE
 }
@@ -92,59 +90,55 @@ model Verification {
   @@map("verification")
 }
 
-model Like{
-  userId String   
-  spaceId String  
-  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
-  space Space @relation(fields: [spaceId], references: [id],onDelete: Cascade)
+model Like {
+  userId  String
+  spaceId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space   Space  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
   @@unique([userId, spaceId])
   @@map("likes")
+}
 
-  }
- model Space {
-  id               String       @id @default(cuid())
-  title            String
-  description      String
-  banner           String?     //admin is himself confused what the fuck is banner
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime
-  userid           String
-  users            SpaceUser[]  
-  likes            Like[]
-  backgroundMediaId String?      @unique  
-  backgroundMediaUrl   String?
-  backgroundMedia   Media?      @relation(name: "mediagayamaachudane",fields: [backgroundMediaId], references: [id])
-  media              Media[]      @relation(name: "SpaceMediaRelation")
-
+model Space {
+  id                 String      @id @default(cuid())
+  title              String
+  description        String
+  banner             String
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime
+  userid             String
+  users              SpaceUser[]
+  likes              Like[]
+  media              Media[]
   @@map("space")
 }
-  model SpaceUser {
-  id        String   @id @default(cuid())
-  userId    String
-  spaceId   String
-  role      String? 
-  joinedAt  DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+model SpaceUser {
+  id       String   @id @default(cuid())
+  userId   String
+  spaceId  String
+  // role     Role     @default(MEMEBER)
+  joinedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, spaceId])
   @@map("space_user")
 }
-model Media {
-  id           String     @id @default(cuid())
-  Mediatypo    MediaType
-  role         MediaRole
-  url          String
-  spaceId      String?
-  filename     String     @unique
-  originalurl  String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime
- space              Space?     @relation(name: "SpaceMediaRelation", fields: [spaceId], references: [id], onDelete: SetNull) 
- usedAsBackground Space?     @relation(name: "mediagayamaachudane")
 
-  @@unique([spaceId, Mediatypo, url])
+model Media {
+  id               String    @id @default(cuid())
+  Mediatype        MediaType
+  url              String
+  spaceId          String
+  filename         String    @unique
+  originalurl      String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime
+  space            Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  @@unique([spaceId, Mediatype, url])
   @@map("media")
 }
 
@@ -153,8 +147,7 @@ enum MediaType {
   VIDEO
 }
 
-enum MediaRole {
-  PROFILE
-  BANNER
-  SPACEENTITY
+enum Role {
+  ADMIN
+  MEMEBER
 }

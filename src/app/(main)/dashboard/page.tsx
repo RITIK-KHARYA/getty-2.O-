@@ -15,6 +15,7 @@ export default async function Page() {
                   <div className=" gap-x-2 space-auto ">
                     <SpaceCard
                       spacename={item.title}
+                      banner={item.banner}
                     />
                   </div>
                 </div>

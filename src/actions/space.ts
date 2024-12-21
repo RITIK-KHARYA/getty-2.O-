@@ -2,6 +2,8 @@
 import prisma from "@/app/lib";
 import { getSession } from "./session";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { formSchema } from "@/app/components/custom/custom-dialog";
 
 export default async function GetSpace() {
   const session = await getSession();
@@ -10,14 +12,18 @@ export default async function GetSpace() {
     const space = await prisma.space.findMany({
       where: {
         userid: user?.id,
+        banner: { startsWith: "https://utfs.io/f/" },
+        
       },
       select: {
         title: true,
         description: true,
+        banner: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
-
-    console.log(space[0],"only first space");
+    console.log("space", space);
     if (space.length === 0) {
       console.log(" this specific user does not have any space");
     }
@@ -27,7 +33,7 @@ export default async function GetSpace() {
   }
 }
 
-export async function CreateSpace(spacetitle: string, spacebio: string) {
+export async function CreateSpace(data: z.infer<typeof formSchema>) {
   const session = await getSession();
   const user = session?.user;
   try {
@@ -35,20 +41,16 @@ export async function CreateSpace(spacetitle: string, spacebio: string) {
       console.log("user not found");
       return;
     }
-    const space = await prisma.space.create({
+     await prisma.space.create({
       data: {
         userid: user?.id,
-        title: spacetitle,
+        title: data.spacename,
         updatedAt: new Date(),
-        description: spacebio,
-        
-
-      }, 
-      include: {
-        media: true,
-      }
+        description: data.bio,
+        banner: data.banner,
+        createdAt: new Date(),
+      },
     });
-    console.log(space, spacetitle);
     revalidatePath("/dashboard");
   } catch (error) {
     console.log("error in creating space", error);
