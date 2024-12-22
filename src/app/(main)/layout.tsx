@@ -8,10 +8,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full">
+      <main className="w-full overflow-hidden ">
         <div className="flex w-full justify-between">
           <div className="gap-x-2">
-            <SidebarTrigger className="mt-3" />
+            <SidebarTrigger className="mt-3 ml-5 bg-neutral-700/40 rounded-lg" />
           </div>
           <Header />
         </div>

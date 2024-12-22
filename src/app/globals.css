@@ -94,6 +94,11 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+  .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+}
   
   body {
     @apply bg-background text-foreground;

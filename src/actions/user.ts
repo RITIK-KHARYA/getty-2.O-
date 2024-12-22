@@ -1,3 +1,4 @@
+"use server";
 import { redirect } from "next/navigation";
 import { getSession } from "./session";
 import prisma from "@/app/lib";
@@ -11,7 +12,6 @@ export async function Userboard() {
     const user = await prisma.user.findUnique({
       where: {
         email: session?.user?.email,
-        
       },
       select: {
         email: true,

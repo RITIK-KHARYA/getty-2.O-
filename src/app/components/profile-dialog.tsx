@@ -6,7 +6,15 @@ import { LogOut, Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { signOut, useSession } from "../lib/auth-client";
 
-export default function ProfileInterface() {
+interface ProfileInterfaceProps { 
+  userbio: string,
+  username: string
+}
+
+
+export default function ProfileInterface(
+  { userbio, username }: ProfileInterfaceProps
+) {
   const { data } = useSession();
   const signout = () => {
       signOut();
@@ -15,7 +23,7 @@ export default function ProfileInterface() {
 
   return (
     <div className=" bg-black rounded-lg">
-      <Card className="w-full max-w-sm bg-neutral-900 text-white border-neutral-800">
+      <Card className="relative w-[270px]  bg-neutral-900 text-white border-neutral-800">
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -31,14 +39,14 @@ export default function ProfileInterface() {
               <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-zinc-900" />
             </div>
             <div>
-              <h2 className="font-semibold">ritikdev_dsa</h2>
+              <h2 className="font-semibold">{username}</h2>
               <p className="text-sm text-zinc-400">He</p>
             </div>
           </div>
 
           {/* Bio */}
-          <p className="text-sm text-zinc-300">
-            dev songs anime and mostly chill |sleep
+          <p className="text-sm text-zinc-300 bg-neutral-800/70 rounded-lg p-4">
+            {userbio}
           </p>
 
           {/* Actions */}
@@ -53,8 +61,8 @@ export default function ProfileInterface() {
 
             <Button
               variant="ghost"
-                          className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-zinc-800"
-                          onClick={() => signout()}
+              className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-zinc-800"
+              onClick={() => signout()}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Log Out

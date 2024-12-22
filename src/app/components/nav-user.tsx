@@ -28,19 +28,34 @@ import {
 
 import { Skeleton } from "./ui/skeleton";
 import { signOut, useSession } from "./../lib/auth-client";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-import { getSession } from "@/actions/session";
 import ProfileInterface from "./profile-dialog";
+import { Userboard } from "@/actions/user";
+import { useEffect, useState } from "react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const { data, isPending, error } = useSession();
+  const [loading, setisLoading] = useState(false);
+  const [biodata, setBiodata] = useState<any>(null);
   const handleSignout = () => {
     signOut();
     router.push("/signin");
   };
+  useEffect(() => {
+    const getbio = async () => {
+      try {
+        setisLoading(true);
+        const biodata = await Userboard();
+        setBiodata(biodata?.bio);
+        setisLoading(false);
+      } catch (error) {
+        console.log(error, "bhai we got error");
+      }
+    };
+    getbio();
+  }, []);
 
   return (
     <SidebarMenu className="">
@@ -76,7 +91,25 @@ export function NavUser() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className=" bg-neutral-900 text-white border-neutral-600">
-            <ProfileInterface />
+            {!loading ? (
+              <ProfileInterface
+                username={data?.user?.name || ""}
+                userbio={biodata}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-start h-[230px] w-[270px] gap-y-5">
+                <div className="w-full flex flex-row items-center justify-start gap-x-6">
+                  <Skeleton className="rounded-full w-12 h-12 mt-5 ml-5" />
+                  <div className="flex flex-col gap-y-2">
+                    <Skeleton className="rounded-full w-24 h-3" />
+                    <Skeleton className="rounded-full w-20 h-3" />
+                  </div>
+                </div>
+                <span className="p-5 flex items-center justify-center">
+                  <Skeleton className="w-[200px] rounded-lg h-24 " />
+                </span>
+              </div>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

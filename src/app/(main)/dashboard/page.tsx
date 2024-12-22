@@ -6,10 +6,10 @@ export default async function Page() {
 
   return (
     <div className="">
-      <div className="ml-2 font-semibold shadow-sm w-full">
+      <div className="ml-2 font-semibold shadow-sm w-full p-5 ">
         <div className="flex flex-col ">
           <div className="rounded-md p-4 flex flex-row gap-y-4 ">
-            <div className=" gap-x-4 gap-y-4 flex flex-wrap ">
+            <div className=" gap-x-4 gap-y-4 flex flex-wrap grow">
               {data?.map((item: any) => (
                 <div className="">
                   <div className=" gap-x-2 space-auto ">
