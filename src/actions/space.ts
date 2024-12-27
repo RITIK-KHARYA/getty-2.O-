@@ -1,4 +1,5 @@
 "use server";
+
 import prisma from "@/app/lib";
 import { getSession } from "./session";
 import { revalidatePath } from "next/cache";
@@ -6,28 +7,37 @@ import { z } from "zod";
 import { formSchema } from "@/app/components/custom/custom-dialog";
 
 export default async function GetSpace() {
-  const session = await getSession();
-  const user = session?.user;
   try {
     const space = await prisma.space.findMany({
       where: {
-        userid: user?.id,
-        banner: { startsWith: "https://utfs.io/f/" },
-        
+        banner: {
+          startsWith: "https://utfs.io/",
+        },
       },
-      select: {
-        title: true,
-        description: true,
-        banner: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        users: {
+          where: {
+            role: "ADMIN",
+          },
+          select: {
+            user: {
+              select: {
+                image: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
-    console.log("space", space);
-    if (space.length === 0) {
-      console.log(" this specific user does not have any space");
-    }
-    return space;
+    // console.log("space", space);
+    const spaceWithAdmin = space.map((s) => {
+      return {
+        ...s,
+        users: { ...s.users[0].user },
+      };
+    });
+    return spaceWithAdmin;
   } catch (error) {
     console.log("error in finding space", error);
   }
@@ -41,7 +51,7 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
       console.log("user not found");
       return;
     }
-     await prisma.space.create({
+    const space = await prisma.space.create({
       data: {
         userid: user?.id,
         title: data.spacename,
@@ -49,6 +59,16 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
         description: data.bio,
         banner: data.banner,
         createdAt: new Date(),
+      },
+    });
+    if (!space) {
+      throw new Error("unable to create space");
+    }
+    await prisma.spaceUser.create({
+      data: {
+        spaceId: space.id,
+        userId: user?.id,
+        role: "ADMIN",
       },
     });
     revalidatePath("/dashboard");

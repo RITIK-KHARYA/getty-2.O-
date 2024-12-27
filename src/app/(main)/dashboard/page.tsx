@@ -10,14 +10,14 @@ export default async function Page() {
         <div className="flex flex-col ">
           <div className="rounded-md p-4 flex flex-row gap-y-4 ">
             <div className=" gap-x-4 gap-y-4 flex flex-wrap grow">
-              {data?.map((item: any) => (
+              {data?.map((item) => (
                 <div className="">
                   <div className=" gap-x-2 space-auto ">
                     <SpaceCard
                       spacename={item.title}
                       banner={item.banner}
                       description={item.description}
-                      spaceadmin={item.userid}
+                      spaceadmin={item.users}
                     />
                   </div>
                 </div>

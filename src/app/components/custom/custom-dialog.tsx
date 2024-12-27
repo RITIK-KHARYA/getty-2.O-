@@ -16,9 +16,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { useState } from "react";
-import AttachmentButton from "@/app/example-uploader/index";
+import { useEffect, useMemo, useState } from "react";
+import AttachmentButton from "@/app/example-uploader/uploadarea";
 import { CreateSpace } from "@/actions/space";
+import { cn } from "@/app/lib/utils";
+import useMediaUpload from "@/actions/cardmediaupload";
+import { Sparkles } from "lucide-react";
 
 export const formSchema = z.object({
   spacename: z.string().min(2, {
@@ -32,7 +35,8 @@ export const formSchema = z.object({
 
 export function ProfileForm() {
   const [open, setOpen] = useState(false);
-  const [isLoading,setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,25 +46,33 @@ export function ProfileForm() {
       banner: "",
     },
   });
+  const bannerUrl = form.watch("banner");
   const submitvalues = async (data: z.infer<typeof formSchema>) => {
     console.log("submited", data);
     try {
       setIsLoading(true);
-       await CreateSpace(data);
+      await CreateSpace(data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
       setOpen(false);
+      form.reset();
     }
-
-    
   };
+  useEffect(() => {
+    if (bannerUrl) {
+      setIsUploading(false);
+      return;
+    }
+    setIsUploading(true);
+  }, [bannerUrl]);
   return (
     <Dialog
       open={open}
       onOpenChange={() => {
         setOpen((open) => !open);
+        form.reset();
       }}
     >
       <DialogTrigger asChild>
@@ -117,9 +129,12 @@ export function ProfileForm() {
               />
             </div>
             <div className="flex justify-end gap-x-2">
-              <Button type="submit">{isLoading ? "Creating..." : "Create"}</Button>
+              <Button type="submit" disabled={isLoading || isUploading}>
+                <Sparkles className="mr-1" />
+                {isLoading ? "Creating..." : "Create"}
+              </Button>
               <Button
-                className="bg-red-500 hover:bg-red-700 text-white w-24"
+                className="bg-red-500 hover:bg-red-700 text-white w-20"
                 type="button"
                 onClick={(open) => setOpen(!open)}
               >

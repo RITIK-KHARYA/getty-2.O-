@@ -44,11 +44,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   }, []);
 
   const data = {
-    user: {
-      name: "shadcn",
-      email: "m@example.com",
-      avatar: "/avatars/shadcn.jpg",
-    },
     navMain: [
       {
         title: "Home",
@@ -80,11 +75,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="">
       <SidebarHeader className=" ">
-        <h1 className="bg-black rounded-full flex items-center justify-center">
-          logo
+        <h1 className="text-2xl mt-1">
+          S&B
         </h1>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-8 " >
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>

@@ -1,29 +1,14 @@
 "use client";
-
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "./ui/sidebar";
 
 import { Skeleton } from "./ui/skeleton";
@@ -34,15 +19,9 @@ import { Userboard } from "@/actions/user";
 import { useEffect, useState } from "react";
 
 export function NavUser() {
-  const { isMobile } = useSidebar();
-  const router = useRouter();
   const { data, isPending, error } = useSession();
   const [loading, setisLoading] = useState(false);
   const [biodata, setBiodata] = useState<any>(null);
-  const handleSignout = () => {
-    signOut();
-    router.push("/signin");
-  };
   useEffect(() => {
     const getbio = async () => {
       try {
@@ -58,7 +37,7 @@ export function NavUser() {
   }, []);
 
   return (
-    <SidebarMenu className="">
+    <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

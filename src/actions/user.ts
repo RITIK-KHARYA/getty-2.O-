@@ -14,9 +14,6 @@ export async function Userboard() {
         email: session?.user?.email,
       },
       select: {
-        email: true,
-        name: true,
-        image: true,
         id: true,
         bio: true,
       },

@@ -35,21 +35,15 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Station...</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={false}
-          >
+          <Collapsible key={item.title} asChild defaultOpen={false}>
             <SidebarMenuItem>
               <SidebarMenuButton
                 tooltip={item.title}
-                className="h-10 flex flex-row gap-x-5 "
-              >
+                className="h-10 flex flex-row gap-x-5 pl-5 hover:bg-neutral-700/20">
                 {item.icon && <item.icon />}
-                <span>{item.title}</span>
+                <span className="text-base font-thin ">{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </Collapsible>

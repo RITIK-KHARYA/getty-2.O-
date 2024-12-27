@@ -15,9 +15,7 @@ export default function AttachmentPreview({
   onRemoveclick,
   key,
 }: AttachmentPreviewProps) {
-  console.log("attachment",file);
   const src = URL.createObjectURL(file);
-  console.log("src",src);
   return (
     <>
       <div

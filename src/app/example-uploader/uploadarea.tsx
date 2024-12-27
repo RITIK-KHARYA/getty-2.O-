@@ -1,4 +1,4 @@
-import { UploadCloud } from "lucide-react";
+import { Upload, UploadCloud } from "lucide-react";
 import { useDropzone } from "@uploadthing/react";
 import { useCallback, useState } from "react";
 import {
@@ -37,8 +37,8 @@ export default function AttachmentButton({
         {attachment.length === 0 ? (
           <div>
             <div className="flex flex-col items-center justify-center gap-y-1">
-              <div className="w-10 h-10 border border-blue-700/[0.8] flex items-center justify-center rounded-md bg-sky-600 bg-blend-normal">
-                <UploadCloud className="text-gray-200 text-2xl" />
+              <div className="w-10 h-10  flex items-center justify-center bg-blend-normal">
+                <Upload className="text-white text-3xl  " />
               </div>
               <div className="flex flex-row items-center gap-x-1">
                 <span className="text-md text-neutral-400">
@@ -49,7 +49,7 @@ export default function AttachmentButton({
                 </span>
               </div>
               <span className="text-md text-neutral-600">
-                PNG,JPF,PDF(max 800 x 400 px)
+                PNG only(max 800 x 400 px)
               </span>
             </div>
           </div>

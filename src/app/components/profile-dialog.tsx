@@ -5,22 +5,22 @@ import { Card } from "./ui/card";
 import { LogOut, Pencil } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { signOut, useSession } from "../lib/auth-client";
+import { useRouter } from "next/navigation";
 
-interface ProfileInterfaceProps { 
-  userbio: string,
-  username: string
+interface ProfileInterfaceProps {
+  userbio: string;
+  username: string;
 }
-
-
-export default function ProfileInterface(
-  { userbio, username }: ProfileInterfaceProps
-) {
+export default function ProfileInterface({
+  userbio,
+  username,
+}: ProfileInterfaceProps) {
   const { data } = useSession();
+  const router = useRouter();
   const signout = () => {
-      signOut();
-      return signOut();
+    signOut();
+    router.refresh();
   };
-
   return (
     <div className=" bg-black rounded-lg">
       <Card className="relative w-[270px]  bg-neutral-900 text-white border-neutral-800">
