@@ -1,5 +1,6 @@
 import GetSpace, { CreateSpace } from "@/actions/space";
 import SpaceCard from "@/app/components/spacecard/card";
+import Link from "next/link";
 
 export default async function Page() {
   const data = await GetSpace();
@@ -13,12 +14,15 @@ export default async function Page() {
               {data?.map((item) => (
                 <div className="">
                   <div className=" gap-x-2 space-auto ">
-                    <SpaceCard
-                      spacename={item.title}
-                      banner={item.banner}
-                      description={item.description}
-                      spaceadmin={item.users}
-                    />
+                    <Link
+                    href={`/spaceid/${item.id}`}>
+                      <SpaceCard
+                        spacename={item.title}
+                        banner={item.banner}
+                        description={item.description}
+                        spaceadmin={item.users}
+                      />
+                    </Link>
                   </div>
                 </div>
               ))}

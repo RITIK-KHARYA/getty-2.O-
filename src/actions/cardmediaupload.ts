@@ -3,12 +3,14 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useState } from "react";
 import { UTApi } from "uploadthing/server";
+import deleteAttachment from "./delete";
 // import deleteAttachment from "./delete";
 
 export interface attachment {
   mediaId?: string;
   isUploading: boolean;
   file: File;
+  url?: string;
 }
 
 export default function useMediaUpload(onChange:(value:string)=> void) {
@@ -43,10 +45,11 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
             const uploadResult = res.find((r) => r.name === a.file.name);
             if (!uploadResult) return a;
 
-            console.log(uploadResult.name);
+            console.log(uploadResult);
 
             return {
               ...a,
+              url: uploadResult.url,
               mediaId: uploadResult.serverData.uploadedBy,
               isUploading: false,
             };
@@ -88,8 +91,9 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
     startUpload(files);
   }
   async function removeAttachment(fileName: string) {
+    const currentAttachment = attachment.find((a) => a.file.name === fileName);
     setAttachment((prev) => prev.filter((a) => a.file.name !== fileName));
-    // await deleteAttachment(fileName);
+    await deleteAttachment(currentAttachment.url);
     onChange("");
   }
     function reset() {

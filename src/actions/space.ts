@@ -4,6 +4,7 @@ import prisma from "@/app/lib";
 import { getSession } from "./session";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { formSchema2 } from "@/app/components/findspacedialog/findspacedialog";
 import { formSchema } from "@/app/components/custom/custom-dialog";
 
 export default async function GetSpace() {
@@ -26,6 +27,7 @@ export default async function GetSpace() {
                 name: true,
               },
             },
+            spaceId: true,
           },
         },
       },
@@ -39,6 +41,7 @@ export default async function GetSpace() {
     });
     return spaceWithAdmin;
   } catch (error) {
+    throw new Error("unable to find space");
     console.log("error in finding space", error);
   }
 }
@@ -77,3 +80,18 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
   }
 }
 
+export async function GetUniqueIdSpace(data: z.infer<typeof formSchema2>) {
+  try {
+    const uniquespace = await prisma.space.findUnique({
+      where: {
+        id: data.spaceId,
+      },
+    });
+    if (!uniquespace) {
+      console.log("There is no space for this space-ID");
+      throw new Error("unable to find space");
+    }
+  } catch (error) {
+    throw new Error("unable to get unique id");
+  }
+}

@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import {
   Dialog,
@@ -19,59 +20,67 @@ import {
   FormMessage,
   FormControl,
   FormField,
+  FormDescription,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import GetUniqueSpace from "@/actions/uniquespace";
+import { GetUniqueIdSpace } from "@/actions/space";
 
-const formSchema = z.object({
-  spaceId: z.string(),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+export const formSchema2 = z.object({
+  spaceId: z.string().min(1, { message: "Space ID is required" }),
 });
 
 export default function FindSpaceDialog() {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof formSchema2>>({
     defaultValues: {
       spaceId: "",
-      password: "",
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema2),
   });
-  const submitvalues = (data: z.infer<typeof formSchema>) => {
-    GetUniqueSpace(data.spaceId);
-    console.log(data);
-    setOpen(false);
+  const submitvalues = async (data: z.infer<typeof formSchema2>) => {
+    try {
+      await GetUniqueIdSpace(data);
+    } catch (error) {
+      console.log("bhai lvde lg gye");
+      throw new Error("unable to find space");
+    }
   };
   return (
     <Dialog open={open} onOpenChange={() => setOpen((open) => !open)}>
       <DialogTrigger asChild>
         <Button>Find Space</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="gap-y-5">
         <DialogHeader>
-          <DialogTitle>Looking For the Space</DialogTitle>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(submitvalues)}>
-              <FormField
-                control={form.control}
-                name="spaceId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Space ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Space ID" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex justify-end">
-                <Button type="submit">Find Space</Button>
-              </div>
-            </form>
-          </Form>
+          <DialogTitle>Find Space</DialogTitle>
         </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(submitvalues)}>
+            <FormField
+              control={form.control}
+              name="spaceId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Space ID" {...field} />
+                  </FormControl>
+                  <FormMessage className="text-xs">
+                    {form.formState.errors.spaceId?.message}
+                  </FormMessage>
+                  <FormDescription className="text-sm">
+                    Only space Id
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end">
+              <Button type="submit" className="mt-2 w-20 h-7 text-sm">
+                Search
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

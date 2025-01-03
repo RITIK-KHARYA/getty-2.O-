@@ -106,7 +106,7 @@ export function ProfileForm() {
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="space name  " {...field} />
+                    <Textarea placeholder="Description" {...field} />
                   </FormControl>
                   <FormDescription>Tell about your space</FormDescription>
                 </FormItem>
@@ -129,12 +129,12 @@ export function ProfileForm() {
               />
             </div>
             <div className="flex justify-end gap-x-2">
-              <Button type="submit" disabled={isLoading || isUploading}>
-                <Sparkles className="mr-1" />
+              <Button type="submit" disabled={isLoading || isUploading} className="w-24 h-7">
+                <Sparkles size={10} />
                 {isLoading ? "Creating..." : "Create"}
               </Button>
               <Button
-                className="bg-red-500 hover:bg-red-700 text-white w-20"
+                className="bg-red-500 hover:bg-red-700 text-white w-20 h-7"
                 type="button"
                 onClick={(open) => setOpen(!open)}
               >

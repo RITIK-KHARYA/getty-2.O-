@@ -14,7 +14,7 @@ interface spacecardprops {
   spaceadmin: {
     name: string;
     image: string | null;
-  }
+  };
 }
 
 export default function SpaceCard({
@@ -36,33 +36,30 @@ export default function SpaceCard({
         />
       </div>
       <CardContent className={`p-3 bg-gradient-to-br ${gradient}`}>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center shadow-sm">
-              <span className="text-xs font-bold">
-                <Avatar className="h-6 w-6 rounded-full">
-                  <AvatarFallback>
-                    <Skeleton className="h-6 w-6 rounded-full" />
-                  </AvatarFallback>
-                  <AvatarImage
-                    src={
-                      spaceadmin.image || "https://github.com/shadcn.png"
-                    }
-                    alt="Avatar"
-                    className="rounded-full h-6 w-6"
-                  />
-                </Avatar>
-              </span>
-            </div>
-            <span className="text-xs text-gray-200">{spaceadmin.name}</span>
+        <div className="grid grid-cols-[3fr_1fr] ">
+          <h3 className="text-base font-medium mb-1 ">{spacename}</h3>
+        </div>
+        <div className="grid grid-cols-[3fr_1fr] text-muted-foreground w-full">
+          <p className="text-xs text-neutral-300 line-clamp-1 overflow-hidden truncate...">
+            {description}
+          </p>
+          <div className="flex items-center justify-end">
+            <span className="text-xs font-bold">
+              <Avatar className="h-6 w-6 rounded-full">
+                <AvatarFallback>
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                </AvatarFallback>
+                <AvatarImage
+                  src={spaceadmin.image || "https://github.com/shadcn.png"}
+                  alt="Avatar"
+                  className="rounded-full h-6 w-6"
+                />
+              </Avatar>
+            </span>
           </div>
         </div>
-        <h3 className="text-sm font-semibold text-white mb-1 truncate">
-          {spacename}
-        </h3>
-        <p className="text-xs text-gray-200 line-clamp-2 truncate ...">
-          {description}
-        </p>
+
+
       </CardContent>
     </Card>
   );

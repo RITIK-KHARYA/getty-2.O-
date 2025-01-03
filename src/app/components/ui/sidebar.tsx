@@ -421,7 +421,7 @@ const SidebarContent = React.forwardRef<
         "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden group-data-[collapsible=icon]:flex-row group-data-[collapsible=icon]:ml-5 group-data-[collapsible=icon]:mr-2 group-data-[collapsible=icon]:mt-7 group-data-[collapsible=icon]:mb-2 ",
         className
       )}
-      {...props} //here the admin edited the sidebarcontent
+      {...props}
     />
   );
 })

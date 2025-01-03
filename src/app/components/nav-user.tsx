@@ -3,13 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "./ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 
 import { Skeleton } from "./ui/skeleton";
 import { signOut, useSession } from "./../lib/auth-client";
@@ -43,11 +39,11 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground bg-neutral-700/40 rounded-lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground bg-neutral-800/50 rounded-lg"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={data?.user?.image || ""}
+                  src={data?.user?.image || "https://github.com/shadcn.png"}
                   alt={data?.user?.name || ""}
                 />
                 <AvatarFallback className="rounded-lg">
@@ -62,8 +58,8 @@ export function NavUser() {
                   </div>
                 ) : (
                   <div className="flex flex-col justify-start">
-                    <span className="">{data?.user?.name || ""}</span>
-                    <span>{data?.user?.email || ""}</span>
+                    <span className="p-2">{data?.user?.name || ""}</span>
+                    {/* <span>{data?.user?.email || ""}</span> */}
                   </div>
                 )}
               </div>

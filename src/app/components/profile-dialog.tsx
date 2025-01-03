@@ -17,10 +17,10 @@ export default function ProfileInterface({
 }: ProfileInterfaceProps) {
   const { data } = useSession();
   const router = useRouter();
-  const signout = () => {
-    signOut();
-    router.refresh();
-  };
+const handleSignOut = () => {
+  signOut();
+  router.refresh();
+};
   return (
     <div className=" bg-black rounded-lg">
       <Card className="relative w-[270px]  bg-neutral-900 text-white border-neutral-800">
@@ -32,7 +32,7 @@ export default function ProfileInterface({
                   <AvatarFallback></AvatarFallback>
                   <AvatarImage
                     className="rounded-full"
-                    src={data?.user.image || "https://github.com/shadcn.png"}
+                    // src={data?.user.image || "https://github.com/shadcn.png"}
                   />
                 </Avatar>
               </div>
@@ -62,7 +62,7 @@ export default function ProfileInterface({
             <Button
               variant="ghost"
               className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-zinc-800"
-              onClick={() => signout()}
+              onClick={() => handleSignOut()}
             >
               <LogOut className="w-4 h-4 mr-2" />
               Log Out

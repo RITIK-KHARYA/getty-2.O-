@@ -75,11 +75,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="">
       <SidebarHeader className=" ">
-        <h1 className="text-2xl mt-1">
-          S&B
-        </h1>
+        <h1 className="text-2xl mt-1">S&B</h1>
       </SidebarHeader>
-      <SidebarContent className="mt-8 " >
+      <SidebarContent className="mt-8 ">
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
