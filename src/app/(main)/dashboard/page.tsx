@@ -14,8 +14,7 @@ export default async function Page() {
               {data?.map((item) => (
                 <div className="">
                   <div className=" gap-x-2 space-auto ">
-                    <Link
-                    href={`/spaceid/${item.id}`}>
+                    <Link href={`/${item.id}`}>
                       <SpaceCard
                         spacename={item.title}
                         banner={item.banner}
