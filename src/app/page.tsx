@@ -13,8 +13,13 @@ import { HoverBorderGradient } from "./components/ui/hover-border-gradient";
 import { BorderBeam } from "./components/ui/border-beam";
 import { Button } from "./components/ui/button";
 import { Vortex } from "./components/ui/vortex";
+import { useSession } from "./lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const session = useSession();
+  const router = useRouter();
+
   // Text content for the hero section
   const headlineText = "Deep dive into getty,";
   const subheadlineText = "Lets get anonymous";
@@ -22,6 +27,9 @@ export default function Home() {
   // Theme-based color state
   const { themes } = useTheme();
   const [particlesColor, setParticlesColor] = useState("light");
+  if (session) {
+    router.push("/dashboard");
+  }
 
   useEffect(() => {
     setParticlesColor(themes.includes("dark") ? "#fafaf9" : "#171717");
@@ -34,7 +42,7 @@ export default function Home() {
   ];
 
   return (
-    <div >
+    <div>
       {/* Header */}
       <div className="flex items-center justify-center">
         <AppBar />
@@ -101,7 +109,7 @@ export default function Home() {
 
       <div className=" ">
         <div className="w-[calc(100%-4rem)] mx-auto rounded-md  h-[20rem] overflow-hidden mt-52">
-          <Vortex 
+          <Vortex
             backgroundColor="black"
             className="flex items-center flex-col justify-center px-2 md:px-10 py-4 w-full h-full"
           >
