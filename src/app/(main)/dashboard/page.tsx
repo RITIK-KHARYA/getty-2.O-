@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 // import Link from "next/link";
 
 // Separate component for the space list
-function SpaceList({ data,classname }: { data: any; classname: string }) {
+function SpaceList({ data, classname }: { data: any; classname: string }) {
   return (
     <div className="flex flex-col gap-4">
       {data?.map((item: any) => (
