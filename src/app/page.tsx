@@ -11,7 +11,7 @@ import Particles from "./components/ui/particles";
 import HeroVideoDialog from "./components/ui/hero-video-dialog";
 import { HoverBorderGradient } from "./components/ui/hover-border-gradient";
 import { BorderBeam } from "./components/ui/border-beam";
-import { Button } from "./components/ui/button";
+
 import { Vortex } from "./components/ui/vortex";
 import { useSession } from "./lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ export default function Home() {
   // Theme-based color state
   const { themes } = useTheme();
   const [particlesColor, setParticlesColor] = useState("light");
-  if (session) {
+  if (session.data?.user) {
     router.push("/dashboard");
   }
 

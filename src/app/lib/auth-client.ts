@@ -1,7 +1,7 @@
 import { createAuthClient } from "better-auth/react";
 
-export const { signIn, signUp, useSession,signOut } = createAuthClient({
-  baseURL: "http://localhost:3002",
+export const { signIn, signUp, useSession,signOut ,$Infer } = createAuthClient({
+  baseURL: "http://localhost:3000",
 });
 
 export const signInWithGithub = async () => {
@@ -17,3 +17,4 @@ export const signInWithDiscord = async () => {
   });
 };
 
+export type Session = typeof $Infer.Session;

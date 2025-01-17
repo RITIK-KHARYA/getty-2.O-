@@ -7,7 +7,7 @@ export default async function authMiddleware(
 ) {
 
   const { data: session } = await betterFetch<Session>(
-    "/api/auth/get-session",
+    "http://localhost:3000/api/auth/get-session",
     {
       baseURL: request.nextUrl.origin,
       headers: {
@@ -15,7 +15,6 @@ export default async function authMiddleware(
       },
     }
   );
-
   if (!session) {
     return NextResponse.redirect(new URL("/signin", request.url));
 
@@ -24,5 +23,9 @@ export default async function authMiddleware(
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+  ],
 };
+
+

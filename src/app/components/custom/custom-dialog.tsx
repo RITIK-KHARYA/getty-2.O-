@@ -129,7 +129,11 @@ export function ProfileForm() {
               />
             </div>
             <div className="flex justify-end gap-x-2">
-              <Button type="submit" disabled={isLoading || isUploading} className="w-24 h-7">
+              <Button
+                type="submit"
+                disabled={isLoading || isUploading}
+                className="w-24 h-7"
+              >
                 <Sparkles size={10} />
                 {isLoading ? "Creating..." : "Create"}
               </Button>

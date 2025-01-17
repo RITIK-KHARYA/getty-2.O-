@@ -93,7 +93,7 @@ const ModelContent = ({ spacename, description, image, spaceadmin }: any) => {
             {spaceadmin}
           </TooltipContent>
         </Tooltip>
-        <CustomButton className="hover:bg-neutral-700 transition-colors  duration-200 font-thin">
+        <CustomButton className="hover:bg-neutral-700 transition-colors duration-200 fot">
           Connect
         </CustomButton>
       </div>
@@ -116,7 +116,7 @@ const CustomButton = ({
     <button
       {...props}
       className={cn(
-        "bg-neutral-800/80 text-sm text-neutral-100 rounded-lg px-6 py-2 font-medium",
+        "bg-neutral-800/80 text-sm text-neutral-100 rounded-xl px-6 py-2 font-medium",
         "hover:bg-neutral-700/80 transition-all duration-200",
         "disabled:opacity-50 disabled:cursor-not-allowed",
         className
