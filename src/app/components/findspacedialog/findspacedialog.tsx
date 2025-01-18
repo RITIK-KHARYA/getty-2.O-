@@ -23,7 +23,7 @@ import {
   FormDescription,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { GetUniqueIdSpace } from "@/actions/space";
+
 
 export const formSchema2 = z.object({
   spaceId: z.string().min(1, { message: "Space ID is required" }),
@@ -39,7 +39,7 @@ export default function FindSpaceDialog() {
   });
   const submitvalues = async (data: z.infer<typeof formSchema2>) => {
     try {
-      await GetUniqueIdSpace(data);
+      
     } catch (error) {
       console.log("bhai lvde lg gye");
       throw new Error("unable to find space");

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-
   return (
     <div className="flex items-center justify-center h-screen bg-black">
       <div className="bg-neutral-800/30 rounded-lg border border-neutral-700 p-8 sm:p-12 shadow-lg max-w-md w-full">

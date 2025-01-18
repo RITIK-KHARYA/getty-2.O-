@@ -1,6 +1,6 @@
 "use server"
 import { Session } from "@/app/lib/auth-client";
-import { betterFetch } from "@better-fetch/fetch";/
+import { betterFetch } from "@better-fetch/fetch";
 import {cache} from "react"
 import { headers } from "next/headers";
 

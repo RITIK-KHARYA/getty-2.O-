@@ -1,4 +1,4 @@
-import GetSpace from "@/actions/space";
+import  GetSpace from "@/actions/space";
 import { Button } from "@/app/components/Button";
 import SpaceCard from "@/app/components/spacecard/card";
 import {

@@ -1,24 +1,29 @@
 "use server";
-import { redirect } from "next/navigation";
+
 import { getSession } from "./session";
-import prisma from "@/app/lib";
-import { error } from "console";
 
 export async function Userboard() {
   const session = await getSession();
-  if(!session) {
-    throw  Error("unauthorized");
+  if (!session) {
+    throw new Error("Unauthorized");
   }
 
   try {
-    const user = await fetch("http://localhost:3000/api/user", {
+    const response = await fetch("http://localhost:3000/api/user", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-    })
-     return user
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user: ${response.statusText}`);
+    }
+
+    const user = await response.json();
+    return user;
   } catch (error) {
-    console.log("bhai back laggayi", error);
+    console.error("Error fetching user:", error);
+    throw new Error("Failed to fetch user details");
   }
 }
