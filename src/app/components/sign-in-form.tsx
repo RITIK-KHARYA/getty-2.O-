@@ -8,7 +8,6 @@ import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,7 +15,6 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { signIn } from "../lib/auth-client";
-import { error } from "console";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -26,10 +24,6 @@ const formSchema = z.object({
 export function SignInForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // errorMessage: {
-    //   email: "Invalid email",
-    //   password: "Password must be at least 8 characters",
-    // },
     defaultValues: {
       email: "",
       password: "",
@@ -46,15 +40,19 @@ export function SignInForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-white">Email</FormLabel>
               <FormControl>
-                <Input placeholder="test@gmail.com" {...field} />
+                <Input
+                  placeholder="test@gmail.com"
+                  {...field}
+                  className="bg-neutral-900 border-neutral-800/70 text-white rounded-none"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -65,15 +63,25 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-white">Password</FormLabel>
               <FormControl>
-                <Input placeholder="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  {...field}
+                  className="bg-neutral-900 border-neutral-800/70 text-white rounded-none"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          className="w-full bg-neutral-400 text-black hover:bg-gray-200"
+        >
+          Sign In
+        </Button>
       </form>
     </Form>
   );
