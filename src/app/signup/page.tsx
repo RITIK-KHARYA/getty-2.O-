@@ -11,12 +11,7 @@ export default function SignUpPage() {
   return (
     <div className="flex h-screen bg-black text-white">
       <div className="w-1/2 relative">
-        <Image
-          src="/meme.png"
-          alt="Sign Up"
-          layout="fill"
-          objectFit="cover"
-        />
+        <Image src="/meme.png" alt="Sign Up" layout="fill" objectFit="cover" />
       </div>
       <div className="w-1/2 flex items-center justify-center">
         <div className="w-2/3 max-w-md">
@@ -25,7 +20,7 @@ export default function SignUpPage() {
             <Button
               onClick={() => signInWithDiscord()}
               variant="outline"
-              className="bg-neutral-800/80 border-neutral-700 text-white hover:bg-gray-700 w-full"
+              className="bg-neutral-800/80 border-neutral-700 text-white hover:bg-neutral-700/40 w-full rounded-none"
             >
               <BsDiscord className="mr-2 h-4 w-4" />
               Discord
@@ -33,7 +28,7 @@ export default function SignUpPage() {
             <Button
               onClick={() => signInWithGithub()}
               variant="outline"
-              className="bg-neutral-800/80 border-neutral-700 text-white hover:bg-gray-700 w-full"
+              className="bg-neutral-800/80 border-neutral-700 text-white hover:bg-neutral-700/40 w-full rounded-none"
             >
               <Github className="mr-2 h-4 w-4" />
               GitHub

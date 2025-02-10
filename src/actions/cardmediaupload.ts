@@ -3,7 +3,7 @@ import { useToast } from "@/app/hooks/use-toast";
 import { useUploadThing } from "@/utils/uploadthing";
 import { useState } from "react";
 import { UTApi } from "uploadthing/server";
-import deleteAttachment from "./delete";
+import deleteAttachment from "./mediadeletion";
 // import deleteAttachment from "./delete";
 
 export interface attachment {

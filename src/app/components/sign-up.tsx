@@ -63,7 +63,7 @@ export function SignUpForm() {
                   <Input
                     placeholder="test@gmail.com"
                     {...field}
-                    className="bg-neutral-800 bg-border-neutral-700/90 text-white"
+                    className="bg-neutral-800 bg-border-neutral-700/90 text-white rounded-none"
                   />
                 </FormControl>
                 <FormMessage />
@@ -81,7 +81,7 @@ export function SignUpForm() {
                     type="password"
                     placeholder="••••••••"
                     {...field}
-                    className="bg-neutral-800 bg-border-neutral-700/90 text-white"
+                    className="bg-neutral-800 bg-border-neutral-700/90 text-white rounded-none"
                   />
                 </FormControl>
                 <FormMessage />

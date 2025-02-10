@@ -26,6 +26,7 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
                 banner={item.banner}
                 description={item.description}
                 spaceadmin={item.users}
+                memberCount={10}
               />
             </div>
           </DialogTrigger>
@@ -81,18 +82,6 @@ const ModelContent = ({ spacename, description, image, spaceadmin }: any) => {
         </div>
       </div>
       <div className="flex items-center justify-between px-2 pt-4 border-t border-neutral-700">
-        <Tooltip>
-          <Avatar className="h-10 w-10 ring-2 ring-neutral-700">
-            <AvatarFallback>
-              <Skeleton className="h-10 w-10 rounded-full" />
-            </AvatarFallback>
-            <AvatarImage src={spaceadmin.image} />
-          </Avatar>
-
-          <TooltipContent className="bg-neutral-800 text-neutral-100">
-            {spaceadmin}
-          </TooltipContent>
-        </Tooltip>
         <CustomButton className="hover:bg-neutral-700 transition-colors duration-200 fot">
           Connect
         </CustomButton>
