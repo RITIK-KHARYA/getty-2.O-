@@ -21,7 +21,7 @@ interface SpaceCardProps {
   banner: string;
   spacename: string;
   description: string;
-  spaceadmin: {
+  spaceAdmin: {
     name: string | null;
     image: string | null;
   };
@@ -32,11 +32,12 @@ export default function SpaceCard({
   banner,
   spacename,
   description,
-  spaceadmin,
+  spaceAdmin,
   memberCount=10,
 }: SpaceCardProps) {
+  console.log("hehe",spaceAdmin);
   return (
-    <Card className="w-[320px] overflow-hidden bg-zinc-900 text-zinc-100 border-zinc-800 shadow-lg group transition-all duration-300 hover:shadow-2xl">
+    <Card className="w-[350px] overflow-hidden bg-zinc-900 text-zinc-100 border-zinc-800 shadow-lg group transition-all duration-300 hover:shadow-2xl">
       <div className="relative w-full h-40">
         <Image
           src={banner || "/placeholder.svg"}
@@ -53,11 +54,11 @@ export default function SpaceCard({
           <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
         </CardTitle>
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 justify-between">
+          <div className="flex items-center space-x-2 mb-2 justify-between">
             <div>
               <Avatar>
                 <AvatarImage
-                  src={spaceadmin?.image || "https://github.com/shadcn.png"}
+                  src={spaceAdmin?.image || "https://github.com/shadcn.png"}
                 />
               </Avatar>
               <p className="text-xs text-zinc-400">Created by</p>

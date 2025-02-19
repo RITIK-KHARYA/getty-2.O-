@@ -25,7 +25,7 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
                 spacename={item.title}
                 banner={item.banner}
                 description={item.description}
-                spaceadmin={item.users}
+                spaceAdmin={item.spaceAdmin[0]}
                 memberCount={10}
               />
             </div>
