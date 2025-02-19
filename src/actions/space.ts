@@ -24,6 +24,9 @@ export default async function GetSpace() {
   }
 }
 
+// export async function GetSpaceByName()
+
+
 export async function CreateSpace(data: z.infer<typeof formSchema>) {
   try {
     const response = await fetch("http://localhost:3000/api/space", {

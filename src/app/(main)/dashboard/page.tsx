@@ -1,4 +1,4 @@
-import  GetSpace from "@/actions/space";
+import GetSpace from "@/actions/space";
 import { Button } from "@/app/components/Button";
 import SpaceCard from "@/app/components/spacecard/card";
 import {
@@ -11,6 +11,7 @@ import { Skeleton } from "@/app/components/ui/skeleton";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { GeistMono } from "geist/font";
 import { Link } from "lucide-react";
 import Image from "next/image";
 
@@ -50,7 +51,9 @@ export default async function Page() {
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl p-6">
-        <h2 className="text-2xl font-bold mb-4 text-neutral-100">Spaces 🚀</h2>
+        <h2 className={cn("text-xl mb-4 text-neutral-100 ",GeistMono.className)}>
+          Spaces🚀
+        </h2>
         <SpaceList data={data} classname="flex" />
       </div>
     </div>

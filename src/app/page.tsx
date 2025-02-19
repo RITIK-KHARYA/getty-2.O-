@@ -68,20 +68,8 @@ export default function Home() {
               world.
             </span>
             <div className="w-full flex items-center justify-center mt-10">
-              {/* Button placeholder */}
             </div>
           </div>
-
-          {/* <div className="relative w-[1000px] mx-auto z-10 mt-20">
-            <div className="shadow-[0px_0px_300px_0px_#5b21b6] top-full left-0 bg-black absolute -z-10 flex max-w-screen-lg w-full aspect-video flex-col items-center justify-center overflow-hidden rounded- border bg-background">
-              <HeroVideoDialog
-                videoSrc="https://www.youtube.com/embed/U14GpQ5K03g"
-                thumbnailSrc="/thumbnail.jpg"
-                thumbnailAlt="Video Thumbnail"
-              />
-              <BorderBeam size={250} duration={10}  delay={1} />
-            </div>
-          </div> */}
 
           <div className="w-full items-center justify-center flex z-10 p-2 ">
             <div className="rounded-lg border border-neutral-300/30 overflow-hidden">

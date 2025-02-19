@@ -46,7 +46,7 @@ export default function Searchdialog() {
     <Dialog open={open} onOpenChange={handleClick}>
       <DialogContent>
         <Command>
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput placeholder="Type a command or search" />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
