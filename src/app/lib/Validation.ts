@@ -8,3 +8,6 @@ export const formSchema = z.object({
 export const mediaSchema = z.object({
 
 })
+export const formSchema2 = z.object({
+  spacename: z.string().min(2).max(50),
+});

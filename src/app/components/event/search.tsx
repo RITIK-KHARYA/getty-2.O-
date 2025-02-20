@@ -2,49 +2,40 @@
 
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { useRouter } from "next/navigation";
 
-interface SearchdialogProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface SearchdialogProps {
+  setIsOpen: (open: boolean) => void;
+}
 
-export default function Searchdialog() {
-  const [open, setOpen] = useState(false);
+export default function Searchdialog({ setIsOpen }: SearchdialogProps) {
   const router = useRouter();
-
-  const handleClick = () => {
-    setOpen((open) => !open);
-  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setOpen(true);
-        console.log("search bar khul gaya");
+        setIsOpen(true);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setIsOpen]);
 
   return (
-    <Dialog open={open} onOpenChange={handleClick}>
-      <DialogContent>
+    <Dialog open onOpenChange={setIsOpen}>
+      <DialogContent className="bg-neutral-950  border border-neutral-700/[0.2] p-4 rounded-md flex flex-col space-y-2 cursor-pointer">
         <Command>
           <CommandInput placeholder="Type a command or search" />
           <CommandList>
@@ -59,7 +50,6 @@ export default function Searchdialog() {
               <CommandItem onClick={() => router.push("/profile")}>
                 Profile
               </CommandItem>
-
               <CommandItem onClick={() => router.push("/settings")}>
                 Settings
               </CommandItem>

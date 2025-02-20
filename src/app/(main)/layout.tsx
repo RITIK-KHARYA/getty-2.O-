@@ -1,8 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/app/components/ui/sidebar";
 import { AppSidebar } from "@/app/components/app-sidebar";
 import Header from "../components/custom/custom-header";
-import Breadcrumbdemo from "../components/custom/custom-breadcum";
-import Searchdialog from "../components/event/search";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,15 +13,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <Header />
         </div>
-        <Searchdialog/>
+   
         {children}
       </main>
     </SidebarProvider>
   );
 }
-{/* <Breadcrumbdemo
-  classname="inline-flex "
-  link1="/dashboard"
-  link2="/components"
-  link3="/components/breadcrumb"
-/>; */}

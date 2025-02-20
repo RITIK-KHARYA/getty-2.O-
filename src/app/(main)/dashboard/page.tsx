@@ -51,7 +51,7 @@ export default async function Page() {
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl p-6">
-        <h2 className={cn("text-xl mb-4 text-neutral-100 ",GeistMono.className)}>
+        <h2 className={cn("text-xl mb-0 text-neutral-100 ",GeistMono.className)}>
           Spaces🚀
         </h2>
         <SpaceList data={data} classname="flex" />

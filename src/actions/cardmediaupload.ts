@@ -4,7 +4,6 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { useState } from "react";
 import { UTApi } from "uploadthing/server";
 import deleteAttachment from "./mediadeletion";
-// import deleteAttachment from "./delete";
 
 export interface attachment {
   mediaId?: string;
@@ -93,7 +92,7 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
   async function removeAttachment(fileName: string) {
     const currentAttachment = attachment.find((a) => a.file.name === fileName);
     setAttachment((prev) => prev.filter((a) => a.file.name !== fileName));
-    await deleteAttachment(currentAttachment.url);
+    await deleteAttachment(currentAttachment?.mediaId || "");
     onChange("");
   }
     function reset() {

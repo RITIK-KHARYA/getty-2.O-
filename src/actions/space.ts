@@ -1,12 +1,9 @@
 "use server";
-
-import prisma from "@/app/lib";
-import { getSession } from "./session";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { formSchema2 } from "@/app/components/findspacedialog/findspacedialog";
 import { formSchema } from "@/app/components/custom/custom-dialog";
 import { headers } from "next/headers";
+import { formSchema2 } from "@/app/lib/Validation";
 
 export default async function GetSpace() {
   try {
@@ -24,8 +21,22 @@ export default async function GetSpace() {
   }
 }
 
-// export async function GetSpaceByName()
-
+export async function GetSpaceOnSearch(data: z.infer<typeof formSchema2>) {
+  try {
+    const response = await fetch("http://localhost:3000/api/space", {
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("dude we got a error", error);
+    throw new Error("unable to get space");
+  }
+}
 
 export async function CreateSpace(data: z.infer<typeof formSchema>) {
   try {

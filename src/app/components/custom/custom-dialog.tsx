@@ -11,7 +11,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,8 +18,6 @@ import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { useEffect, useMemo, useState } from "react";
 import AttachmentButton from "@/app/example-uploader/uploadarea";
 import { CreateSpace } from "@/actions/space";
-import { cn } from "@/app/lib/utils";
-import useMediaUpload from "@/actions/cardmediaupload";
 import { Sparkles } from "lucide-react";
 
 export const formSchema = z.object({
@@ -132,13 +129,13 @@ export function ProfileForm() {
               <Button
                 type="submit"
                 disabled={isLoading || isUploading}
-                className="w-24 h-7"
+                className="w-24 h-7 rounded-sm"
               >
                 <Sparkles size={10} />
                 {isLoading ? "Creating..." : "Create"}
               </Button>
               <Button
-                className="bg-red-500 hover:bg-red-700 text-white w-20 h-7"
+                className="bg-red-500 hover:bg-red-700 text-white w-20 h-7 rounded-sm"
                 type="button"
                 onClick={(open) => setOpen(!open)}
               >
