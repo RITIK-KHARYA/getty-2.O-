@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Command,
   CommandEmpty,
@@ -14,33 +14,30 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { useRouter } from "next/navigation";
 
 interface SearchdialogProps {
-  onClick: () => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export default function Searchdialog({
-  onClick,
   open,
   onOpenChange,
 }: SearchdialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setIsOpen(true);
+        onOpenChange(true);
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [onOpenChange]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-neutral-950 border border-neutral-700/[0.2] p-4 rounded-md flex flex-col space-y-2 cursor-pointer">
         <Command>
           <CommandInput placeholder="Type a command or search" />

@@ -23,32 +23,37 @@ import {
   FormDescription,
 } from "../ui/form";
 import { Input } from "../ui/input";
-
-
-export const formSchema2 = z.object({
-  spaceId: z.string().min(1, { message: "Space ID is required" }),
-});
+import { formSchema2 } from "@/app/lib/Validation";
+import { GetSpaceOnSearch } from "@/actions/space";
 
 export default function FindSpaceDialog() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema2>>({
     defaultValues: {
-      spaceId: "",
+      spacename: "",
     },
     resolver: zodResolver(formSchema2),
   });
   const submitvalues = async (data: z.infer<typeof formSchema2>) => {
     try {
-      
+      setIsLoading(true);
+      await GetSpaceOnSearch(data);
+      console.log(data);
     } catch (error) {
-      console.log("bhai lvde lg gye");
+      console.log("error here");
       throw new Error("unable to find space");
+    } finally {
+      form.reset();
+      setIsLoading(false);
     }
   };
   return (
     <Dialog open={open} onOpenChange={() => setOpen((open) => !open)}>
       <DialogTrigger>
-       <div className="text-sm rounded-sm flex justify-center items-center font-semibold bg-white text-black w-24 h-9 ">Find Space</div>
+        <div className="text-sm rounded-sm flex justify-center items-center font-semibold bg-white text-black w-24 h-9 ">
+          Find Space
+        </div>
       </DialogTrigger>
       <DialogContent className="gap-y-5">
         <DialogHeader>
@@ -58,14 +63,14 @@ export default function FindSpaceDialog() {
           <form onSubmit={form.handleSubmit(submitvalues)}>
             <FormField
               control={form.control}
-              name="spaceId"
+              name="spacename"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input placeholder="Space ID" {...field} />
                   </FormControl>
                   <FormMessage className="text-xs">
-                    {form.formState.errors.spaceId?.message}
+                    {form.formState.errors.spacename?.message}
                   </FormMessage>
                   <FormDescription className="text-sm">
                     Only space Id

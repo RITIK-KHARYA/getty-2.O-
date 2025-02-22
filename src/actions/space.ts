@@ -12,6 +12,7 @@ export default async function GetSpace() {
         cookie: (await headers()).get("cookie") || "",
       },
       method: "GET",
+      cache:"force-cache"
     });
     const data = await response.json();
     console.log(data);
@@ -23,18 +24,20 @@ export default async function GetSpace() {
 
 export async function GetSpaceOnSearch(data: z.infer<typeof formSchema2>) {
   try {
-    const response = await fetch("http://localhost:3000/api/space", {
+    const response = await fetch("http://localhost:3000/api/findspace", {
       headers: {
         cookie: (await headers()).get("cookie") || "",
         "Content-Type": "application/json",
       },
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(data),
     });
-    const data = await response.json();
-    return data;
+    const value = await response.json();
+    console.log(value, "search result");
+    return value.data;
   } catch (error) {
     console.log("dude we got a error", error);
-    throw new Error("unable to get space");
+    throw Error("unable to get space");
   }
 }
 

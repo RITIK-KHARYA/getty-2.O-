@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState } from "react";
 import AttachmentButton from "@/app/example-uploader/uploadarea";
 import { CreateSpace } from "@/actions/space";
 import { Sparkles } from "lucide-react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export const formSchema = z.object({
   spacename: z.string().min(2, {
@@ -73,9 +74,9 @@ export function ProfileForm() {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-blue-700/60 text-white hover:bg-blue-900">
+        <div className="bg-blue-700/60 text-white hover:bg-blue-900 font-semibold rounded-sm w-24 h-9 text-sm cursor-pointer flex items-center justify-center">
           Create space
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>

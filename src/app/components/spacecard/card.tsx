@@ -35,7 +35,6 @@ export default function SpaceCard({
   spaceAdmin,
   memberCount=10,
 }: SpaceCardProps) {
-  console.log("hehe",spaceAdmin);
   return (
     <Card className="w-[350px] overflow-hidden bg-zinc-900 text-zinc-100 border-zinc-800 shadow-lg group transition-all duration-300 hover:shadow-2xl">
       <div className="relative w-full h-40">
