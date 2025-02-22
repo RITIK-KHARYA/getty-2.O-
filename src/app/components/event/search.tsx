@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Command,
   CommandEmpty,
@@ -9,16 +10,21 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-
-import { useEffect } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { useRouter } from "next/navigation";
 
 interface SearchdialogProps {
-  setIsOpen: (open: boolean) => void;
+  onClick: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export default function Searchdialog({ setIsOpen }: SearchdialogProps) {
+export default function Searchdialog({
+  onClick,
+  open,
+  onOpenChange,
+}: SearchdialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,13 +35,13 @@ export default function Searchdialog({ setIsOpen }: SearchdialogProps) {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setIsOpen]);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
-    <Dialog open onOpenChange={setIsOpen}>
-      <DialogContent className="bg-neutral-950  border border-neutral-700/[0.2] p-4 rounded-md flex flex-col space-y-2 cursor-pointer">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="bg-neutral-950 border border-neutral-700/[0.2] p-4 rounded-md flex flex-col space-y-2 cursor-pointer">
         <Command>
           <CommandInput placeholder="Type a command or search" />
           <CommandList>

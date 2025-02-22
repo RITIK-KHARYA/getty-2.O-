@@ -24,7 +24,7 @@ export default function SearchDemo() {
           </kbd>
         </div>
       </div>
-      {isOpen && <Searchdialog setIsOpen={setIsOpen} />}
+      {isOpen && <Searchdialog onClick={()=>setIsOpen(true)} open={isOpen} onOpenChange={setIsOpen} />}
     </div>
   );
 }

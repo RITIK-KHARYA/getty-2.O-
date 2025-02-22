@@ -47,8 +47,8 @@ export default function FindSpaceDialog() {
   };
   return (
     <Dialog open={open} onOpenChange={() => setOpen((open) => !open)}>
-      <DialogTrigger asChild>
-        <Button>Find Space</Button>
+      <DialogTrigger>
+       <div className="text-sm rounded-sm flex justify-center items-center font-semibold bg-white text-black w-24 h-9 ">Find Space</div>
       </DialogTrigger>
       <DialogContent className="gap-y-5">
         <DialogHeader>

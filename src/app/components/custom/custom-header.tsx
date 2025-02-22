@@ -1,5 +1,6 @@
-import SearchDemo from "./custom-search";
+"use client";
 
+import SearchDemo from "./custom-search";
 import { ProfileForm } from "./custom-dialog";
 import FindSpaceDialog from "../findspacedialog/findspacedialog";
 

@@ -35,6 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          
           <NextSSRPlugin
             routerConfig={extractRouterConfig(ourFileRouter)}
           />

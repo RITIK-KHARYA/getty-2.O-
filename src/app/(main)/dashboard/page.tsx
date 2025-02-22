@@ -1,5 +1,6 @@
 import GetSpace from "@/actions/space";
 import { Button } from "@/app/components/Button";
+import Header from "@/app/components/custom/custom-header";
 import SpaceCard from "@/app/components/spacecard/card";
 import {
   Avatar,
@@ -50,10 +51,7 @@ export default async function Page() {
 
   return (
     <div className="w-full p-3">
-      <div className=" backdrop-blur rounded-2xl shadow-xl p-6">
-        <h2 className={cn("text-xl mb-0 text-neutral-100 ",GeistMono.className)}>
-          Spaces🚀
-        </h2>
+      <div className=" backdrop-blur rounded-2xl shadow-xl">
         <SpaceList data={data} classname="flex" />
       </div>
     </div>
