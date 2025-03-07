@@ -39,7 +39,6 @@ export default function FindSpaceDialog() {
     try {
       setIsLoading(true);
       await GetSpaceOnSearch(data);
-      console.log(data);
     } catch (error) {
       console.log("error here");
       throw new Error("unable to find space");

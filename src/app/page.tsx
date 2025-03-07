@@ -12,6 +12,7 @@ import { useSession } from "./lib/auth-client";
 import { useRouter } from "next/navigation";
 import Footer from "./components/footer";
 import Image from "next/image";
+import Header from "./components/custom/custom-header";
 
 export default function Home() {
   const session = useSession();
@@ -37,9 +38,10 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <main className="flex-grow relative">
+    <div className="flex flex-col min-h-screen bg-background text-foreground bg-black">
+      <main className="flex-grow">
         <div className="h-full max-w-full relative mt-10 pb-20">
+          
           <div className="p-2 flex flex-col items-center justify-center">
             <Link href="" className="">
               <span className="relative z-10 text-sm">
@@ -76,7 +78,7 @@ export default function Home() {
               <Image
                 src={"/meme.png"}
                 alt="landing page image"
-                className="object-cover  "
+                className="object-cover "
                 width={800}
                 height={400}
               />

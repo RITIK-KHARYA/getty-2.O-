@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} `}>
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning >
+      <body className={`${geistSans.variable} ${geistMono.variable} `} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

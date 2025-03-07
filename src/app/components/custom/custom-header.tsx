@@ -6,7 +6,7 @@ import FindSpaceDialog from "../findspacedialog/findspacedialog";
 
 interface HeaderProps {}
 
-export default function Header() {
+export default function NavBar() {
   return (
     <div className="sticky top-0 h-[60px] ">
       <div className="flex items-center h-full justify-end px-4 gap-x-5 ">

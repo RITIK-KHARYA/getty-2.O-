@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Moon, Sun } from "lucide-react";
+
 import { useTheme } from "next-themes";
+import { BsGithub, BsMoon, BsSun } from "react-icons/bs";
 
 export default function Footer() {
   const { theme, setTheme } = useTheme();
@@ -21,7 +22,7 @@ export default function Footer() {
               href="https://github.com/wtfdivyansh/bm"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              <Github className="h-5 w-5" />
+              <BsGithub className="h-5 w-5" />
             </Link>
           </div>
           <div className="flex space-x-4">
@@ -30,9 +31,9 @@ export default function Footer() {
               className="text-gray-400 hover:text-white"
             >
               {theme === "dark" ? (
-                <Sun className="h-5 w-5" />
+                <BsSun className="h-5 w-5" />
               ) : (
-                <Moon className="h-5 w-5" />
+                <BsMoon className="h-5 w-5" />
               )}
             </button>
           </div>

@@ -7,12 +7,11 @@ export async function Userboard() {
   if (!session) {
     throw new Error("Unauthorized");
   }
-
   try {
     const response = await fetch("http://localhost:3000/api/user", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
     });
 
@@ -24,6 +23,6 @@ export async function Userboard() {
     return user;
   } catch (error) {
     console.error("Error fetching user:", error);
-    throw new Error("Failed to fetch user details");
+    alert("unable to get the user");
   }
 }

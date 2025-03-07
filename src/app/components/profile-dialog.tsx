@@ -18,8 +18,13 @@ export default function ProfileInterface({
   const { data } = useSession();
   const router = useRouter();
 const handleSignOut = () => {
-  signOut();
-  router.refresh();
+  try {
+    signOut();
+    router.refresh();
+  } catch (error) {
+    console.log(error)
+    throw new Error("unable to sign out");
+  }
 };
   return (
     <div className=" bg-black rounded-lg">
@@ -32,7 +37,7 @@ const handleSignOut = () => {
                   <AvatarFallback></AvatarFallback>
                   <AvatarImage
                     className="rounded-full"
-                    // src={data?.user.image || "https://github.com/shadcn.png"}
+                    src={data?.user.image || "https://github.com/shadcn.png"}
                   />
                 </Avatar>
               </div>

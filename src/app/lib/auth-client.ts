@@ -9,13 +9,13 @@ export const { signIn, signUp, useSession, signOut, $Infer } = createAuthClient(
 export const signInWithGithub = async () => {
   await signIn.social({
     provider: "github",
-    callbackURL: "/dashboard",
+    callbackURL: "http://localhost:3002/dashboard",
   });
 };
 export const signInWithDiscord = async () => {
   await signIn.social({
     provider: "discord",
-    callbackURL: "/dashboard",
+    callbackURL: "http://localhost:3002/dashboard",
   });
 };
 

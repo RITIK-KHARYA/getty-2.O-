@@ -12,13 +12,13 @@ export default async function GetSpace() {
         cookie: (await headers()).get("cookie") || "",
       },
       method: "GET",
-      cache:"force-cache"
     });
     const data = await response.json();
     console.log(data);
     return data.data;
   } catch (error) {
-    throw new Error("unable to get space");
+    console.log("unable to get the space",error)
+    alert("unable to get the space")
   }
 }
 

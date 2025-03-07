@@ -45,7 +45,6 @@ export default function SpaceCard({
           className="object-cover"
           priority
         />
-        {/* <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/70 to-transparent"></div> */}
       </div>
       <CardContent className="p-4 relative -mt-16">
         <CardTitle className="text-xl font-semibold mb-2 flex items-center justify-between group-hover:text-emerald-400 transition-colors">
