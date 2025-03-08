@@ -5,10 +5,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
-import { ButtonProps } from "@/app/components/ui/button";
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogTrigger } from "@/app/components/ui/dialog";  
 import { Heart } from "lucide-react";
 import Image from "next/image";
 
@@ -106,14 +104,14 @@ function ModelContent({
         )}
       </div>
       <div className="space-y-4">
-        <div className="bg-[#1A1A1A]/50 rounded-2xl p-4">
+        <div className="bg-transparent rounded-2xl p-4">
           <h2 className="font-mono text-white text-xl tracking-wide">
             {spacename}
           </h2>
         </div>
 
         {description && (
-          <div className="bg-[#1A1A1A]/50 rounded-2xl p-4">
+          <div className="bg-[#1A1A1A] rounded-2xl p-4">
             <p className="font-mono text-neutral-300">{description}</p>
           </div>
         )}
@@ -135,13 +133,12 @@ function ModelContent({
           </div>
           <div className="flex items-center gap-4">
             <button
-              className="p-2.5 hover:bg-[#1A1A1A] rounded-full transition-colors"
-              aria-label="Like space"
+              className="p-2.5 hover:bg-[#1A1A1A] rounded-lg"
             >
               <Heart className="w-5 h-5 text-rose-500" />
             </button>
             <a href={`/dashboard/${spaceid}`}>
-              <button className="px-8 py-2.5 bg-[#1A1A1A] hover:bg-[#252525] rounded-md text-white transition-colors font-mono">
+              <button className="px-8 py-2.5 text-neutral-300 hover:bg-[#252525] rounded-none bg-neutral-950 transition-colors font-mono">
                 Join
               </button>
             </a>
