@@ -14,7 +14,6 @@ import Image from "next/image";
 
 export default async function Page() {
   const data = await GetSpace();
-
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl">
@@ -27,30 +26,51 @@ export default async function Page() {
 function SpaceList({ data, classname }: { data: any; classname: string }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-      {data?.map((item: any) => (
-        <Dialog key={item.id}>
-          <DialogTrigger className="w-full" asChild>
-            <div className={`${classname}  rounded-xl shadow-lg`}>
-              <SpaceCard
+      {data ? (
+        data?.map((item: any) => (
+          <Dialog key={item.id}>
+            <DialogTrigger className="w-full" asChild>
+              <div className={`${classname}  rounded-xl shadow-lg`}>
+                <SpaceCard
+                  spacename={item.title}
+                  banner={item.banner}
+                  description={item.description}
+                  spaceAdmin={item.spaceAdmin[0]}
+                  memberCount={10}
+                />
+              </div>
+            </DialogTrigger>
+            <DialogContent className="h-fit overflow-y-hidden bg-neutral-900/95">
+              <ModelContent
                 spacename={item.title}
-                banner={item.banner}
+                spaceid={item.id}
                 description={item.description}
-                spaceAdmin={item.spaceAdmin[0]}
-                memberCount={10}
+                image={item.banner}
+                spaceadmin={item.spaceAdmin?.[0]?.name || "Unknown Admin"}
+                adminimage={
+                  item.spaceAdmin?.[0]?.image ||
+                  " https://github.com/shadcn.png"
+                }
               />
-            </div>
-          </DialogTrigger>
-          <DialogContent className="h-fit overflow-y-hidden bg-neutral-900/95">
-            <ModelContent
-              spacename={item.title}
-              description={item.description}
-              image={item.banner}
-              spaceadmin={item.spaceAdmin?.[0]?.name || "Unknown Admin"}
-              adminimage={item.spaceAdmin?.[0]?.image || " https://github.com/shadcn.png"}
-            />
-          </DialogContent>
-        </Dialog>
-      ))}
+            </DialogContent>
+          </Dialog>
+        ))
+      ) : (
+        <div className="flex flex-row items-center gap-x-3 ">
+          <div>
+            <Skeleton className="w-full h-52 rounded-lg" />
+          </div>
+          <div>
+            <Skeleton className="w-full h-52 rounded-lg" />
+          </div>
+          <div>
+            <Skeleton className="w-full h-52 rounded-lg" />
+          </div>
+          <div>
+            <Skeleton className="w-full h-52 rounded-lg" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -59,16 +79,18 @@ interface ModelContentProps {
   spacename: string;
   description: string;
   image?: string;
-  adminimage:string
+  adminimage: string;
   spaceadmin?: string;
+  spaceid: string;
 }
 
 function ModelContent({
   spacename,
+  spaceid,
   description,
   image,
   spaceadmin,
-  adminimage
+  adminimage,
 }: ModelContentProps) {
   return (
     <div className="w-full rounded-2xl p-2 space-y-6">
@@ -118,9 +140,11 @@ function ModelContent({
             >
               <Heart className="w-5 h-5 text-rose-500" />
             </button>
-            <button className="px-8 py-2.5 bg-[#1A1A1A] hover:bg-[#252525] rounded-md text-white transition-colors font-mono">
-              Join
-            </button>
+            <a href={`/dashboard/${spaceid}`}>
+              <button className="px-8 py-2.5 bg-[#1A1A1A] hover:bg-[#252525] rounded-md text-white transition-colors font-mono">
+                Join
+              </button>
+            </a>
           </div>
         </div>
       </div>

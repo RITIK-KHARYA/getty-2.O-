@@ -7,7 +7,7 @@ import Header from "../components/Header";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex h-screen">
+      <div className="flex h-screen w-full">
         <AppSidebar />
         <main className="flex-1 flex flex-col h-full overflow-hidden">
           <Header />

@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   Tooltip,
@@ -16,6 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ArrowUpRight, Users } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface SpaceCardProps {
   banner: string;
@@ -33,8 +29,9 @@ export default function SpaceCard({
   spacename,
   description,
   spaceAdmin,
-  memberCount=10,
+  memberCount = 10,
 }: SpaceCardProps) {
+  const router = useRouter();
   return (
     <Card className="w-[350px] overflow-hidden bg-zinc-900 text-zinc-100 border-zinc-800 shadow-lg group transition-all duration-300 hover:shadow-2xl">
       <div className="relative w-full h-40">
@@ -64,14 +61,14 @@ export default function SpaceCard({
           </div>
 
           <div className="mt-4 items-center justify-normal text-zinc-400 text-xs ">
-            <div>
+            <div className="mt-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-100 text-xs w-20 h-7 rounded-none "
+                      className="bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-100 text-xs w-full h-7  rounded-none "
                     >
                       Join
                     </Button>

@@ -6,6 +6,7 @@ import {
   Bell,
   Command,
   GalleryVerticalEnd,
+  Ghost,
   House,
   HouseIcon,
   Settings,
@@ -75,11 +76,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props} className="">
       <SidebarHeader className=" ">
-        <h1 className="text-2xl mt-1">S&B</h1>
+        <h1 className="flex items-center justify-center">
+          <Ghost className="size-10 text-neutral-500/80 hover:text-neutral-500" />
+        </h1>
       </SidebarHeader>
-      <SidebarContent className="mt-8 ">
+      <SidebarContent className="">
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

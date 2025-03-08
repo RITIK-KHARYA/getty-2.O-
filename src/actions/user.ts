@@ -23,6 +23,5 @@ export async function Userboard() {
     return user;
   } catch (error) {
     console.error("Error fetching user:", error);
-    alert("unable to get the user");
   }
 }

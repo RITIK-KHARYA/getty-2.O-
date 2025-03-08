@@ -14,11 +14,9 @@ export default async function GetSpace() {
       method: "GET",
     });
     const data = await response.json();
-    console.log(data);
     return data.data;
   } catch (error) {
-    console.log("unable to get the space",error)
-    alert("unable to get the space")
+    console.log("unable to get the space", error);
   }
 }
 
@@ -37,7 +35,6 @@ export async function GetSpaceOnSearch(data: z.infer<typeof formSchema2>) {
     return value.data;
   } catch (error) {
     console.log("dude we got a error", error);
-    throw Error("unable to get space");
   }
 }
 
@@ -60,5 +57,25 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
     return result;
   } catch (error) {
     throw new Error("unable to create space");
+  }
+}
+export async function FindSpaceById(id: string) {
+  try {
+    const space = await fetch(`http://localhost:3000/api/space/${id}`, {
+      method: "GET",
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+      },
+    });
+
+    console.log("space by id" ,space)
+    
+    if(!space){
+      return null
+    }
+
+    return space.json();
+  } catch (error) {
+    console.log(error);
   }
 }
