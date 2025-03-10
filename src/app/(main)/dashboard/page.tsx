@@ -1,14 +1,21 @@
 import GetSpace from "@/actions/space";
 import SpaceCard from "@/app/components/spacecard/card";
+import { usePrefetchConnection } from "@/app/hooks/use-prefetchConnection";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { Dialog, DialogContent, DialogTrigger } from "@/app/components/ui/dialog";  
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
 import { Heart } from "lucide-react";
 import Image from "next/image";
+import { PrefetchHandler } from "@/app/components/event/prefetchHandler";
 
 export default async function Page() {
   const data = await GetSpace();
@@ -25,10 +32,10 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {data ? (
-        data?.map((item: any) => (
+        data.map((item: any) => (
           <Dialog key={item.id}>
             <DialogTrigger className="w-full" asChild>
-              <div className={`${classname}  rounded-xl shadow-lg`}>
+              <div className={`${classname} rounded-xl shadow-lg`}>
                 <SpaceCard
                   spacename={item.title}
                   banner={item.banner}
@@ -39,6 +46,7 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
               </div>
             </DialogTrigger>
             <DialogContent className="h-fit overflow-y-hidden bg-neutral-900/95">
+              <DialogTitle className="hidden" />
               <ModelContent
                 spacename={item.title}
                 spaceid={item.id}
@@ -46,29 +54,24 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
                 image={item.banner}
                 spaceadmin={item.spaceAdmin?.[0]?.name || "Unknown Admin"}
                 adminimage={
-                  item.spaceAdmin?.[0]?.image ||
-                  " https://github.com/shadcn.png"
+                  item.spaceAdmin?.[0]?.image || "https://github.com/shadcn.png"
                 }
               />
             </DialogContent>
           </Dialog>
         ))
       ) : (
-        <div className="flex flex-row items-center gap-x-3 ">
-          <div>
-            <Skeleton className="w-full h-52 rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="w-full h-52 rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="w-full h-52 rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="w-full h-52 rounded-lg" />
-          </div>
-        </div>
+        <SkeletonLoader />
       )}
+    </div>
+  );
+}
+function SkeletonLoader() {
+  return (
+    <div className="flex flex-row items-center gap-x-3">
+      {[...Array(4)].map((_, i) => (
+        <Skeleton key={i} className="w-full h-52 rounded-lg" />
+      ))}
     </div>
   );
 }
@@ -81,8 +84,7 @@ interface ModelContentProps {
   spaceadmin?: string;
   spaceid: string;
 }
-
-function ModelContent({
+export function ModelContent({
   spacename,
   spaceid,
   description,
@@ -132,19 +134,14 @@ function ModelContent({
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              className="p-2.5 hover:bg-[#1A1A1A] rounded-lg"
-            >
+            <button className="p-2.5 hover:bg-[#1A1A1A] rounded-lg focus:ring-0 focus:outline-none">
               <Heart className="w-5 h-5 text-rose-500" />
             </button>
-            <a href={`/dashboard/${spaceid}`}>
-              <button className="px-8 py-2.5 text-neutral-300 hover:bg-[#252525] rounded-none bg-neutral-950 transition-colors font-mono">
-                Join
-              </button>
-            </a>
+            <PrefetchHandler spaceId={spaceid} />
           </div>
         </div>
       </div>
     </div>
   );
 }
+

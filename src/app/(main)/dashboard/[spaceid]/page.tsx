@@ -15,7 +15,7 @@ export default async function SpacePage({
 }: {
   params: { spaceid: string };
 }) {
-  const space = await FindSpaceById(params.spaceid);
+  const space = await FindSpaceById((await params).spaceid);
 
   if (!space) {
     return (
@@ -38,8 +38,7 @@ export default async function SpacePage({
 
       <header className="relative z-10 flex justify-end p-4">
         <div className="flex items-center gap-3 rounded-full bg-black/10 px-4 py-2 backdrop-blur-md">
-          <h1 className="text-xl font-bold text-primary">{space.name}</h1>
-
+          {" "}
           <div className="flex gap-2">
             <div className="rounded-xl bg-card px-3 drop-shadow-sm shadow-lg ">
               <span className="text-xs font-medium">Members:</span>
@@ -61,7 +60,7 @@ export default async function SpacePage({
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{space.name} Details</DialogTitle>
+                  <DialogTitle>{space.title} Details</DialogTitle>
                 </DialogHeader>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium">Description:</h3>

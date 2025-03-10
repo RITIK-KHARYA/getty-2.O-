@@ -73,8 +73,9 @@ export async function FindSpaceById(id: string) {
     if(!space){
       return null
     }
-
-    return space.json();
+    const data = await space.json();
+    return data.space;
+  
   } catch (error) {
     console.log(error);
   }
