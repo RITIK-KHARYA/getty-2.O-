@@ -1,3 +1,5 @@
+"use client";
+
 import { FindSpaceById } from "@/actions/space";
 import { GridSmallBackgroundDemo } from "@/components/updatedone/spacebackground";
 import {
@@ -8,14 +10,37 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, PlusIcon } from "lucide-react";
+import { useWebSocketStore } from "@/app/hooks/use-websocket";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
-export default async function SpacePage({
-  params,
-}: {
-  params: { spaceid: string };
-}) {
-  const space = await FindSpaceById((await params).spaceid);
+export default function SpacePage() {
+  const { spaceid } = useParams();
+  const [space, setSpace] = useState<any>(null);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<string[]>([]);
+  const { ConnectSocket, socket } = useWebSocketStore();
+
+  useEffect(() => {
+    ConnectSocket(spaceid);
+    const fetchSpace = async () => {
+      const data = await FindSpaceById(spaceid);
+      setSpace(data);
+    };
+    fetchSpace();
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("r", (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   if (!space) {
     return (
@@ -36,11 +61,12 @@ export default async function SpacePage({
         <GridSmallBackgroundDemo />
       </div>
 
-      <header className="relative z-10 flex justify-end p-4">
+      <header className="relative z-10 flex justify-end">
         <div className="flex items-center gap-3 rounded-full bg-black/10 px-4 py-2 backdrop-blur-md">
-          {" "}
+          <h1 className="text-xl font-bold text-primary">{space.name}</h1>
+
           <div className="flex gap-2">
-            <div className="rounded-xl bg-card px-3 drop-shadow-sm shadow-lg ">
+            <div className="rounded-xl bg-card px-3 drop-shadow-sm shadow-lg">
               <span className="text-xs font-medium">Members:</span>
               <span className="text-xs text-muted-foreground ml-1">
                 {space.members?.length || 0}
@@ -60,7 +86,7 @@ export default async function SpacePage({
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>{space.title} Details</DialogTitle>
+                  <DialogTitle>{space.name} Details</DialogTitle>
                 </DialogHeader>
                 <div className="mt-4">
                   <h3 className="text-sm font-medium">Description:</h3>
@@ -73,6 +99,30 @@ export default async function SpacePage({
           </div>
         </div>
       </header>
+
+      <div className="flex flex-col bg-neutral-500 text-green-200 p-4">
+        {messages.map((m, index) => (
+          <span key={index}>{m}</span>
+        ))}
+      </div>
+
+      <div className="fixed bottom-0 right-[39%] md:right-[30%] p-4 w-[500px] inline-flex">
+        <input
+          className="border border-neutral-800 p-2 rounded w-[90%]"
+          value={input}
+          placeholder="Type something..."
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button
+          className="ml-2 bg-neutral-800 text-white flex items-center justify-center h-10 w-10 rounded-full"
+          onClick={() => {
+            socket?.emit("c", input);
+            setInput("");
+          }}
+        >
+          <PlusIcon className="h-4 w-4 " />
+        </button>
+      </div>
     </div>
   );
 }
