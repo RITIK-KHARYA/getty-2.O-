@@ -40,6 +40,7 @@ export default function SpacePage() {
       message: input,
       spaceid: spaceid,
     };
+    console.log(data)
     const result = await SendMessage(data);
     console.log(result);
     // setMessages((prev) => [...prev, input]);

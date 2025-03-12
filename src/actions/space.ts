@@ -67,9 +67,6 @@ export async function FindSpaceById(id: string) {
         cookie: (await headers()).get("cookie") || "",
       },
     });
-
-    console.log("space by id" ,space)
-    
     if(!space){
       return null
     }

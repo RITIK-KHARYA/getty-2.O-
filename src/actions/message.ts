@@ -2,14 +2,14 @@
 import { headers } from "next/headers";
 import { z } from "zod";
 
-const formSchema3 = z.object({
+const MessageSchema3 = z.object({
   message: z.string().min(1, {
     message: "atleast one character",
   }),
   spaceid: z.string(),
 });
 
-export default async function GetMessage(data: z.infer<typeof formSchema3>) {
+export default async function GetMessage(data: z.infer<typeof MessageSchema3>) {
   try {
     const response = await fetch("http://localhost:3000/api/message", {
       headers: {
@@ -28,7 +28,7 @@ export default async function GetMessage(data: z.infer<typeof formSchema3>) {
   }
 }
 
-export async function SendMessage(data: z.infer<typeof formSchema3>) {
+export async function SendMessage(data: z.infer<typeof MessageSchema3>) {
   try {
     if (!data) {
       console.log("no data write something");
@@ -38,6 +38,7 @@ export async function SendMessage(data: z.infer<typeof formSchema3>) {
       console.log("no spaceid there");
       return;
     }
+
     const response = await fetch("http://localhost:3000/api/message", {
       headers: {
         cookie: (await headers()).get("cookie") || "",
