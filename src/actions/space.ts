@@ -56,7 +56,7 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
     }
     return result;
   } catch (error) {
-    throw new Error("unable to create space");
+    console.log("error nigga",error)
   }
 }
 export async function FindSpaceById(id: string) {

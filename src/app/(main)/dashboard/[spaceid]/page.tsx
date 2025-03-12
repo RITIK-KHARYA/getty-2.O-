@@ -12,11 +12,12 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { InfoIcon, PlusIcon } from "lucide-react";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
-import { useEffect, useState } from "react";
+import { useState, FormEvent, useEffect, KeyboardEvent } from "react";
 import { useParams } from "next/navigation";
+import { SendMessage } from "@/actions/message";
 
 export default function SpacePage() {
-  const { spaceid } = useParams();
+  const { spaceid } = useParams<{ spaceid: string }>();
   const [space, setSpace] = useState<any>(null);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -30,6 +31,26 @@ export default function SpacePage() {
     };
     fetchSpace();
   }, []);
+
+  const handleSubmit = async (e?: any) => {
+    e.preventDefault();
+    socket?.emit("c", input);
+    if (!input) return;
+    const data = {
+      message: input,
+      spaceid: spaceid,
+    };
+    const result = await SendMessage(data);
+    console.log(result);
+    // setMessages((prev) => [...prev, input]);
+    setInput("");
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   useEffect(() => {
     if (!socket) return;
@@ -100,29 +121,34 @@ export default function SpacePage() {
         </div>
       </header>
 
-      <div className="flex flex-col bg-neutral-500 text-green-200 p-4">
+      <div className="z-50 relative flex flex-col text-green-200 p-4  ">
         {messages.map((m, index) => (
-          <span key={index}>{m}</span>
+          <span key={index} className="">
+            {m.trim()}
+          </span>
         ))}
       </div>
 
-      <div className="fixed bottom-0 right-[39%] md:right-[30%] p-4 w-[500px] inline-flex">
-        <input
-          className="border border-neutral-800 p-2 rounded w-[90%]"
-          value={input}
-          placeholder="Type something..."
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button
-          className="ml-2 bg-neutral-800 text-white flex items-center justify-center h-10 w-10 rounded-full"
-          onClick={() => {
-            socket?.emit("c", input);
-            setInput("");
-          }}
-        >
-          <PlusIcon className="h-4 w-4 " />
-        </button>
-      </div>
+      <form
+        className="fixed bottom-0 lg:right-[30%] md:right-[30%] sm:right-[10%] p-4 w-[500px] inline-flex"
+        onSubmit={handleSubmit}
+      >
+        <div className=" p-4 w-[80%] inline-flex">
+          <input
+            className="border border-neutral-800 p-2 rounded w-[90%]"
+            value={input}
+            placeholder="Type something..."
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button
+            className="ml-2 bg-neutral-800 text-white flex items-center justify-center h-10 w-10 rounded-full"
+            type="submit"
+            disabled={!input}
+          >
+            <PlusIcon className="h-4 w-4 " />
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
