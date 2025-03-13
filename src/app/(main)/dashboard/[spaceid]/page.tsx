@@ -15,12 +15,14 @@ import { useWebSocketStore } from "@/app/hooks/use-websocket";
 import { useState, FormEvent, useEffect, KeyboardEvent } from "react";
 import { useParams } from "next/navigation";
 import GetMessage, { SendMessage } from "@/actions/message";
+import { useSession } from "@/app/lib/auth-client";
 const generateRandomId = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
 type Message = {
   id: string;
   content: string;
+  userId?: string;
 };
 
 export default function SpacePage() {
@@ -30,16 +32,20 @@ export default function SpacePage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const { ConnectSocket, socket } = useWebSocketStore();
 
+  const user = useSession();
+  console.log(user.data?.user.id);
+
   const handleSubmit = async (e?: any) => {
     e.preventDefault();
-    socket?.emit("c", input);
     if (!input) return;
-    const data = {
-      message: input,
-      spaceid: spaceid,
+    const newMessage: Message = {
+      id: generateRandomId(),
+      content: input,
+      userId: user.data?.user.id,
     };
-
-     await SendMessage(data);
+    socket?.emit("c", newMessage);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    await SendMessage({ message: input, spaceid: spaceid });
 
     setInput("");
   };
@@ -52,7 +58,6 @@ export default function SpacePage() {
 
   const handleMessage = async () => {
     const data = await GetMessage(spaceid);
-
     setMessages(data.messages);
   };
   useEffect(() => {
@@ -61,18 +66,19 @@ export default function SpacePage() {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("r", (data: string) => {
-      const message = {
-        id: generateRandomId(),
-        content: data,
-      };
-      setMessages((prevMessages) => [...prevMessages, message]);
+
+    socket.on("r", (data: Message) => {
+      if (data.userId !== user.data?.user.id) {
+        setMessages((prevMessages) => [...prevMessages, data]); //the same user sending message on both sides so ignore one sending from the right side
+      }
     });
 
     return () => {
       socket.disconnect();
     };
   }, [socket]);
+
+  console.log(messages);
 
   useEffect(() => {
     ConnectSocket(spaceid);
@@ -141,10 +147,37 @@ export default function SpacePage() {
       </header>
 
       <div className=" relative flex flex-col text-green-200 p-4  ">
-        {messages.length > 0 ? (
+        {/* {messages.length > 0 ? (
           messages.map((m) => <span key={m.id}>{m.content.trim()}</span>)
         ) : (
           <p>No messages found.</p>
+        )} */}
+        {messages
+          .map((m: Message) => m.userId)
+          .includes(user.data?.user.id) && (
+          <div className="">
+            {messages.map((m: Message) => {
+              if (m.userId === user.data?.user.id) {
+                return (
+                  <span
+                    className="flex flex-row justify-end items-start p-2 gap-2"
+                    key={m.id}
+                  >
+                    {m.content}
+                  </span>
+                );
+              } else {
+                return (
+                  <span
+                    className="flex flex-row justify-start items-start p-2 gap-2"
+                    key={m.id}
+                  >
+                    {m.content}
+                  </span>
+                );
+              }
+            })}
+          </div>
         )}
       </div>
 
