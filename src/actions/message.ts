@@ -9,19 +9,19 @@ const MessageSchema3 = z.object({
   spaceid: z.string(),
 });
 
-export default async function GetMessage(data: z.infer<typeof MessageSchema3>) {
+export default async function GetMessage(spaceid: string) {
   try {
-    const response = await fetch("http://localhost:3000/api/message", {
+    const response = await fetch(`http://localhost:3000/api/space/${spaceid}/message`, {
       headers: {
         cookie: (await headers()).get("cookie") || "",
       },
       method: "GET",
-      body: JSON.stringify(data),
     });
     if (!response.ok) {
       return null;
     }
     const value = await response.json();
+    console.log(value);
     return value;
   } catch (error) {
     console.log(error, "ERROR BHENCHOD");

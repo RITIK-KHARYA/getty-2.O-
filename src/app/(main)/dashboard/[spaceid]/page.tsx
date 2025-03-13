@@ -14,23 +14,21 @@ import { InfoIcon, PlusIcon } from "lucide-react";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
 import { useState, FormEvent, useEffect, KeyboardEvent } from "react";
 import { useParams } from "next/navigation";
-import { SendMessage } from "@/actions/message";
+import GetMessage, { SendMessage } from "@/actions/message";
+const generateRandomId = (): string =>
+  Math.floor(100000 + Math.random() * 900000).toString();
+
+type Message = {
+  id: string;
+  content: string;
+};
 
 export default function SpacePage() {
   const { spaceid } = useParams<{ spaceid: string }>();
   const [space, setSpace] = useState<any>(null);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const { ConnectSocket, socket } = useWebSocketStore();
-
-  useEffect(() => {
-    ConnectSocket(spaceid);
-    const fetchSpace = async () => {
-      const data = await FindSpaceById(spaceid);
-      setSpace(data);
-    };
-    fetchSpace();
-  }, []);
 
   const handleSubmit = async (e?: any) => {
     e.preventDefault();
@@ -40,10 +38,9 @@ export default function SpacePage() {
       message: input,
       spaceid: spaceid,
     };
-    console.log(data)
-    const result = await SendMessage(data);
-    console.log(result);
-    // setMessages((prev) => [...prev, input]);
+
+     await SendMessage(data);
+
     setInput("");
   };
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -53,10 +50,23 @@ export default function SpacePage() {
     }
   };
 
+  const handleMessage = async () => {
+    const data = await GetMessage(spaceid);
+
+    setMessages(data.messages);
+  };
+  useEffect(() => {
+    handleMessage();
+  }, []);
+
   useEffect(() => {
     if (!socket) return;
-    socket.on("r", (data) => {
-      setMessages((prev) => [...prev, data]);
+    socket.on("r", (data: string) => {
+      const message = {
+        id: generateRandomId(),
+        content: data,
+      };
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     return () => {
@@ -64,6 +74,14 @@ export default function SpacePage() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    ConnectSocket(spaceid);
+    const fetchSpace = async () => {
+      const data = await FindSpaceById(spaceid);
+      setSpace(data);
+    };
+    fetchSpace();
+  }, [spaceid]);
   if (!space) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -122,12 +140,12 @@ export default function SpacePage() {
         </div>
       </header>
 
-      <div className="z-50 relative flex flex-col text-green-200 p-4  ">
-        {messages.map((m, index) => (
-          <span key={index} className="">
-            {m.trim()}
-          </span>
-        ))}
+      <div className=" relative flex flex-col text-green-200 p-4  ">
+        {messages.length > 0 ? (
+          messages.map((m) => <span key={m.id}>{m.content.trim()}</span>)
+        ) : (
+          <p>No messages found.</p>
+        )}
       </div>
 
       <form

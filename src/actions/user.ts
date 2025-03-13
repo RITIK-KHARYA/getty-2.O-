@@ -16,7 +16,7 @@ export async function Userboard() {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch user: ${response.statusText}`);
+      console.log("Error fetching user:", response.status);
     }
 
     const user = await response.json();
