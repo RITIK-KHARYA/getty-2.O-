@@ -24,9 +24,6 @@ export const useWebSocketStore = create<WebSocketStore>((set) => ({
       set({ Connected: true });
     });
 
-    socket.on("r", (data) => {
-      console.log("recieved", data);
-    });
 
     socket.on("disconnect", () => {
       console.log("disconnected");

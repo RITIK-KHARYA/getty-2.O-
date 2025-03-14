@@ -12,10 +12,17 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { InfoIcon, PlusIcon } from "lucide-react";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
-import { useState, FormEvent, useEffect, KeyboardEvent } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { useParams } from "next/navigation";
 import GetMessage, { SendMessage } from "@/actions/message";
 import { useSession } from "@/app/lib/auth-client";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/components/ui/avatar";
+import { Skeleton } from "@/app/components/ui/skeleton";
+
 const generateRandomId = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -23,6 +30,8 @@ type Message = {
   id: string;
   content: string;
   userId?: string;
+  image?: string;
+  user?: {image?:string};
 };
 
 export default function SpacePage() {
@@ -31,54 +40,67 @@ export default function SpacePage() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const { ConnectSocket, socket } = useWebSocketStore();
-
   const user = useSession();
-  console.log(user.data?.user.id);
 
-  const handleSubmit = async (e?: any) => {
-    e.preventDefault();
+  const handleSubmit = async (
+    e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    e?.preventDefault();
     if (!input) return;
+
     const newMessage: Message = {
       id: generateRandomId(),
       content: input,
       userId: user.data?.user.id,
+      image: user.data?.user.image || "https://github.com/shadcn.png",
     };
-    socket?.emit("c", newMessage);
+
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    await SendMessage({ message: input, spaceid: spaceid });
+    socket?.emit("c", newMessage);
+    await SendMessage({
+      message: input,
+      spaceid: spaceid,
+      image: user.data?.user.image || "https://github.com/shadcn.png",
+      userId: user.data?.user.id ?? ""
+    } );
 
     setInput("");
   };
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
   };
 
-  const handleMessage = async () => {
-    const data = await GetMessage(spaceid);
-    setMessages(data.messages);
-  };
   useEffect(() => {
-    handleMessage();
+    const fetchMessages = async () => {
+      const data = await GetMessage(spaceid);
+      setMessages(
+        data.messages.map((msg:Message) => ({
+          ...msg,
+          image: msg.user?.image 
+        }))
+      );
+    };
+    fetchMessages();
   }, []);
 
   useEffect(() => {
     if (!socket) return;
 
     socket.on("r", (data: Message) => {
-      if (data.userId !== user.data?.user.id) {
-        setMessages((prevMessages) => [...prevMessages, data]); //the same user sending message on both sides so ignore one sending from the right side
-      }
+      console.log("in",data)
+      setMessages((prevMessages) => [
+        ...prevMessages,data
+      ]);
     });
 
     return () => {
       socket.disconnect();
     };
   }, [socket]);
-
-  console.log(messages);
 
   useEffect(() => {
     ConnectSocket(spaceid);
@@ -88,6 +110,7 @@ export default function SpacePage() {
     };
     fetchSpace();
   }, [spaceid]);
+
   if (!space) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -146,37 +169,43 @@ export default function SpacePage() {
         </div>
       </header>
 
-      <div className=" relative flex flex-col text-green-200 p-4  ">
-        {/* {messages.length > 0 ? (
-          messages.map((m) => <span key={m.id}>{m.content.trim()}</span>)
+      <div className="relative flex flex-col p-4">
+        {messages.length > 0 ? (
+          messages.map((m) => (
+            <div
+              className={`flex items-start p-2 gap-2 ${
+                m.userId === user.data?.user.id
+                  ? "justify-end"
+                  : "justify-start"
+              }`}
+              key={m.id}
+            >
+              {m.userId !== user.data?.user.id && (
+                <Avatar>
+                  <AvatarImage
+                    src={m.image || "https://github.com/shadcn.png"}
+                  />
+                  <AvatarFallback>
+                    <Skeleton className="w-8 h-8" />
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <p className="text-neutral-200">{m.content}</p>
+              {m.userId === user.data?.user.id && (
+                <Avatar>
+                  <AvatarImage
+                    src={m.image || "https://github.com/shadcn.png"}
+                  />
+                  <AvatarFallback>
+                    <Skeleton className="w-8 h-8" />
+                  </AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+          ))
         ) : (
-          <p>No messages found.</p>
-        )} */}
-        {messages
-          .map((m: Message) => m.userId)
-          .includes(user.data?.user.id) && (
-          <div className="">
-            {messages.map((m: Message) => {
-              if (m.userId === user.data?.user.id) {
-                return (
-                  <span
-                    className="flex flex-row justify-end items-start p-2 gap-2"
-                    key={m.id}
-                  >
-                    {m.content}
-                  </span>
-                );
-              } else {
-                return (
-                  <span
-                    className="flex flex-row justify-start items-start p-2 gap-2"
-                    key={m.id}
-                  >
-                    {m.content}
-                  </span>
-                );
-              }
-            })}
+          <div className="flex justify-center items-center p-2">
+            <span>No messages yet</span>
           </div>
         )}
       </div>
@@ -185,19 +214,20 @@ export default function SpacePage() {
         className="fixed bottom-0 lg:right-[30%] md:right-[30%] sm:right-[10%] p-4 w-[500px] inline-flex"
         onSubmit={handleSubmit}
       >
-        <div className=" p-4 w-[80%] inline-flex">
+        <div className="p-4 w-[80%] inline-flex">
           <input
             className="border border-neutral-800 p-2 rounded w-[90%]"
             value={input}
             placeholder="Type something..."
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button
             className="ml-2 bg-neutral-800 text-white flex items-center justify-center h-10 w-10 rounded-full"
             type="submit"
             disabled={!input}
           >
-            <PlusIcon className="h-4 w-4 " />
+            <PlusIcon className="h-4 w-4" />
           </button>
         </div>
       </form>

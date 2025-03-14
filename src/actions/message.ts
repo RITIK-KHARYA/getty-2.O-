@@ -7,16 +7,21 @@ const MessageSchema3 = z.object({
     message: "atleast one character",
   }),
   spaceid: z.string(),
+  image: z.string(),
+  userId: z.string(),
 });
 
 export default async function GetMessage(spaceid: string) {
   try {
-    const response = await fetch(`http://localhost:3000/api/space/${spaceid}/message`, {
-      headers: {
-        cookie: (await headers()).get("cookie") || "",
-      },
-      method: "GET",
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/space/${spaceid}/message`,
+      {
+        headers: {
+          cookie: (await headers()).get("cookie") || "",
+        },
+        method: "GET",
+      }
+    );
     if (!response.ok) {
       return null;
     }
@@ -30,12 +35,8 @@ export default async function GetMessage(spaceid: string) {
 
 export async function SendMessage(data: z.infer<typeof MessageSchema3>) {
   try {
-    if (!data) {
-      console.log("no data write something");
-      return;
-    }
-    if (!data.spaceid) {
-      console.log("no spaceid there");
+    if (!data?.message || !data.spaceid) {
+      console.log("Invalid data");
       return;
     }
 
@@ -45,14 +46,21 @@ export async function SendMessage(data: z.infer<typeof MessageSchema3>) {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        message: data.message,
+        spaceid: data.spaceid,
+        image: data.image,
+        userId: data.userId,
+      }),
     });
-    if (!response) {
+
+    if (!response.ok) {
+      console.log("Failed to send message");
       return;
     }
-    const value = await response.json();
-    return value;
+
+    return await response.json();
   } catch (error) {
-    console.log("bitch error", error);
+    console.log("Error:", error);
   }
 }
