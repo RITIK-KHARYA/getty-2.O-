@@ -10,9 +10,9 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
-import { InfoIcon, PlusIcon } from "lucide-react";
+import { InfoIcon, PlusIcon, Send } from "lucide-react";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
-import { useState, useEffect, KeyboardEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import GetMessage, { SendMessage } from "@/actions/message";
 import { useSession } from "@/app/lib/auth-client";
@@ -29,9 +29,10 @@ const generateRandomId = (): string =>
 type Message = {
   id: string;
   content: string;
+  createdAt?: Date;
   userId?: string;
   image?: string;
-  user?: {image?:string};
+  user?: { image?: string; name?: string };
 };
 
 export default function SpacePage() {
@@ -41,6 +42,7 @@ export default function SpacePage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = async (
     e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
@@ -54,17 +56,16 @@ export default function SpacePage() {
       userId: user.data?.user.id,
       image: user.data?.user.image || "https://github.com/shadcn.png",
     };
-
+  setInput("");
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     socket?.emit("c", newMessage);
     await SendMessage({
       message: input,
       spaceid: spaceid,
       image: user.data?.user.image || "https://github.com/shadcn.png",
-      userId: user.data?.user.id ?? ""
-    } );
-
-    setInput("");
+      userId: user.data?.user.id ?? "",
+    });
+  
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -78,23 +79,23 @@ export default function SpacePage() {
     const fetchMessages = async () => {
       const data = await GetMessage(spaceid);
       setMessages(
-        data.messages.map((msg:Message) => ({
+        data.messages.map((msg: Message) => ({
           ...msg,
-          image: msg.user?.image 
+          image: msg.user?.image,
         }))
       );
     };
     fetchMessages();
   }, []);
 
+  console.log(messages);
+
   useEffect(() => {
     if (!socket) return;
 
     socket.on("r", (data: Message) => {
-      console.log("in",data)
-      setMessages((prevMessages) => [
-        ...prevMessages,data
-      ]);
+      console.log("in", data);
+      setMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
@@ -111,6 +112,10 @@ export default function SpacePage() {
     fetchSpace();
   }, [spaceid]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   if (!space) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -125,12 +130,12 @@ export default function SpacePage() {
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen flex flex-col">
       <div className="absolute inset-0">
         <GridSmallBackgroundDemo />
       </div>
 
-      <header className="relative z-10 flex justify-end">
+      <header className="relative z-10 flex justify-end p-4">
         <div className="flex items-center gap-3 rounded-full bg-black/10 px-4 py-2 backdrop-blur-md">
           <h1 className="text-xl font-bold text-primary">{space.name}</h1>
 
@@ -169,11 +174,11 @@ export default function SpacePage() {
         </div>
       </header>
 
-      <div className="relative flex flex-col p-4">
+      <div className="flex-col flex relative overflow-y-auto p-4 mb-20 rounded-lg">
         {messages.length > 0 ? (
           messages.map((m) => (
             <div
-              className={`flex items-start p-2 gap-2 ${
+              className={`flex items-start p-2 gap-3 ${
                 m.userId === user.data?.user.id
                   ? "justify-end"
                   : "justify-start"
@@ -181,53 +186,78 @@ export default function SpacePage() {
               key={m.id}
             >
               {m.userId !== user.data?.user.id && (
-                <Avatar>
+                <Avatar className="h-9 w-9 shadow-md border border-neutral-700 flex-shrink-0 mt-7">
                   <AvatarImage
                     src={m.image || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
-                    <Skeleton className="w-8 h-8" />
+                    <Skeleton className="w-9 h-9 rounded-full" />
                   </AvatarFallback>
                 </Avatar>
               )}
-              <p className="text-neutral-200">{m.content}</p>
+              <div className="flex flex-col max-w-[70%]">
+                <span className={`text-xs text-neutral-500 mb-1 flex truncate px-1 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
+                  {m.userId === user.data?.user.id ? "You" : m.user?.name || "Member"}
+                </span>
+                <p
+                  className={`${
+                    m.userId === user.data?.user.id
+                      ? "bg-neutral-800 text-white rounded-br-none"
+                      : "bg-neutral-900 text-gray-100 rounded-bl-none"
+                  } p-3 px-4 rounded-2xl shadow-sm break-words`}
+                >
+                  <p className="whitespace-pre-wrap"> {m.content}</p>
+                  <span className={`text-[10px] flex items-center  text-neutral-500 mt-1 truncate px-0 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
+                    {new Date(m.createdAt || Date.now()).toLocaleTimeString(
+                      [],
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }
+                    )}
+                  </span>
+                </p>
+              </div>
               {m.userId === user.data?.user.id && (
-                <Avatar>
+                <Avatar className="h-9 w-9 shadow-md border border-neutral-700 flex-shrink-0 mt-7">
                   <AvatarImage
                     src={m.image || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
-                    <Skeleton className="w-8 h-8" />
+                    <Skeleton className="w-9 h-9 rounded-full" />
                   </AvatarFallback>
                 </Avatar>
               )}
             </div>
           ))
         ) : (
-          <div className="flex justify-center items-center p-2">
-            <span>No messages yet</span>
+          <div className="flex justify-center items-center p-6 h-full">
+            <span className="text-gray-400 text-sm font-medium">
+              No messages yet
+            </span>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <form
-        className="fixed bottom-0 lg:right-[30%] md:right-[30%] sm:right-[10%] p-4 w-[500px] inline-flex"
+        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4"
         onSubmit={handleSubmit}
       >
-        <div className="p-4 w-[80%] inline-flex">
+        <div className="flex items-center bg-neutral-900 p-3 rounded-lg shadow-lg w-full">
           <input
-            className="border border-neutral-800 p-2 rounded w-[90%]"
+            className="flex-1 bg-transparent border-none text-white focus:ring-0 outline-none"
             value={input}
             placeholder="Type something..."
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
           />
           <button
-            className="ml-2 bg-neutral-800 text-white flex items-center justify-center h-10 w-10 rounded-full"
+            className="ml-2 bg-violet-800/40 text-white flex items-center justify-center h-10 w-10 rounded-full"
             type="submit"
             disabled={!input}
           >
-            <PlusIcon className="h-4 w-4" />
+            <Send className="h-4 w-4" />
           </button>
         </div>
       </form>
