@@ -1,21 +1,19 @@
 "use client";
 
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  AudioWaveform,
   Bell,
-  Command,
   GalleryVerticalEnd,
   Ghost,
-  House,
-  HouseIcon,
+  Home,
+  Moon,
   Settings,
-  SquareTerminal,
+  Sun,
 } from "lucide-react";
 
 import { NavMain } from "./nav-main";
-import { NavProjects } from "./nav-projects";
-import { NavUser } from "./nav-user";
+import NavUser from "./nav-user";
+import { LikedSpaces } from "./event/likedspaces";
 
 import {
   Sidebar,
@@ -23,22 +21,31 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "./ui/sidebar";
+  SidebarSeparator,
+} from "@/app/components/ui/sidebar";
+import { Button } from "@/app/components/ui/button";
+import { useTheme } from "next-themes";
 import GetSpace from "@/actions/space";
-import { isActive } from "@tiptap/react";
-
-async function GetSpacevalue() {
-  const data = await GetSpace();
-  return data;
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [spaces, setSpaces] = React.useState<any>([]);
+  const [spaces, setSpaces] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { setTheme, theme } = useTheme();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchSpaces = async () => {
-      const data = await GetSpacevalue();
-      setSpaces(data);
+      try {
+        setIsLoading(true);
+        const data = await GetSpace();
+        setSpaces(data);
+        setError(null);
+      } catch (error) {
+        console.error("Failed to fetch spaces:", error);
+        setError("Failed to load spaces. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchSpaces();
@@ -50,10 +57,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Home",
         url: "/dashboard",
         isActive: false,
-        icon: House,
+        icon: Home,
       },
       {
-        title: "Notification",
+        title: "Notifications",
         url: "/notifications",
         isActive: false,
         icon: Bell,
@@ -62,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Orbits",
         isActive: false,
         url: "/orbits",
-        icon: Bell,
+        icon: GalleryVerticalEnd,
       },
       {
         title: "Settings",
@@ -74,16 +81,61 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   return (
-    <Sidebar collapsible="icon" {...props} className="">
-      <SidebarHeader className=" ">
-        <h1 className="flex items-center justify-center">
-          <Ghost className="size-10 text-neutral-500/80 hover:text-neutral-500" />
-        </h1>
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="border-r border-border/40 bg-gradient-to-b from-background to-background/95"
+    >
+      <SidebarHeader className="p-4">
+        <div className="flex items-center justify-center">
+          <div className="relative group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary/40 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <Ghost className="relative size-10 text-primary transition-all duration-300 ease-in-out" />
+          </div>
+        </div>
       </SidebarHeader>
-      <SidebarContent className="">
+      <SidebarContent className="px-2">
         <NavMain items={data.navMain} />
+
+        <SidebarSeparator className="my-2" />
+
+        {isLoading ? (
+          <div className="p-3 text-sm text-muted-foreground">
+            Loading spaces...
+          </div>
+        ) : error ? (
+          <div className="p-3 text-sm text-destructive">{error}</div>
+        ) : (
+          // <LikedSpaces spaces={spaces} />
+          <></>
+        )}
+
+        <div className="mt-auto px-2 py-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="w-full h-11 justify-start gap-3 px-3 rounded-md hover:bg-primary/10"
+          >
+            {theme === "dark" ? (
+              <>
+                <Sun className="h-5 w-5" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Light Mode
+                </span>
+              </>
+            ) : (
+              <>
+                <Moon className="h-5 w-5" />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Dark Mode
+                </span>
+              </>
+            )}
+          </Button>
+        </div>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-border/40">
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

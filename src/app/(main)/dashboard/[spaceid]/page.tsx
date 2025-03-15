@@ -135,7 +135,7 @@ export default function SpacePage() {
         <GridSmallBackgroundDemo />
       </div>
 
-      <header className="relative z-10 flex justify-end p-4">
+      {/* <header className="relative z-10 flex justify-end p-4">
         <div className="flex items-center gap-3 rounded-full bg-black/10 px-4 py-2 backdrop-blur-md">
           <h1 className="text-xl font-bold text-primary">{space.name}</h1>
 
@@ -172,13 +172,13 @@ export default function SpacePage() {
             </Dialog>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <div className="flex-col flex relative overflow-y-auto p-4 mb-20 rounded-lg">
         {messages.length > 0 ? (
           messages.map((m) => (
             <div
-              className={`flex items-start p-2 gap-3 ${
+              className={`flex items-start px-2 py-2 gap-3 ${
                 m.userId === user.data?.user.id
                   ? "justify-end"
                   : "justify-start"
@@ -199,12 +199,12 @@ export default function SpacePage() {
                 <span className={`text-xs text-neutral-500 mb-1 flex truncate px-1 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
                   {m.userId === user.data?.user.id ? "You" : m.user?.name || "Member"}
                 </span>
-                <p
+                <div
                   className={`${
                     m.userId === user.data?.user.id
                       ? "bg-neutral-800 text-white rounded-br-none"
                       : "bg-neutral-900 text-gray-100 rounded-bl-none"
-                  } p-3 px-4 rounded-2xl shadow-sm break-words`}
+                  } p-[8px] px-4 rounded-2xl shadow-sm break-words`}
                 >
                   <p className="whitespace-pre-wrap"> {m.content}</p>
                   <span className={`text-[10px] flex items-center  text-neutral-500 mt-1 truncate px-0 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
@@ -216,7 +216,7 @@ export default function SpacePage() {
                       }
                     )}
                   </span>
-                </p>
+                </div>
               </div>
               {m.userId === user.data?.user.id && (
                 <Avatar className="h-9 w-9 shadow-md border border-neutral-700 flex-shrink-0 mt-7">

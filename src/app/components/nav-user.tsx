@@ -1,92 +1,66 @@
-"use client";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import * as React from "react";
+import { Circle } from "lucide-react";
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/components/ui/avatar";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/app/components/ui/sidebar";
+import { UserProfileDialog } from "./event/userdialogcard";
+import { cn } from "@/lib/utils";
+import { useSession } from "../lib/auth-client";
 
-import { Skeleton } from "./ui/skeleton";
-import { signOut, useSession } from "./../lib/auth-client";
-import { useRouter } from "next/navigation";
-import ProfileInterface from "./profile-dialog";
-import { Userboard } from "@/actions/user";
-import { useEffect, useState } from "react";
-
-export function NavUser() {
-  const { data, isPending, error } = useSession();
-  const [loading, setisLoading] = useState(false);
-  const [biodata, setBiodata] = useState<any>(null);
-  useEffect(() => {
-    const getbio = async () => {
-      try {
-        setisLoading(true);
-        const biodata = await Userboard();
-        setBiodata(biodata?.bio);
-        setisLoading(false);
-      } catch (error) {
-        console.log(error, "bhai we got error");
-      }
-    };
-    getbio();
-  }, []);
+export default function NavUser() {
+  const [open, setOpen] = React.useState(false);
+const user = useSession();
+const status = user.data?.user.name as keyof typeof statusColors;
+  const statusColors = {
+    online: "bg-emerald-500",
+    idle: "bg-amber-500",
+    dnd: "bg-rose-500",
+    invisible: "bg-slate-500",
+  };
 
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground bg-neutral-800/50 rounded-lg"
-            >
-              <Avatar className="h-8 w-8 rounded-lg">
+        <UserProfileDialog open={open} onOpenChange={setOpen}>
+          <SidebarMenuButton
+            size="lg"
+            className="h-auto py-2.5 transition-colors hover:bg-primary/10"
+            onClick={() => setOpen(true)}
+          >
+            <div className="relative">
+              <Avatar className="h-8 w-8 border-2 border-primary/20">
                 <AvatarImage
-                  src={data?.user?.image || "https://github.com/shadcn.png"}
-                  alt={data?.user?.name || ""}
+                  src={user.data?.user.image || "https://github.com/shadcn.png"}
+                  alt={user.data?.user.name}
                 />
-                <AvatarFallback className="rounded-lg">
-                  <Skeleton className="h-8 w-8 rounded-full" />
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  AJ
                 </AvatarFallback>
               </Avatar>
-              <div className="grid grid-rows-1 text-left text-xs leading-tight">
-                {!data?.user ? (
-                  <div className="mt-2 gap-y-1 flex flex-col">
-                    <Skeleton className="h-2 w-20 " />
-                    <Skeleton className="h-2 w-28" />
-                  </div>
-                ) : (
-                  <div className="flex flex-col justify-start">
-                    <span className="p-2">{data?.user?.name || ""}</span>
-                    {/* <span>{data?.user?.email || ""}</span> */}
-                  </div>
-                )}
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background">
+                <Circle
+                  className={cn("h-full w-full", statusColors[status])} 
+                />
               </div>
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className=" bg-neutral-900 text-white border-neutral-600">
-            {!loading ? (
-              <ProfileInterface
-                username={data?.user?.name || ""}
-                userbio={biodata}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-start h-[230px] w-[270px] gap-y-5">
-                <div className="w-full flex flex-row items-center justify-start gap-x-6">
-                  <Skeleton className="rounded-full w-12 h-12 mt-5 ml-5" />
-                  <div className="flex flex-col gap-y-2">
-                    <Skeleton className="rounded-full w-24 h-3" />
-                    <Skeleton className="rounded-full w-20 h-3" />
-                  </div>
-                </div>
-                <span className="p-5 flex items-center justify-center">
-                  <Skeleton className="w-[200px] rounded-lg h-24 " />
-                </span>
-              </div>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">
+                {user.data?.user.name}
+              </span>
+              <span className="truncate text-xs text-muted-foreground">
+                {user.data?.user.email}
+              </span>
+            </div>
+          </SidebarMenuButton>
+        </UserProfileDialog>
       </SidebarMenuItem>
     </SidebarMenu>
   );
