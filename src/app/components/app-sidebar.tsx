@@ -10,6 +10,7 @@ import {
   Settings,
   Sun,
 } from "lucide-react";
+import { GeistMono, GeistSans } from "geist/font";
 
 import { NavMain } from "./nav-main";
 import NavUser from "./nav-user";
@@ -26,6 +27,7 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { useTheme } from "next-themes";
 import GetSpace from "@/actions/space";
+import { cn } from "../lib/utils";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [spaces, setSpaces] = useState<any>([]);
@@ -87,9 +89,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="border-r border-border/40 bg-gradient-to-b from-background to-background/95"
     >
       <SidebarHeader className="p-4">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between :">
+          <h1
+            className={cn(
+              "text-2xl font-bold text-primary group-data-[collapsible=icon]:hidden",
+              GeistMono.className
+            )}
+          >
+            Getty
+          </h1>
           <div className="relative group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary/40 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
             <Ghost className="relative size-10 text-primary transition-all duration-300 ease-in-out" />
           </div>
         </div>

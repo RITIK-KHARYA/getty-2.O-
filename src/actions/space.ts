@@ -4,6 +4,8 @@ import { z } from "zod";
 import { formSchema } from "@/app/components/custom/custom-dialog";
 import { headers } from "next/headers";
 import { formSchema2 } from "@/app/lib/Validation";
+import { useToast } from "@/app/hooks/use-toast";
+import { Toast } from "@/app/components/ui/toast";
 
 export default async function GetSpace() {
   try {
@@ -14,11 +16,52 @@ export default async function GetSpace() {
       method: "GET",
     });
     const data = await response.json();
+    console.log(data);
     return data.data;
   } catch (error) {
     console.log("unable to get the space", error);
   }
 }
+
+// Frontend code (React example)
+// export async function handleEnterSpace (spaceId: string) {
+//   try {
+//     const response = await fetch(`/api/space/${spaceId}/enter`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     const data = await response.json();
+
+//     if (response.ok) {
+//       // Show any success messages if needed
+//       if (data.data.isNewMember) {
+//         // Use your toast library's specific method
+//         Toast({ title: "Welcome to the space!", variant: "default" });
+//         // or perhaps:
+//         // toast.show({ message: "Welcome to the space!" });
+//       }
+
+//       // Redirect to the space page
+//       window.location.href = data.data.redirectUrl;
+//       // Or if using a router like Next.js:
+//       // router.push(data.data.redirectUrl);
+//     } else {
+//       Toast({
+//         title: data.message || "Failed to enter space",
+//         variant: "destructive",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error entering space:", error);
+//     Toast({
+//       title: "An error occurred while trying to enter the space",
+//       variant: "destructive",
+//     });
+//   }
+// };
 
 export async function GetSpaceOnSearch(data: z.infer<typeof formSchema2>) {
   try {
@@ -54,9 +97,10 @@ export async function CreateSpace(data: z.infer<typeof formSchema>) {
     if (result) {
       revalidatePath("/dashboard");
     }
+    console.log(result);
     return result;
   } catch (error) {
-    console.log("error nigga",error)
+    console.log("error nigga", error);
   }
 }
 export async function FindSpaceById(id: string) {
@@ -67,12 +111,12 @@ export async function FindSpaceById(id: string) {
         cookie: (await headers()).get("cookie") || "",
       },
     });
-    if(!space){
-      return null
+    if (!space) {
+      return null;
     }
     const data = await space.json();
-    return data.space;
-  
+    console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
   }

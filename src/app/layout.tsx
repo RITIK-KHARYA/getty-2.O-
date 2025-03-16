@@ -15,7 +15,6 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
 });
-
 export const metadata: Metadata = {
   title: "Welcome to getty",
   description: "Welcome to getty",

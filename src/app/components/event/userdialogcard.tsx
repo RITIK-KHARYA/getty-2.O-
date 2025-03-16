@@ -199,7 +199,7 @@ export function UserProfileDialog({
           </div>
 
           <Separator />
-
+{/* 
           <Tabs defaultValue="about">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="about">About</TabsTrigger>
@@ -210,14 +210,14 @@ export function UserProfileDialog({
                 <h3 className="text-sm font-medium text-muted-foreground">
                   ABOUT ME
                 </h3>
-                {/* <p className="mt-1 text-sm">{user.about}</p> */}
+                <p className="mt-1 text-sm">{user.about}</p>
               </div>
 
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">
                   MEMBER SINCE
                 </h3>
-                {/* <p className="mt-1 text-sm">{user.data?.user.createdAt }</p> */}
+                <p className="mt-1 text-sm">{user.data?.user.createdAt }</p>
               </div>
             </TabsContent>
             <TabsContent value="settings" className="space-y-4 pt-4">
@@ -228,12 +228,12 @@ export function UserProfileDialog({
 
               <div className="grid gap-2">
                 <Label htmlFor="about">About Me</Label>
-                {/* <Textarea id="about" defaultValue={user.data?.user.about} /> */}
+                <Textarea id="about" defaultValue={user.data?.user.about} />
               </div>
 
               <Button className="w-full">Save Changes</Button>
             </TabsContent>
-          </Tabs>
+          </Tabs> */}
         </div>
 
         <DialogFooter className="flex flex-col sm:flex-col">

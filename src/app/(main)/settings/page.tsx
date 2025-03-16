@@ -4,15 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import {
-  BellRing,
-  User,
-  Shield,
-  Moon,
-  SettingsIcon,
-  HelpCircle,
-  LogOut,
-} from "lucide-react";
+
 
 export default function SettingsPage() {
   return (

@@ -88,13 +88,11 @@ export default function SpacePage() {
     fetchMessages();
   }, []);
 
-  console.log(messages);
 
   useEffect(() => {
     if (!socket) return;
 
     socket.on("r", (data: Message) => {
-      console.log("in", data);
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
@@ -174,7 +172,7 @@ export default function SpacePage() {
         </div>
       </header> */}
 
-      <div className="flex-col flex relative overflow-y-auto p-4 mb-20 rounded-lg">
+      <div className="flex-col flex relative   overflow-y-auto p-4 mb-20 rounded-lg">
         {messages.length > 0 ? (
           messages.map((m) => (
             <div
@@ -231,7 +229,7 @@ export default function SpacePage() {
             </div>
           ))
         ) : (
-          <div className="flex justify-center items-center p-6 h-full">
+          <div className="flex justify-center items-center p-3 w-full h-full">
             <span className="text-gray-400 text-sm font-medium">
               No messages yet
             </span>
