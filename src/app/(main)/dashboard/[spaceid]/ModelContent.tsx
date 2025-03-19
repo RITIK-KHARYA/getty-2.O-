@@ -1,4 +1,5 @@
 "use client";
+import { FindSpaceById, handleEnterSpace } from "@/actions/space";
 import {
   Avatar,
   AvatarFallback,
@@ -7,7 +8,8 @@ import {
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { Heart } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ClientModelContentProps {
   spacename: string;
@@ -26,7 +28,17 @@ export default function ClientModelContent({
   spaceadmin,
   adminimage,
 }: ClientModelContentProps) {
-
+  const router = useRouter();
+  const handleJoin = async () => {
+    const data = await handleEnterSpace(spaceid);
+    const spacedetail = await FindSpaceById(spaceid);
+    if (!data) {
+      return;
+    }
+    console.log(spacedetail,"hehe")
+    router.push(data.data.redirectUrl);
+  };
+  
 
   return (
     <div className="w-full rounded-2xl p-2 space-y-6">
@@ -73,13 +85,13 @@ export default function ClientModelContent({
             <button className="p-2.5 hover:bg-[#1A1A1A] rounded-lg focus:ring-0 focus:outline-none">
               <Heart className="w-5 h-5 text-rose-500" />
             </button>
-            <Link href={`/dashboard/${spaceid}`}>
-              <button
-                className="px-8 py-2.5 text-neutral-300 hover:bg-[#252525] rounded-none bg-neutral-950 transition-colors font-mono"
-              >
-                {"Join"}
-              </button>
-            </Link>
+
+            <button
+              onClick={() => handleJoin()}
+              className="px-8 py-2.5 text-neutral-300 hover:bg-[#252525] rounded-none bg-neutral-950 transition-colors font-mono"
+            >
+              {"Join"}
+            </button>
           </div>
         </div>
       </div>

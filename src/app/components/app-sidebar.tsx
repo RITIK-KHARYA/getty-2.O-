@@ -10,11 +10,11 @@ import {
   Settings,
   Sun,
 } from "lucide-react";
-import { GeistMono, GeistSans } from "geist/font";
+import { GeistMono } from "geist/font";
 
 import { NavMain } from "./nav-main";
 import NavUser from "./nav-user";
-import { LikedSpaces } from "./event/likedspaces";
+
 
 import {
   Sidebar,

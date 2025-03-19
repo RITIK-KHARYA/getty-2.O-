@@ -16,14 +16,18 @@ import { FindSpaceById } from "@/actions/space";
 import Link from "next/link";
 
 interface Space {
-  id: string;
-  title: string;
-  banner: string;
-  description: string;
-  members: { id: string; name: string; avatar: string }[];
-  memberCount: number;
-  createdAt: Date;
-  likes: number;
+  space: {
+    id: string;
+    title: string;
+    banner: string;
+    description: string;
+    members: { id: string; name: string; avatar: string }[];
+    _count: { users: number };
+
+    createdAt: Date;
+    likes: number;
+  };
+  membersCount: number;
 }
 
 export default function SpaceCorner() {
@@ -33,8 +37,7 @@ export default function SpaceCorner() {
   useEffect(() => {
     const fetchSpace = async () => {
       const data = await FindSpaceById(spaceid);
-      console.log(data.space);
-      setSpace(data.space);
+      setSpace(data);
     };
     fetchSpace();
   }, [spaceid]);
@@ -57,14 +60,14 @@ export default function SpaceCorner() {
           <SheetHeader>
             <div className="flex items-center gap-4">
               <Image
-                src={space?.banner || "https://github.com/shadcn.png"}
-                alt={space.title}
+                src={space.space.banner || "https://github.com/shadcn.png"}
+                alt={space.space.title}
                 width={50}
                 height={50}
                 className="w-16 h-16 rounded-full border border-neutral-700 object-cover"
               />
               <div>
-                <SheetTitle>{space.title}</SheetTitle>
+                <SheetTitle>{space.space.title}</SheetTitle>
                 <p className="text-xs text-neutral-500">{spaceid}</p>
               </div>
             </div>
@@ -72,7 +75,7 @@ export default function SpaceCorner() {
 
           {/* Space Description */}
           <SheetDescription className="mt-3 text-sm text-neutral-400">
-            {space.description || "No description available."}
+            {space.space?.description || "No description available."}
           </SheetDescription>
 
           {/* Members Section */}
@@ -80,13 +83,13 @@ export default function SpaceCorner() {
             <h3 className="text-sm font-semibold text-neutral-300 mb-3 flex items-center justify-between">
               <span>Members</span>
               <span className="text-xs bg-neutral-800 px-2 py-0.5 rounded-full text-neutral-400">
-                {space.memberCount}
+                {space.membersCount}
               </span>
             </h3>
 
             <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 custom-scrollbar">
-              {space.members && space.members.length > 0 ? (
-                space.members.map((member) => (
+              {space.space.members && space.space.members.length > 0 ? (
+                space.space.members.map((member) => (
                   <div
                     key={member.id}
                     className="flex items-center gap-3 p-2.5 bg-neutral-900 hover:bg-neutral-800 rounded-lg border border-neutral-800 transition-colors"
@@ -101,9 +104,6 @@ export default function SpaceCorner() {
                       className="rounded-full border border-neutral-700 w-10 h-10 object-cover"
                     />
                     <div>
-                      <p className="text-sm font-medium text-white">
-                        {member.name}
-                      </p>
                       <p className="text-xs text-neutral-500">Member</p>
                     </div>
                   </div>
