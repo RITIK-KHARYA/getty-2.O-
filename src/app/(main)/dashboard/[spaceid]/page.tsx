@@ -22,6 +22,7 @@ import {
   AvatarImage,
 } from "@/app/components/ui/avatar";
 import { Skeleton } from "@/app/components/ui/skeleton";
+import { Textarea } from "@/app/components/ui/textarea";
 
 const generateRandomId = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
@@ -56,7 +57,7 @@ export default function SpacePage() {
       userId: user.data?.user.id,
       image: user.data?.user.image || "https://github.com/shadcn.png",
     };
-  setInput("");
+    setInput("");
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     socket?.emit("c", newMessage);
     await SendMessage({
@@ -65,10 +66,9 @@ export default function SpacePage() {
       image: user.data?.user.image || "https://github.com/shadcn.png",
       userId: user.data?.user.id ?? "",
     });
-  
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
@@ -87,7 +87,6 @@ export default function SpacePage() {
     };
     fetchMessages();
   }, []);
-
 
   useEffect(() => {
     if (!socket) return;
@@ -131,47 +130,7 @@ export default function SpacePage() {
     <div className="relative min-h-screen flex flex-col">
       <div className="absolute inset-0">
         <GridSmallBackgroundDemo />
-      </div>
-
-      {/* <header className="relative z-10 flex justify-end p-4">
-        <div className="flex items-center gap-3 rounded-full bg-black/10 px-4 py-2 backdrop-blur-md">
-          <h1 className="text-xl font-bold text-primary">{space.name}</h1>
-
-          <div className="flex gap-2">
-            <div className="rounded-xl bg-card px-3 drop-shadow-sm shadow-lg">
-              <span className="text-xs font-medium">Members:</span>
-              <span className="text-xs text-muted-foreground ml-1">
-                {space.members?.length || 0}
-              </span>
-            </div>
-
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 rounded-xl"
-                >
-                  <InfoIcon size={14} />
-                  <span className="text-xs">Details</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>{space.name} Details</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium">Description:</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {space.description || "No description available"}
-                  </p>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-      </header> */}
-
+      </div>{" "}
       <div className="flex-col flex relative   overflow-y-auto p-4 mb-20 rounded-lg">
         {messages.length > 0 ? (
           messages.map((m) => (
@@ -194,8 +153,16 @@ export default function SpacePage() {
                 </Avatar>
               )}
               <div className="flex flex-col max-w-[70%]">
-                <span className={`text-xs text-neutral-500 mb-1 flex truncate px-1 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
-                  {m.userId === user.data?.user.id ? "You" : m.user?.name || "Member"}
+                <span
+                  className={`text-xs text-neutral-500 mb-1 flex truncate px-1 ${
+                    m.userId === user.data?.user.id
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  {m.userId === user.data?.user.id
+                    ? "You"
+                    : m.user?.name || "Member"}
                 </span>
                 <div
                   className={`${
@@ -205,7 +172,13 @@ export default function SpacePage() {
                   } p-[8px] px-4 rounded-2xl shadow-sm break-words`}
                 >
                   <p className="whitespace-pre-wrap"> {m.content}</p>
-                  <span className={`text-[10px] flex items-center  text-neutral-500 mt-1 truncate px-0 ${m.userId === user.data?.user.id ? "justify-end" : "justify-start"}`}>
+                  <span
+                    className={`text-[10px] flex items-center  text-neutral-500 mt-1 truncate px-0 ${
+                      m.userId === user.data?.user.id
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                  >
                     {new Date(m.createdAt || Date.now()).toLocaleTimeString(
                       [],
                       {
@@ -237,14 +210,13 @@ export default function SpacePage() {
         )}
         <div ref={messagesEndRef} />
       </div>
-
       <form
         className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4"
         onSubmit={handleSubmit}
       >
         <div className="flex items-center bg-neutral-900 p-3 rounded-lg shadow-lg w-full">
-          <input
-            className="flex-1 bg-transparent border-none text-white focus:ring-0 outline-none"
+          <Textarea
+            className="flex-1 bg-transparent border-none text-white focus:ring-0 outline-none h-min-[40px]"
             value={input}
             placeholder="Type something..."
             onChange={(e) => setInput(e.target.value)}
