@@ -21,9 +21,15 @@ interface Space {
     title: string;
     banner: string;
     description: string;
-    members: { id: string; name: string; avatar: string }[];
     _count: { users: number };
-
+    users: [
+      id: {
+        user: {
+          image: string;
+          name: string;
+        };
+      }
+    ];
     createdAt: Date;
     likes: number;
   };
@@ -37,6 +43,7 @@ export default function SpaceCorner() {
   useEffect(() => {
     const fetchSpace = async () => {
       const data = await FindSpaceById(spaceid);
+      console.log(data);
       setSpace(data);
     };
     fetchSpace();
@@ -87,25 +94,31 @@ export default function SpaceCorner() {
               </span>
             </h3>
 
-            <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 custom-scrollbar">
-              {space.space.members && space.space.members.length > 0 ? (
-                space.space.members.map((member) => (
+            <div className="space-y-3 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 custom-scrollbar">
+              {space.space.users && space.space.users.length > 0 ? (
+                space.space.users.map((member) => (
                   <div
-                    key={member.id}
-                    className="flex items-center gap-3 p-2.5 bg-neutral-900 hover:bg-neutral-800 rounded-lg border border-neutral-800 transition-colors"
+                    key={member.user.name}
+                    className="flex justify-between items-center gap-3 p-2.5 bg-neutral-900  rounded-lg border border-neutral-800 transition-colors"
                   >
-                    <Image
-                      src={
-                        member.avatar || "/placeholder.svg?height=40&width=40"
-                      }
-                      alt={member.name}
-                      width={40}
-                      height={40}
-                      className="rounded-full border border-neutral-700 w-10 h-10 object-cover"
-                    />
-                    <div>
-                      <p className="text-xs text-neutral-500">Member</p>
+                    <div className="flex items-center ">
+                      <Image
+                        src={
+                          member.user.image ||
+                          "/placeholder.svg?height=40&width=40"
+                        }
+                        alt={member.user.name}
+                        width={40}
+                        height={40}
+                        className="rounded-full border border-neutral-700 w-10 h-10 object-cover"
+                      />
+                      <div className="ml-2">
+                        <p className="text-xs text-neutral-300">
+                          {member.user.name}
+                        </p>
+                      </div>
                     </div>
+                    <Button className="bg-white hover:bg-neutral-300  text-black w-16 h-7 text-[10px] font-semibold">Add friend</Button>
                   </div>
                 ))
               ) : (

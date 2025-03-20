@@ -26,7 +26,7 @@ export default async function GetMessage(spaceid: string) {
       return null;
     }
     const value = await response.json();
-    console.log(value);
+    // console.log(value);
     return value;
   } catch (error) {
     console.log(error, "ERROR BHENCHOD");
