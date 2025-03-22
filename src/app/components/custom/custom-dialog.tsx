@@ -86,12 +86,12 @@ export function SpaceForm() {
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="bg-violet-700 text-bold text-center text-white rounded-md px-4 py-2 transition-all duration-200 shadow-sm"
+          className="bg-blue-800 text-black hover:bg-purple-900 text-bold text-center rounded-md px-4 py-2 transition-all duration-200 shadow-sm"
         >
           Create Space
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md p-4 sm:p-5">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold tracking-tight">
             Create New Space
@@ -101,13 +101,13 @@ export function SpaceForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(submitValues)}
-            className="space-y-6 py-2"
+            className="space-y-4 py-1"
           >
             <FormField
               control={form.control}
               name="spacename"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-1">
                   <FormLabel className="text-sm font-medium">
                     Space Name
                   </FormLabel>
@@ -118,7 +118,7 @@ export function SpaceForm() {
                       className="focus-visible:ring-primary/70"
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-muted-foreground mt-0.5">
                     This will be the public name of your space
                   </FormDescription>
                   <FormMessage />
@@ -130,16 +130,16 @@ export function SpaceForm() {
               control={form.control}
               name="bio"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="space-y-1">
                   <FormLabel className="text-sm font-medium">Bio</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe your space..."
                       {...field}
-                      className="min-h-24 resize-none focus-visible:ring-primary/70"
+                      className="min-h-16 resize-none focus-visible:ring-primary/70"
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-muted-foreground mt-0.5">
                     Tell others what your space is all about
                   </FormDescription>
                   <FormMessage />
@@ -151,19 +151,19 @@ export function SpaceForm() {
               control={form.control}
               name="banner"
               render={({ field }) => (
-                <FormItem className="space-y-3">
+                <FormItem className="space-y-1">
                   <FormLabel className="text-sm font-medium">
                     Banner Image
                   </FormLabel>
                   <FormControl>
-                    <div className="border border-dashed border-muted-foreground/30 rounded-lg p-4 transition-colors hover:bg-muted/50">
+                    <div className="border border-dashed border-muted-foreground/30 rounded-lg p-2 transition-colors hover:bg-muted/50">
                       <AttachmentButton
                         onChange={field.onChange}
                         value={field.value}
                       />
                     </div>
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-muted-foreground mt-0.5">
                     Upload an image to represent your space
                   </FormDescription>
                   <FormMessage />
@@ -171,7 +171,7 @@ export function SpaceForm() {
               )}
             />
 
-            <div className="flex justify-end gap-3 pt-2">
+            <div className="flex justify-end gap-2 pt-1">
               <Button
                 type="button"
                 variant="outline"
@@ -212,7 +212,7 @@ export function SpaceForm() {
                 ) : (
                   <span className="flex items-center gap-2">
                     <Sparkles size={16} className="mr-1" />
-                    Create 
+                    Create
                   </span>
                 )}
               </Button>

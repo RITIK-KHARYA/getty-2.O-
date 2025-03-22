@@ -74,7 +74,7 @@ export default function SpaceCard({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Join this space</p>
+                    <p>Join the space</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
