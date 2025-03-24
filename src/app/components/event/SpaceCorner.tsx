@@ -43,7 +43,7 @@ export default function SpaceCorner() {
   useEffect(() => {
     const fetchSpace = async () => {
       const data = await FindSpaceById(spaceid);
-      console.log(data);
+      // console.log(data);
       setSpace(data);
     };
     fetchSpace();

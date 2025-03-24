@@ -2,15 +2,7 @@
 
 import { FindSpaceById } from "@/actions/space";
 import { GridSmallBackgroundDemo } from "@/components/updatedone/spacebackground";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/app/components/ui/dialog";
-import { Button } from "@/app/components/ui/button";
-import { InfoIcon, PlusIcon, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
@@ -23,6 +15,7 @@ import {
 } from "@/app/components/ui/avatar";
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { Textarea } from "@/app/components/ui/textarea";
+import Editor from "@/components/editor/Editor";
 
 const generateRandomId = (): string =>
   Math.floor(100000 + Math.random() * 900000).toString();
@@ -44,6 +37,15 @@ export default function SpacePage() {
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  // const {
+  //   startUpload,
+  //   attachment,
+  //   isUploading,
+  //   uploadProgress,
+  //   removeAttachment,
+  //   reset: resetMedia,
+  // } = useMediaUpload();
+  //got be using them later gonna make the codebase super ugly hehe
 
   const handleSubmit = async (
     e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
@@ -211,25 +213,27 @@ export default function SpacePage() {
         <div ref={messagesEndRef} />
       </div>
       <form
-        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4"
+        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4 h-52 flex items-end"
         onSubmit={handleSubmit}
       >
-        <div className="flex items-center bg-neutral-900 p-3 rounded-lg shadow-lg w-full">
-          <Textarea
-            className="flex-1 bg-transparent border-none text-white focus:ring-0 outline-none h-min-[40px]"
-            value={input}
-            placeholder="Type something..."
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+        {/* <div className="w-16 -mt-1 h-7 bg-neutral-900  flex items-center justify-center rounded-tl-lg right-0 top-0 fixed rounded-r-lg space-x-2 gap-2">
+          <AddAttachment
+            onFileSelected={startUpload}
+            disabled={!input || isUploading}
           />
-          <button
-            className="ml-2 bg-violet-800/40 text-white flex items-center justify-center h-10 w-10 rounded-full"
-            type="submit"
-            disabled={!input}
-          >
-            <Send className="h-4 w-4" />
-          </button>
-        </div>
+        </div> */}
+        {/*  here another component using would be placed  */}
+
+        <>
+          <Editor
+          key={input}
+          onChange={()=>{console.log()}}
+            handlekeydown={handleKeyDown}
+            setInput={setInput}
+            input={input}
+            className="w-full"
+          />
+        </>
       </form>
     </div>
   );

@@ -34,12 +34,12 @@ export async function handleEnterSpace(spaceId: string) {
 
     if (response) {
       if (data.data.isNewMember) {
-        console.log(data.data.isNewMember);
+        // console.log(data.data.isNewMember);
       }
     } else {
       return;
     }
-    console.log(data, "wtf");
+    // console.log(data, "wtf");
     return data;
   } catch (error) {
     console.error("Error entering space:", error);
@@ -97,7 +97,7 @@ export async function FindSpaceById(id: string) {
       return null;
     }
     const data = await space.json();
-    console.log(data);
+    // console.log(data);
     // console.log(data.membersCount, "memberscount");
     return data;
   } catch (error) {

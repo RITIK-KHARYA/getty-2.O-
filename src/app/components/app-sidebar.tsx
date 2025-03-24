@@ -15,7 +15,6 @@ import { GeistMono } from "geist/font";
 import { NavMain } from "./nav-main";
 import NavUser from "./nav-user";
 
-
 import {
   Sidebar,
   SidebarContent,
@@ -28,12 +27,15 @@ import { Button } from "@/app/components/ui/button";
 import { useTheme } from "next-themes";
 import GetSpace from "@/actions/space";
 import { cn } from "../lib/utils";
+import { getSession } from "@/actions/session";
+import { useSession } from "../lib/auth-client";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [spaces, setSpaces] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { setTheme, theme } = useTheme();
+  const user = useSession();
 
   useEffect(() => {
     const fetchSpaces = async () => {
@@ -70,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Orbits",
         isActive: false,
-        url: "/orbits",
+        url: `orbits/user/${user?.data?.user.id}`,
         icon: GalleryVerticalEnd,
       },
       {

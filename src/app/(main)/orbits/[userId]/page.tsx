@@ -8,7 +8,7 @@ import {
 import { Input } from "@/app/components/ui/input";
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { useSession } from "@/app/lib/auth-client";
-import { Search, Settings, Settings2 } from "lucide-react";
+import { Search, Settings2 } from "lucide-react";
 import Link from "next/link";
 import {
   Form,
@@ -21,8 +21,11 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 
 export default function Orbits() {
+  // const { userid } = useParams<{ userid: string }>();
+
   const user = useSession();
   const formSchema = z.object({
     name: z.string().min(2).max(10),
@@ -36,8 +39,9 @@ export default function Orbits() {
   });
 
   return (
-    <main className="flex flex-row w-full h-full">
-      <div className="w-1/4 flex flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/80 border space-y-2">
+    <main className="flex flex-col sm:flex-row w-full h-full">
+      {" "}
+      <div className="w-full sm:w-1/3 md:w-1/4 flex flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/80 border space-y-2">
         <div className="w-full border border-neutral-800/80 rounded-lg p-2 bg-neutral-900 flex items-center justify-start">
           <>
             <Avatar>
@@ -85,10 +89,11 @@ export default function Orbits() {
         </div>
         <div>{/*here will be the users chats list */}</div>
       </div>
-      <div className="w-3/4 flex flex-col items-center justify-start p-2 bg-black ">
+      {/* Main chat area - full width on mobile, adjusts on larger screens */}
+      <div className="w-full sm:w-2/3 md:w-3/4 lg:w-2/4 flex flex-col items-center justify-start p-2 bg-black">
         {/* chat header containing the chatting user image name username  */}
       </div>
-      <div className="w-1/4 flex flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/60 border "></div>
+      <div className="hidden lg:flex lg:w-1/4 flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/60 border"></div>
     </main>
   );
 }

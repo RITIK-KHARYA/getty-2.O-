@@ -1,4 +1,4 @@
-import { Upload, UploadCloud } from "lucide-react";
+import { Image, Upload, UploadCloud } from "lucide-react";
 import { useDropzone } from "@uploadthing/react";
 import { useCallback, useState } from "react";
 import {
@@ -6,7 +6,8 @@ import {
   generatePermittedFileTypes,
 } from "uploadthing/client";
 import AttachmentPreview from "../components/preview/previewcard";
-import useMediaUpload from "@/actions/cardmediaupload";
+import useMediaUpload from "@/actions/mediaUpload";
+import { cn } from "../lib/utils";
 interface Attachmentpreviewsprops {
   onChange: (value: string) => void;
   value: string | undefined;
@@ -66,5 +67,46 @@ export default function AttachmentButton({
         )}
       </div>
     </>
+  );
+}
+
+export function AttachmentIcon({ onChange, value }: Attachmentpreviewsprops) {
+  const { startUpload, attachment, routeConfig, removeAttachment } =
+    useMediaUpload(onChange);
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    startUpload(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: generateClientDropzoneAccept(
+      generatePermittedFileTypes(routeConfig).fileTypes
+    ),
+  });
+  return (
+    <div {...getRootProps()}>
+      <input {...getInputProps()} disabled={attachment.length > 0} />
+      <button
+        onClick={() => {}}
+        disabled={attachment.length > 5}
+        className="w-full h-full flex items-center justify-center"
+      >
+        <Image className="size-2/3 text-white opacity-50" />
+      </button>
+
+      <div
+        className={cn(
+          "flex flex-col items-center justify-center gap-y-1 p-2 size-fit",
+          attachment.length > 1 && "sm:grid sm:grid-cols-2"
+        )}
+      >
+        {attachment.map((attachment) => (
+          <AttachmentPreview
+            key={attachment.file.name}
+            Attachment={attachment}
+            onRemoveclick={removeAttachment}
+          />
+        ))}
+      </div>
+    </div>
   );
 }

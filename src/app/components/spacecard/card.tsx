@@ -68,7 +68,7 @@ export default function SpaceCard({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-100 text-xs w-full h-7  rounded-none "
+                      className="bg-zinc-800 text-zinc-100 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-100 text-xs w-full h-7 rounded-none "
                     >
                       Join
                     </Button>
