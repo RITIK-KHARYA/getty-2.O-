@@ -78,6 +78,16 @@
   }
 }
 @layer base {
+
+   .tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: #adb5bd;
+    position: absolute;
+    pointer-events: none;
+  }
+}
+
+@layer base {
   :root {
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;

@@ -1,68 +1,85 @@
 import useMediaUpload from "@/actions/mediaUpload";
-import { Textarea } from "@/app/components/ui/textarea";
 import { useDropzone } from "@uploadthing/react";
-import { Bold, Italic, Send } from "lucide-react";
+import { File, Icon, Send, Smile } from "lucide-react";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useCallback } from "react";
+import { useCallback, ClipboardEvent, useState } from "react";
 import { Placeholder } from "@tiptap/extension-placeholder";
-import { ClipboardEvent, useEffect, useRef } from "react";
-import Focus from '@tiptap/extension-focus'
+import Focus from "@tiptap/extension-focus";
+
 import {
   generateClientDropzoneAccept,
   generatePermittedFileTypes,
 } from "uploadthing/client";
-import Tiptap from "./TipTap";
-import StarterKit from "@tiptap/starter-kit";
 import { cn } from "@/lib/utils";
 import AttachmentPreview from "@/app/components/preview/previewcard";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/app/components/ui/dropdown-menu";
+import StarterKit from "@tiptap/starter-kit";
+import EmojiPicker from "../EmojiPicker";
+
 interface EditorProps {
-  input: string;
+  input: string
   setInput: (value: string) => void;
   className: string;
-  handlekeydown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onchange: (value: string) => void;
 }
 
 export default function Editor({
+  className,
   input,
   setInput,
-  className,
-  handlekeydown: handleKeyDown,
-  onChange,
-}) {
+  onchange,
+}: EditorProps) {
   const editor = useEditor({
+    autofocus: true,
     extensions: [
       StarterKit.configure({
-        italic: false,
-        bold: false,
+        paragraph: {
+          HTMLAttributes: {
+            class: "is-editor-empty",
+          },
+        },
       }),
-      Focus.configure({
-        mode: "deepest",
-      }),
+      Focus.configure({ mode: "shallowest" }),
       Placeholder.configure({
-        placeholder: "What's on your mind...",
+        placeholder: "Write something...",
+        showOnlyWhenEditable: true,
       }),
     ],
+
+    editorProps: {
+      attributes: {
+        class:
+          "h-16 text-sm outline-none ring-0 ring-offset-0 focus:ring-0 focus:outline-none",
+      },
+    },
+    content: input,
+
+    onUpdate: ({ editor }) => {
+      setInput(editor.getText());
+    },
   });
-
-  const Input =
-    editor?.getText({
-      blockSeparator: "\n",
-    }) || "";
-
-    // using the props passing the useffect handlekeydown for the handlesubmit function in page[spaceid].tsx
-
+  const [open, setOpen] = useState(false);
   const {
     startUpload,
     attachment,
     routeConfig,
     removeAttachment,
     isUploading,
-  } = useMediaUpload(onChange);
+  } = useMediaUpload(onchange);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    startUpload(acceptedFiles);
-  }, []);
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      startUpload(acceptedFiles);
+    },
+    [startUpload]
+  );
+
+  //the image is being upload now but preview is not working
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: startUpload,
@@ -70,10 +87,6 @@ export default function Editor({
       generatePermittedFileTypes(routeConfig).fileTypes
     ),
   });
-
-//   const handleSubmit = () => {
-//     editor?.commands.submit();
-//   };
 
   function onPaste(e: ClipboardEvent<HTMLInputElement>) {
     const files = Array.from(e.clipboardData.items)
@@ -86,39 +99,55 @@ export default function Editor({
 
   return (
     <div className={className} {...rootProps}>
-      <div className="flex items-center bg-neutral-900 p-3 rounded-lg shadow-lg w-full">
-        {/* <Textarea
-          className="flex-1 bg-transparent border-none text-white focus:ring-0 outline-none h-min-[40px] resize-none"
-          value={input}
-          placeholder="Type something..."
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-        /> */}
-        <div>
-          {!!attachment.length && (
-            <AttachmentPreview
-              Attachment={attachment}
-              key={attachment[0].file.name}
-              onRemoveclick={removeAttachment}
-            />
-          )}
-        </div>
-        <div className={className}>
+      <div
+        {...getInputProps}
+        className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
+      >
+        <File className="opacity-90" size={20} />
+
+        <EmojiPicker
+          onChange={(e) => {
+            if (!editor) return;
+            editor.chain().focus().insertContent(e).run();
+          }}
+        />
+      </div>
+
+      <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
+        {!!attachment.length && (
+          <AttachmentPreview
+            Attachment={attachment[0]}
+            key={attachment[0].file.name}
+            onRemoveclick={removeAttachment}
+          />
+        )}
+
+        <div className="flex-1 overflow-hidden">
           <EditorContent
             editor={editor}
+            data-placeholder="Write something..."
             className={cn(
-              "text-white w-full rounded-md border border-neutral-800/80 h-16 resize-none flex-1 bg-transparent",
-              isDragActive ? "border-violet-600" : "border-neutral-800/80"
+              "text-white w-full rounded-none border-none focus-outline-none focus:ring-0 max-h-[400px] overflow-y-auto",
+              isDragActive ? "border-violet-600" : ""
             )}
             onPaste={onPaste}
           />
-          <input {...getInputProps()} />
         </div>
 
         <button
-          className="ml-2 bg-violet-800/40 text-white flex items-center justify-center h-10 w-10 rounded-full"
+          className={cn(
+            ` bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full`,
+            isUploading && "opacity-50 cursor-not-allowed"
+          )}
           type="submit"
-          disabled={!input || isUploading}
+          onClick={(e) => {
+            e.stopPropagation();
+            // if (editor) {
+            //   editor.commands.clearContent(true); // Clears editor content
+            //   setInput(""); // Resets state
+            // }
+          }}
+          disabled={!editor?.getText().trim() || isUploading}
         >
           <Send className="h-4 w-4" />
         </button>

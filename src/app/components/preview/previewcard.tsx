@@ -1,4 +1,4 @@
-import { attachment } from "@/actions/cardmediaupload";
+import { attachment } from "@/actions/mediaUpload"
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn } from "@/app/lib/utils";

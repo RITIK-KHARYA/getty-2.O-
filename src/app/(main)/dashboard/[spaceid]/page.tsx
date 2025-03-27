@@ -213,24 +213,14 @@ export default function SpacePage() {
         <div ref={messagesEndRef} />
       </div>
       <form
-        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4 h-52 flex items-end"
+        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
         onSubmit={handleSubmit}
       >
-        {/* <div className="w-16 -mt-1 h-7 bg-neutral-900  flex items-center justify-center rounded-tl-lg right-0 top-0 fixed rounded-r-lg space-x-2 gap-2">
-          <AddAttachment
-            onFileSelected={startUpload}
-            disabled={!input || isUploading}
-          />
-        </div> */}
-        {/*  here another component using would be placed  */}
-
         <>
           <Editor
-          key={input}
-          onChange={()=>{console.log()}}
-            handlekeydown={handleKeyDown}
+            onchange={(value) => setInput(value)}
             setInput={setInput}
-            input={input}
+            input={input || ""}
             className="w-full"
           />
         </>

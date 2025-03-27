@@ -3,7 +3,11 @@
 import * as React from "react";
 import { Check, Circle, Edit, LogOut, Settings, X } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
 import {
   Dialog,
@@ -24,7 +28,8 @@ import { Separator } from "@/app/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/app/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { useSession } from "@/app/lib/auth-client";
+import { signOut, useSession } from "@/app/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 type StatusType = "online" | "idle" | "dnd" | "invisible" | "custom";
 
@@ -82,10 +87,19 @@ export function UserProfileDialog({
   const [status, setStatus] = React.useState<StatusType>("online");
   const [customStatus, setCustomStatus] = React.useState("");
   const [statusMenuOpen, setStatusMenuOpen] = React.useState(false);
-
-  const user = useSession()
-
+  const router = useRouter();
   const currentStatus = statusOptions.find((option) => option.value === status);
+  const user = useSession();
+
+  const handleSignOut = () => {
+    try {
+      signOut();
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      throw new Error("unable to sign out");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -103,7 +117,10 @@ export function UserProfileDialog({
           <div className="absolute -bottom-12 left-6">
             <div className="relative">
               <Avatar className="h-24 w-24 border-4 border-background">
-                <AvatarImage src={user.data?.user.image || "https://github.com/shadcn.png"} alt={user.data?.user.name} />
+                <AvatarImage
+                  src={user.data?.user.image || "https://github.com/shadcn.png"}
+                  alt={user.data?.user.name}
+                />
                 <AvatarFallback className="text-xl">AJ</AvatarFallback>
               </Avatar>
               <div className="absolute bottom-0 right-0">
@@ -189,7 +206,7 @@ export function UserProfileDialog({
           </div>
         </div>
 
-        <div className="mt-14 space-y-4">
+        <div className="mt-10 space-y-4">
           <div>
             <h2 className="text-xl font-semibold">{user.data?.user.name}</h2>
             <p className="text-sm text-muted-foreground">
@@ -199,7 +216,7 @@ export function UserProfileDialog({
           </div>
 
           <Separator />
-{/* 
+          
           <Tabs defaultValue="about">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="about">About</TabsTrigger>
@@ -210,14 +227,16 @@ export function UserProfileDialog({
                 <h3 className="text-sm font-medium text-muted-foreground">
                   ABOUT ME
                 </h3>
-                <p className="mt-1 text-sm">{user.about}</p>
+                <p className="mt-1 text-sm">{user.data?.user.name}</p>
               </div>
 
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">
                   MEMBER SINCE
                 </h3>
-                <p className="mt-1 text-sm">{user.data?.user.createdAt }</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {user.data?.user.createdAt?.toLocaleDateString()}
+                </p>
               </div>
             </TabsContent>
             <TabsContent value="settings" className="space-y-4 pt-4">
@@ -228,26 +247,29 @@ export function UserProfileDialog({
 
               <div className="grid gap-2">
                 <Label htmlFor="about">About Me</Label>
-                <Textarea id="about" defaultValue={user.data?.user.about} />
+                <Textarea id="about" defaultValue={user.data?.user.name} />
               </div>
 
               <Button className="w-full">Save Changes</Button>
             </TabsContent>
-          </Tabs> */}
+          </Tabs>
         </div>
 
-        <DialogFooter className="flex flex-col sm:flex-col">
-          <Button variant="outline" className="w-full justify-start gap-2">
-            <Settings className="h-4 w-4" />
-            User Settings
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full justify-start gap-2 text-destructive hover:text-destructive"
-          >
-            <LogOut className="h-4 w-4" />
-            Log Out
-          </Button>
+        <DialogFooter className="flex flex-col sm:flex-col space-y-2">
+          <div>
+            <Button variant="outline" className="w-full justify-start ">
+              <Settings className="h-4 w-4" />
+              User Settings
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleSignOut()}
+              className="w-full justify-start text-destructive hover:text-destructive"
+            >
+              <LogOut className="h-4 w-4" />
+              Log Out
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
