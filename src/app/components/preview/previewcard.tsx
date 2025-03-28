@@ -1,13 +1,12 @@
-import { attachment } from "@/actions/mediaUpload"
+import { attachment } from "@/actions/mediaUpload";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { cn } from "@/app/lib/utils";
 import { X } from "lucide-react";
 
-
 interface AttachmentPreviewProps {
   Attachment: attachment;
-  onRemoveclick: (fileName:string) => void;
+  onRemoveclick: (fileName: string) => void;
   key: string;
 }
 export default function AttachmentPreview({
@@ -27,7 +26,7 @@ export default function AttachmentPreview({
       >
         {file.type.startsWith("image") ? (
           <Image
-            className=" size-fit max-h-{30rem} rounded-2xl "
+            className=" size-fit max-h-{30rem} rounded-none "
             src={src}
             width={500}
             height={500}
@@ -40,8 +39,8 @@ export default function AttachmentPreview({
         )}
         {!isUploading && (
           <Button
-            className=" absolute right-3 top-3 rounded-full bg-foreground p-1.5 transition-colors hover:bg-muted "
-            onClick={()=> onRemoveclick(file.name)}
+            className="absolute right-0 top-0 rounded-full hover:bg-neutral-300 bg-foreground p-2 transition-colors"
+            onClick={() => onRemoveclick(file.name)}
           >
             <X size={20} className="hover:text-foreground" />
           </Button>
@@ -54,24 +53,23 @@ interface Attachmentpreviewsprops {
   attachments: attachment[];
   onremoveclick: (filename: string) => void;
 }
- function AttachmentPreviews({
+export function AttachmentPreviews({
   attachments,
   onremoveclick,
 }: Attachmentpreviewsprops) {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-3",
-        attachments.length > 1 && "sm:grid sm:grid-cols-2"
+    <div className=" gap-3">
+      {attachments.length > 4 ? (
+        <div className="text-destructive text-red-400 text-xs font-semibold text-center">too many files</div>
+      ) : (
+        attachments.map((attachment) => (
+          <AttachmentPreview
+            key={attachment.file.name}
+            Attachment={attachment}
+            onRemoveclick={() => onremoveclick(attachment.file.name)}
+          />
+        ))
       )}
-    >
-      {attachments.map((attachment) => (
-        <AttachmentPreview
-          key={attachment.file.name}
-          Attachment={attachment}
-          onRemoveclick={() => onremoveclick(attachment.file.name)}
-        />
-      ))}
     </div>
   );
 }

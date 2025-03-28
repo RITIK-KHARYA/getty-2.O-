@@ -212,19 +212,17 @@ export default function SpacePage() {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form
-        className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
-        onSubmit={handleSubmit}
-      >
+  
         <>
           <Editor
+          handleSubmit={handleSubmit}
             onchange={(value) => setInput(value)}
             setInput={setInput}
-            input={input || ""}
+            input={input}
             className="w-full"
           />
         </>
-      </form>
+    
     </div>
   );
 }

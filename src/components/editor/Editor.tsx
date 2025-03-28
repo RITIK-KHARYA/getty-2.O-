@@ -11,7 +11,9 @@ import {
   generatePermittedFileTypes,
 } from "uploadthing/client";
 import { cn } from "@/lib/utils";
-import AttachmentPreview from "@/app/components/preview/previewcard";
+import AttachmentPreview, {
+  AttachmentPreviews,
+} from "@/app/components/preview/previewcard";
 
 import {
   DropdownMenu,
@@ -22,10 +24,11 @@ import StarterKit from "@tiptap/starter-kit";
 import EmojiPicker from "../EmojiPicker";
 
 interface EditorProps {
-  input: string
+  input: string;
   setInput: (value: string) => void;
   className: string;
   onchange: (value: string) => void;
+  handleSubmit: () => void;
 }
 
 export default function Editor({
@@ -33,6 +36,7 @@ export default function Editor({
   input,
   setInput,
   onchange,
+  handleSubmit,
 }: EditorProps) {
   const editor = useEditor({
     autofocus: true,
@@ -94,64 +98,73 @@ export default function Editor({
       .map((item) => item.getAsFile()) as File[];
     startUpload(files);
   }
-
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editor) return;
+    handleSubmit();
+    editor.commands.clearContent();
+  };
   const { onClick, ...rootProps } = getRootProps();
 
   return (
-    <div className={className} {...rootProps}>
-      <div
-        {...getInputProps}
-        className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
-      >
-        <File className="opacity-90" size={20} />
+    <form
+      className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
+      onSubmit={handleFormSubmit}
+    >
+      <div className="w-full" {...rootProps}>
+        <div
+          {...getInputProps}
+          className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
+        >
+          <File className="opacity-90" size={20} />
 
-        <EmojiPicker
-          onChange={(e) => {
-            if (!editor) return;
-            editor.chain().focus().insertContent(e).run();
-          }}
-        />
-      </div>
-
-      <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
-        {!!attachment.length && (
-          <AttachmentPreview
-            Attachment={attachment[0]}
-            key={attachment[0].file.name}
-            onRemoveclick={removeAttachment}
-          />
-        )}
-
-        <div className="flex-1 overflow-hidden">
-          <EditorContent
-            editor={editor}
-            data-placeholder="Write something..."
-            className={cn(
-              "text-white w-full rounded-none border-none focus-outline-none focus:ring-0 max-h-[400px] overflow-y-auto",
-              isDragActive ? "border-violet-600" : ""
-            )}
-            onPaste={onPaste}
+          <EmojiPicker
+            onChange={(e) => {
+              if (!editor) return;
+              editor.chain().focus().insertContent(e).run();
+            }}
           />
         </div>
+        <div className="flex items-center gap-x-2">
+          {!!attachment.length &&
+            attachment.map((a) => (
+              <div className="flex flex-row h-16 w-16 rounded-none">
+                <AttachmentPreviews
+                  key={a.file.name}
+                  attachments={[a]}
+                  onremoveclick={removeAttachment}
+                />
+              </div>
+            ))}
+        </div>
 
-        <button
-          className={cn(
-            ` bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full`,
-            isUploading && "opacity-50 cursor-not-allowed"
-          )}
-          type="submit"
-          onClick={(e) => {
-            e.stopPropagation();
-            // if (editor) {
-            //   editor.commands.clearContent(true); // Clears editor content
-            //   setInput(""); // Resets state
-            // }
-          }}
-          disabled={!editor?.getText().trim() || isUploading}
-        >
-          <Send className="h-4 w-4" />
-        </button>
+        <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
+          <div className="flex-1 overflow-hidden">
+            <EditorContent
+              editor={editor}
+              data-placeholder="Write something..."
+              className={cn(
+                "text-white w-full rounded-none border-none focus-outline-none focus:ring-0 max-h-[400px] overflow-y-auto",
+                isDragActive ? "border-violet-600" : ""
+              )}
+              onPaste={onPaste}
+            />
+          </div>
+
+          <button
+            className={cn(
+              ` bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full`,
+              isUploading && "opacity-50 cursor-not-allowed"
+            )}
+            type="submit"
+            // onClick={(e) => e.stopPropagation()}
+
+            disabled={!editor?.getText().trim() || !!isUploading}
+          >
+            <Send className="h-4 w-4" />
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 }
