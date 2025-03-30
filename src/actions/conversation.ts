@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 import { getSession } from "./session";
 
 export default async function GetConversation() {
-
   const response = await fetch("http://localhost:3000/api/conversation", {
     headers: {
       cookie: (await headers()).get("cookie") || "",
@@ -18,13 +17,13 @@ export default async function GetConversation() {
     return null;
   }
 
-  console.log(data,"conversation here")
+  console.log(data, "conversation here");
   return data;
 }
 
 export async function CreateConversation(data: any) {
   const currentUser = await getSession();
-  const onBoardinguser = data             //consider the userid2
+  const onBoardinguser = data; //consider the userid2
 
   const response = await fetch("http://localhost:3000/api/conversation", {
     headers: {
@@ -45,7 +44,6 @@ export async function CreateConversation(data: any) {
   return value.data;
 }
 
-
 export async function DeleteConversation(ConversationId: string) {
   const response = await fetch(
     `http://localhost:3000/api/conversation/${ConversationId}`,
@@ -56,10 +54,7 @@ export async function DeleteConversation(ConversationId: string) {
       method: "DELETE",
     }
   );
-  const data = await response.json();
-
-  if (!response) {
-    console.log("there is nothing to delete or either something went wrong");
-  }
-
+   if (!response.ok) {
+     console.error("Error deleting conversation:", await response.text());
+   }
 }

@@ -22,9 +22,12 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import ChatArea from "./ChatArea";
+// import SearchChat from "./SearchChat";
 
 export default function Orbits() {
-  // const { userid } = useParams<{ userid: string }>();
+
 
   const user = useSession();
   const formSchema = z.object({
@@ -64,36 +67,18 @@ export default function Orbits() {
         </div>
         <hr className="w-full border border-neutral-800" />
         <div className="w-full">
-          <Form {...form}>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Search</FormLabel>
-                  <FormControl>
-                    <div className="relative w-full">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-neutral-400" />
-                      <Input
-                        placeholder="Search"
-                        {...field}
-                        className="pl-10"
-                      />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </Form>
+         {/* <SearchChat/> */}
         </div>
         <div>{/*here will be the users chats list */}</div>
       </div>
       {/* Main chat area - full width on mobile, adjusts on larger screens */}
       <div className="w-full sm:w-2/3 md:w-3/4 lg:w-2/4 flex flex-col items-center justify-start p-2 bg-black">
         {/* chat header containing the chatting user image name username  */}
+        <ChatArea />
       </div>
-      <div className="hidden lg:flex lg:w-1/4 flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/60 border"></div>
+      <div className="hidden lg:flex lg:w-1/4 flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/60 border">
+      {/* active user right side bar */}
+      </div>
     </main>
   );
 }
