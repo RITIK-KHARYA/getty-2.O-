@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ChatArea from "./ChatArea";
-// import SearchChat from "./SearchChat";
+import SearchChat from "./SearchChat";
 
 export default function Orbits() {
 
@@ -67,7 +67,7 @@ export default function Orbits() {
         </div>
         <hr className="w-full border border-neutral-800" />
         <div className="w-full">
-         {/* <SearchChat/> */}
+         <SearchChat/>
         </div>
         <div>{/*here will be the users chats list */}</div>
       </div>
