@@ -111,7 +111,7 @@ export default function Editor({
       className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
       onSubmit={handleFormSubmit}
     >
-      <div className="w-full" {...rootProps}>
+      <div className={className} {...rootProps}>
         <div
           {...getInputProps}
           className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"

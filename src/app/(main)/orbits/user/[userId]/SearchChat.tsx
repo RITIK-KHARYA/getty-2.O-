@@ -118,7 +118,7 @@ export default function SearchChat() {
             <Link href={`/orbits/user/${result.userid}`}>
               {/* conversation id goes here and replace this inorder to open the conversationid chat */}
               <Button className="bg-neutral-800 text-white font-extrabold  rounded-full w-10 h-10 hover:bg-neutral-800/80 text-center">
-                <MessageCircle className="size-5 mx-auto" />
+                <MessageCircle className="size-5 mx-auto text-center" />
               </Button>
             </Link>
           </div>

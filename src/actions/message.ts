@@ -64,3 +64,27 @@ export async function SendMessage(data: z.infer<typeof MessageSchema3>) {
     console.log("Error:", error);
   }
 }
+export async function ConversationMessage(
+  data: z.infer<typeof MessageSchema3>,
+  conversationId: string
+) {
+  const response = await fetch(
+    `http://localhost:3000/api/conversation${conversationId}`,
+    {
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+  if (!response.ok) {
+    console.log("unable to send the message");
+    return null;
+  }
+  const value = await response.json();
+  console.log(value);
+  return value.data;
+}
+//here since we sending the message to the conversationid we need to mention it
