@@ -4,8 +4,8 @@ import Image from "next/image";
 import { SignUpForm } from "../components/sign-up";
 import { Button } from "../components/ui/button";
 import { Github } from "lucide-react";
-import { signInWithDiscord, signInWithGithub } from "../lib/auth-client";
-import { BsDiscord } from "react-icons/bs";
+import { signInWithDiscord, signInWithGithub, signInWithGoogle } from "../lib/auth-client";
+import { BsDiscord, BsGoogle } from "react-icons/bs";
 
 export default function SignUpPage() {
   return (
@@ -16,7 +16,7 @@ export default function SignUpPage() {
       <div className="w-1/2 flex items-center justify-center">
         <div className="w-2/3 max-w-md">
           <h1 className="text-3xl font-bold mb-6">Sign Up</h1>
-          <div className="grid grid-cols-2 gap-2 m-5">
+          <div className="grid grid-cols-3 gap-2 m-5">
             <Button
               onClick={() => signInWithDiscord()}
               variant="outline"
@@ -24,6 +24,14 @@ export default function SignUpPage() {
             >
               <BsDiscord className="mr-2 h-4 w-4" />
               Discord
+            </Button>
+            <Button
+              onClick={() => signInWithGoogle()}
+              variant="outline"
+              className="bg-neutral-800/80 border-neutral-700 text-white hover:bg-neutral-700/40 w-full rounded-none"
+            >
+            <BsGoogle className="mr-2 h-4 w-4"/>
+              Google
             </Button>
             <Button
               onClick={() => signInWithGithub()}

@@ -66,7 +66,7 @@ export async function SendMessage(data: z.infer<typeof MessageSchema3>) {
 }
 export async function ConversationMessage(
   data: z.infer<typeof MessageSchema3>,
-  conversationId: string
+  {conversationId}: {conversationId: string}
 ) {
   const response = await fetch(
     `http://localhost:3000/api/conversation${conversationId}`,
@@ -85,6 +85,25 @@ export async function ConversationMessage(
   }
   const value = await response.json();
   console.log(value);
-  return value.data;
+  return value
 }
 //here since we sending the message to the conversationid we need to mention it
+
+export async function GetConversationMessage(conversationId: string) {
+  const response = await fetch(
+    `http://localhost:3000/api/conversation${conversationId}`,
+    {
+      headers: {
+        cookie: (await headers()).get("cookie") || "",
+      },
+      method: "GET",
+    }
+  );
+  if (!response.ok) {
+    console.log("unable to fetch the message");
+    return null;
+  }
+  const value = await response.json();
+  console.log(value);
+  return value.data;
+}

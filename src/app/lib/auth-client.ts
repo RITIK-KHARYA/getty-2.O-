@@ -18,5 +18,11 @@ export const signInWithDiscord = async () => {
     callbackURL: "http://localhost:3002/dashboard",
   });
 };
+export const signInWithGoogle = async () => {
+  await signIn.social({
+    provider: "google",
+    callbackURL: "http://localhost:3002/dashboard",
+  });
+};
 
 export type Session = typeof $Infer.Session;

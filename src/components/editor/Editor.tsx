@@ -39,6 +39,7 @@ export default function Editor({
   handleSubmit,
 }: EditorProps) {
   const editor = useEditor({
+    immediatelyRender: false, //hydration mismatches
     autofocus: true,
     extensions: [
       StarterKit.configure({

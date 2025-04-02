@@ -1,15 +1,20 @@
 "use client";
 
+import { ConversationMessage } from "@/actions/message";
 import { getSession } from "@/actions/session";
+import { useSession } from "@/app/lib/auth-client";
 import Editor from "@/components/editor/Editor";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function ChatArea() {
-  const user = getSession();
+  const user = useSession();
   const [message, setmessage] = useState<string | null>("");
   const [messageList, setmessageList] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
   const [isLoading, setisLoading] = useState<boolean>(false);
+  const SearchParams = useSearchParams();
+  const conversationId = SearchParams.get("conversationId");
 
   if (!user)
     return (
@@ -19,13 +24,30 @@ export default function ChatArea() {
         </div>
       </div>
     );
+  console.log(user);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
+    // e.preventDefault()
     try {
       if (!input.trim()) return;
       setisLoading(true);
-      // const result = await SubmitMessage(input);
-      // const setmessage(result)
+      const result = await ConversationMessage(
+        {
+          message: input,
+          spaceid: "1",
+          image: user.data?.user.image || "https://github.com/shadcn.png",
+          userId: user.data?.user.id ?? "",
+        },
+        {
+          conversationId: conversationId,
+        }
+      );
+      console.log(result);
+      if (!result) return;
+
+      //using params we get the conversation id which would be passed into the endpoint and then we send the message
+
+      setmessage(input);
     } catch (error) {
       console.log("unable to submit", error);
     } finally {

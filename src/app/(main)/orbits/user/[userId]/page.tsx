@@ -58,7 +58,7 @@ export default function Orbits() {
             </Avatar>
             <span className="text-sm ml-3 flex flex-col items-center">
               {user.data?.user.name}
-              <p className="text-xs text-muted-foreground mr-2">my account</p>
+              <p className="text-xs text-muted-foreground  w-full">my account</p>
             </span>
             <Link href={"/settings"} prefetch={true} className="ml-auto">
               <Settings2 className="size-5 ml-auto" />
