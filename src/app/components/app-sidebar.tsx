@@ -9,6 +9,7 @@ import {
   Moon,
   Settings,
   Sun,
+  UserPlus,
 } from "lucide-react";
 import { GeistMono } from "geist/font";
 
@@ -29,6 +30,7 @@ import GetSpace from "@/actions/space";
 import { cn } from "../lib/utils";
 import { getSession } from "@/actions/session";
 import { useSession } from "../lib/auth-client";
+import { title } from "process";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [spaces, setSpaces] = useState<any>([]);
@@ -81,6 +83,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: false,
         icon: Settings,
       },
+      // {
+      //   title:"Friends",
+      //   url:"/friends",
+      //   isActive:false,
+      //   icon:UserPlus
+      // }
     ],
   };
 

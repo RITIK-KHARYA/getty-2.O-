@@ -2,12 +2,9 @@
 
 import SearchDemo from "./custom-search";
 import { SpaceForm } from "./custom-dialog";
-import FindSpaceDialog from "../findspacedialog/findspacedialog";
-import { useParams, usePathname } from "next/navigation";
-import { Button } from "../ui/button";
-import { LogOutIcon } from "lucide-react";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 import SpaceCorner from "../event/SpaceCorner";
+import FriendsSheet from "../event/FriendButton";
 
 interface HeaderProps {}
 
@@ -24,6 +21,7 @@ export default function NavBar() {
               </div>
               <SpaceForm />
               {/* add log out button here */}
+              <FriendsSheet/>
             </>
           ) : (
             <>

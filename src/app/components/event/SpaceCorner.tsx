@@ -14,6 +14,8 @@ import { Users, LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import { FindSpaceById } from "@/actions/space";
 import Link from "next/link";
+import FriendButton from "./FriendButton";
+import { useSession } from "@/app/lib/auth-client";
 
 interface Space {
   space: {
@@ -22,14 +24,12 @@ interface Space {
     banner: string;
     description: string;
     _count: { users: number };
-    users: [
-      id: {
-        user: {
-          image: string;
-          name: string;
-        };
-      }
-    ];
+    users: {
+      id: string;
+      image: string;
+      name: string;
+      isFriend: Boolean;
+    }[];
     createdAt: Date;
     likes: number;
   };
@@ -39,18 +39,19 @@ interface Space {
 export default function SpaceCorner() {
   const { spaceid } = useParams<{ spaceid: string }>();
   const [space, setSpace] = useState<Space | null>(null);
+  const user = useSession();
 
   useEffect(() => {
     const fetchSpace = async () => {
       const data = await FindSpaceById(spaceid);
-      // console.log(data);
+
       setSpace(data);
     };
     fetchSpace();
   }, [spaceid]);
 
   if (!space) return null;
-
+  console.log(space);
   return (
     <div className="space-x-2">
       <Sheet>
@@ -98,27 +99,27 @@ export default function SpaceCorner() {
               {space.space.users && space.space.users.length > 0 ? (
                 space.space.users.map((member) => (
                   <div
-                    key={member.user.name}
+                    key={member.name}
                     className="flex justify-between items-center gap-3 p-2.5 bg-neutral-900  rounded-lg border border-neutral-800 transition-colors"
                   >
                     <div className="flex items-center ">
                       <Image
-                        src={
-                          member.user.image ||
-                          "/placeholder.svg?height=40&width=40"
-                        }
-                        alt={member.user.name}
+                        src={member.image || "https://github.com/shadcn.png"}
+                        alt={member.name}
                         width={40}
                         height={40}
                         className="rounded-full border border-neutral-700 w-10 h-10 object-cover"
                       />
                       <div className="ml-2">
                         <p className="text-xs text-neutral-300">
-                          {member.user.name}
+                          {member.name}
                         </p>
                       </div>
                     </div>
-                    <Button className="bg-white hover:bg-neutral-300  text-black w-16 h-7 text-[10px] font-semibold">Add friend</Button>
+                    <FriendButton
+                      friendId={member.id}
+                      isFriend={member.isFriend}
+                    />
                   </div>
                 ))
               ) : (

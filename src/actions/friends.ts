@@ -1,9 +1,11 @@
+"use server";
+
 import { headers } from "next/headers";
 
-export default async function GetFriends(userId: string) {
+export default async function GetFriends(currentUserId: string) {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/user/${userId}/friends`, //there is problem with the endpoint related to the userid and frinedsid how to send the request with whom id at where inorder the id is sended 
+      `http://localhost:3000/api/users/${currentUserId}/friends`, //there is problem with the endpoint related to the userid and frinedsid how to send the request with whom id at where inorder the id is sended
       {
         headers: {
           cookie: (await headers()).get("cookie") || "",
@@ -12,13 +14,17 @@ export default async function GetFriends(userId: string) {
       }
     );
     const data = await response.json();
+    if (!response.ok) {
+      return null;
+    }
     return data;
   } catch (error) {
     console.log(error, "behenchod");
   }
 }
 
-export async function AddFriend(friendId: string) { //same case here id props needed to be managed 
+export async function AddFriend(friendId: string) {
+  //same case here id props needed to be managed
   try {
     const response = await fetch(
       `http://localhost:3000/api/friends?friendId=${friendId}`,

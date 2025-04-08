@@ -37,16 +37,6 @@ export default function SpacePage() {
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  // const {
-  //   startUpload,
-  //   attachment,
-  //   isUploading,
-  //   uploadProgress,
-  //   removeAttachment,
-  //   reset: resetMedia,
-  // } = useMediaUpload();
-  //got be using them later gonna make the codebase super ugly hehe
-
   const handleSubmit = async (
     e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -133,7 +123,7 @@ export default function SpacePage() {
       <div className="absolute inset-0">
         <GridSmallBackgroundDemo />
       </div>{" "}
-      <div className="flex-col flex relative   overflow-y-auto p-4 mb-20 rounded-lg">
+      <div className="flex-col flex relative overflow-y-auto p-4 mb-20 rounded-lg">
         {messages.length > 0 ? (
           messages.map((m) => (
             <div
@@ -212,17 +202,15 @@ export default function SpacePage() {
         )}
         <div ref={messagesEndRef} />
       </div>
-  
-        <>
-          <Editor
+      <>
+        <Editor
           handleSubmit={handleSubmit}
-            onchange={(value) => setInput(value)}
-            setInput={setInput}
-            input={input}
-            className="w-full"
-          />
-        </>
-    
+          onchange={(value) => setInput(value)}
+          setInput={setInput}
+          input={input}
+          className="w-full"
+        />
+      </>
     </div>
   );
 }

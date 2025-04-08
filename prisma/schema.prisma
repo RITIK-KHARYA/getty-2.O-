@@ -20,8 +20,15 @@ model User {
   updatedAt            DateTime
   sessions             Session[]
   accounts             Account[]
+  messages             Message[]
   likes                Like[]
   spaces               SpaceUser[]
+  createdSpaces        Space[]        @relation("creator")
+  sentFriendRequests   FriendRequest[] @relation("sent")
+  receivedFriendRequests FriendRequest[] @relation("received")
+  friends              Friend[]       @relation("user1Relation")
+  friendships          Friend[]       @relation("user2Relation")
+  conversations        ConversationUser[]
 
   @@unique([email])
   @@map("user")
@@ -100,43 +107,110 @@ model Like {
   @@map("likes")
 }
 
+model FriendRequest {
+  id         String  @id @default(cuid())
+  senderId   String
+  receiverId String
+  sender     User    @relation(name: "sent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User    @relation(name: "received", fields: [receiverId], references: [id], onDelete: Cascade)
+  status     Status  @default(PENDING)
+
+  @@unique([senderId, receiverId])
+  @@map("friend_requests")
+}
+
+model Friend {
+  id        String @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  user1     User   @relation("user1Relation", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2     User   @relation("user2Relation", fields: [user2Id], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([user1Id, user2Id])
+  @@map("friends")
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  users     ConversationUser[]
+  messages  Message[]
+  isGroup   Boolean?
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model ConversationUser {
+  id             String        @id @default(cuid())
+  userId         String
+  conversationId String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation  Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+}
+
 model Space {
-  id                 String      @id @default(cuid())
-  title              String
-  description        String
-  banner             String
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime
-  userid             String
-  users              SpaceUser[]
-  likes              Like[]
-  media              Media[]
+  id           String      @id @default(cuid())
+  title        String
+  description  String
+  banner       String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now())
+  creatorId    String
+  creator      User        @relation("creator", fields: [creatorId], references: [id], onDelete: Cascade)
+  users        SpaceUser[]
+  likes        Like[]
+  messages     Message[]
+  media        Media[]
+
   @@map("space")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  userId    String
+  spaceId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  conversationId String?
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("message")
 }
 
 model SpaceUser {
   id       String   @id @default(cuid())
   userId   String
   spaceId  String
-  role     Role     @default(MEMEBER)
+  role     Role     @default(MEMBER)
   joinedAt DateTime @default(now())
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  space    Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, spaceId])
   @@map("space_user")
 }
 
 model Media {
-  id               String    @id @default(cuid())
-  Mediatype        MediaType
-  url              String
-  spaceId          String
-  filename         String    @unique
-  originalurl      String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime
-  space            Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  Mediatype   MediaType
+  url         String
+  spaceId     String
+  filename    String    @unique
+  originalurl String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  space       Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
   @@unique([spaceId, Mediatype, url])
   @@map("media")
 }
@@ -148,5 +222,7 @@ enum MediaType {
 
 enum Role {
   ADMIN
-  MEMEBER
+  MEMBER
 }
+
+//this is only demo schema remember

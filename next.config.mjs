@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental:{
-    reactCompiler:true
+  experimental: {
+    reactCompiler: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -22,6 +22,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "github.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
       },
     ],
   },
