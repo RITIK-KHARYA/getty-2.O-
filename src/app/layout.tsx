@@ -6,6 +6,7 @@ import Footer from "./components/footer";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./../app/api/uploadthing/core";
+import { Toaster } from "./components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,6 +41,7 @@ export default function RootLayout({
           />
           {children}
         </ThemeProvider>
+        <Toaster/>
       </body>
     </html>
   );

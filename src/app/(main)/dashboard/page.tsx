@@ -11,6 +11,7 @@ import ClientModelContent from "./[spaceid]/ModelContent";
 
 export default async function Page() {
   const data = await GetSpace();
+  console.log(data)
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl">
@@ -41,6 +42,7 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
               <DialogTitle className="hidden" />
               <ClientModelContent
                 spacename={item.title}
+                intialLikes={item.like}
                 spaceid={item.id}
                 description={item.description}
                 image={item.banner}
@@ -62,7 +64,7 @@ function SkeletonLoader() {
   return (
     <div className="flex flex-row items-center gap-x-3">
       {[...Array(4)].map((_, i) => (
-        <Skeleton key={i} className="w-full h-52 rounded-lg" />
+        <Skeleton key={i} className="w-full h-52 rounded-sm" />
       ))}
     </div>
   );

@@ -97,7 +97,7 @@ export async function FindSpaceById(id: string) {
       return null;
     }
     const data = await space.json();
-    // console.log(data);
+    console.log(data);
     // console.log(data.membersCount, "memberscount");
     return data;
   } catch (error) {
