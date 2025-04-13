@@ -116,11 +116,11 @@ export default function SpaceCorner() {
                         </p>
                       </div>
                     </div>
-                    <FriendButton
+                    {/* <FriendButton
                       friendId={member.id}
                       isFriend={member.isFriend}
-                    />
-                  </div>
+                    /> */}
+                  </div> 
                 ))
               ) : (
                 <div className="text-center py-6 text-neutral-500 text-sm">

@@ -11,7 +11,7 @@ import ClientModelContent from "./[spaceid]/ModelContent";
 
 export default async function Page() {
   const data = await GetSpace();
-  console.log(data)
+ 
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl">
@@ -34,7 +34,7 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
                   banner={item.banner}
                   description={item.description}
                   spaceAdmin={item.spaceAdmin[0]}
-                  memberCount={10}
+                  memberCount={item.Role}
                 />
               </div>
             </DialogTrigger>

@@ -17,17 +17,37 @@ export default async function GetFriends(currentUserId: string) {
     if (!response.ok) {
       return null;
     }
-    return data;
+    console.log(data.data);
+    return data
   } catch (error) {
     console.log(error, "behenchod");
   }
 }
 
-export async function AddFriend(friendId: string) {
+export async function AddFriendRequest(friendId: string) {
   //same case here id props needed to be managed
   try {
     const response = await fetch(
-      `http://localhost:3000/api/friends?friendId=${friendId}`,
+      `http://localhost:3000/api/friends/request?friendId=${friendId}`,
+      {
+        headers: {
+          cookie: (await headers()).get("cookie") || "",
+        },
+        method: "POST",
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error, "behenchod");
+  }
+}
+export async function AcceptFriendRequest(friendId: string) {
+  //same case here id props needed to be managed
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/friends/accept?friendId=${friendId}`,
       {
         headers: {
           cookie: (await headers()).get("cookie") || "",
@@ -44,16 +64,15 @@ export async function AddFriend(friendId: string) {
 export async function RemoveFriend(friendId: string) {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/friends?friendId=${friendId}`,
+      `http://localhost:3000/api/friends/delete?friendId=${friendId}`,
       {
         headers: {
           cookie: (await headers()).get("cookie") || "",
         },
-        method: "DELETE",
+        method: "DELETE", 
       }
     );
-    const data = await response.json();
-    return data;
+    console.log("DELETED")
   } catch (error) {
     console.log(error, "error deleting the friend");
   }

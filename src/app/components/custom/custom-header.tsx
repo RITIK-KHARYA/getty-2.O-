@@ -5,11 +5,19 @@ import { SpaceForm } from "./custom-dialog";
 import { usePathname } from "next/navigation";
 import SpaceCorner from "../event/SpaceCorner";
 import FriendsSheet from "../event/FriendButton";
+import GetFriends from "@/actions/friends";
+import { getSession } from "@/actions/session";
+import { useSession } from "@/app/lib/auth-client";
 
 interface HeaderProps {}
 
 export default function NavBar() {
   const pathname = usePathname();
+  const CurrentUser = useSession();
+  
+  const GetAllfriends = async()=>{
+    await GetFriends(CurrentUser.data?.user.id);
+  }
   return (
     <div className="sticky top-0 h-[60px] ">
       <div className="flex items-center h-full justify-end px-4 gap-x-5 ">
@@ -21,7 +29,8 @@ export default function NavBar() {
               </div>
               <SpaceForm />
               {/* add log out button here */}
-              <FriendsSheet/>
+              <FriendsSheet  />
+              {/* //get all the member of all space */}
             </>
           ) : (
             <>

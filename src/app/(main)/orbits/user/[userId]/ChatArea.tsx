@@ -26,7 +26,7 @@ export default function ChatArea() {
           <div className="font-bold text-2xl">Please login to chat</div>
         </div>
       </div>
-    );
+    );  
     
   useEffect(() => {}, []);
 

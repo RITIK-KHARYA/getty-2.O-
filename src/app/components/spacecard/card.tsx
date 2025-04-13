@@ -29,7 +29,7 @@ export default function SpaceCard({
   spacename,
   description,
   spaceAdmin,
-  memberCount = 10,
+  memberCount 
 }: SpaceCardProps) {
   const router = useRouter();
   return (

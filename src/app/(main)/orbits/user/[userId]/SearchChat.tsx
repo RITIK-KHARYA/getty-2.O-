@@ -38,7 +38,6 @@ export default function SearchChat() {
 
   const handleSubmit = (e?: React.ChangeEvent<HTMLInputElement>) => {
     console.log(search);
-    // SearchResult();
     if (!search.trim()) {
       console.log("empty search");
       return;
@@ -115,7 +114,7 @@ export default function SearchChat() {
               </Avatar>
               <p className="text-muted-foreground text-sm">{result?.name}</p>
             </div>
-            <Link href={`/orbits/user/${result.userid}`}>
+            <Link href={`http://localhost:3002/orbits/user/${result.userid}`}>
               {/* conversation id goes here and replace this inorder to open the conversationid chat */}
               <Button className="bg-neutral-800 text-white font-extrabold  rounded-full w-10 h-10 hover:bg-neutral-800/80 text-center">
                 <MessageCircle className="size-5 mx-auto text-center" />
@@ -127,14 +126,3 @@ export default function SearchChat() {
     </Popover>
   );
 }
-
-//   useEffect(() => {
-//     const keydown = (e?: KeyboardEvent) => {
-//       if (!e) return;
-//       e.preventDefault();
-//       if (e.key === "Enter") {
-//         handleSubmit();
-//       }
-//     };
-//   }, []);
-//debounce value

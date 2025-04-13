@@ -57,7 +57,7 @@ export default function ClientModelContent({
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (liked) {
       setLiked(false);
       setOptimisticLikes((prev): number => prev - 1);
@@ -116,6 +116,7 @@ export default function ClientModelContent({
                   liked ? "fill-rose-500 text-rose-500" : ""
                 }`}
               />
+            
               <span className="text-sm font-medium">{optimisticLikes}</span>
             </button>
           </div>

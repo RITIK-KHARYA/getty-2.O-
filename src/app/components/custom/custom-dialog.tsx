@@ -186,7 +186,7 @@ export function SpaceForm() {
                 className="font-medium"
               >
                 {isLoading ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-sm">
                     <svg
                       className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
                       xmlns="http://www.w3.org/2000/svg"

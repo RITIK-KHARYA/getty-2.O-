@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserPlus } from "lucide-react";
-import GetFriends from "@/actions/friends";
+import { Loader2, Loader2Icon, LoaderIcon, UserPlus } from "lucide-react";
+import GetFriends, {
+  AcceptFriendRequest,
+  RemoveFriend,
+} from "@/actions/friends";
 import { getSession } from "@/actions/session";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -19,66 +22,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/components/ui/sheet";
-
-// export default function FriendButton({
-//   friendId,
-//   isFriend,
-// }: {
-//   friendId: string;
-//   isFriend: Boolean;
-// }) {
-//   console.log(friendId);
-//   const handleAddFriend = async () => {
-//     await AddFriend(friendId);
-//   };
-//   return (
-//     <div>
-//       {!isFriend ? (
-//         <Tooltip>
-//           <TooltipTrigger>
-//             <Button
-//               className="bg-neutral-900 text-neutral-200 text-sm text-center"
-//               onClick={handleAddFriend}
-//             >
-//               <UserPlus className=" h-4 w-4" />
-//             </Button>
-//             <TooltipContent className="text-xs text-muted-foreground">
-//               Add Friend
-//             </TooltipContent>
-//           </TooltipTrigger>
-//         </Tooltip>
-//       ) : (
-//         <Tooltip>
-//           <TooltipTrigger>
-//             <Button className="bg-neutral-900 text-neutral-200 text-sm text-center">
-//               <UserCheck className=" h-4 w-4" />
-//             </Button>
-//             <TooltipContent className="text-xs text-muted-foreground">
-//               Remove user
-//             </TooltipContent>
-//           </TooltipTrigger>
-//         </Tooltip>
-//       )}
-//     </div>
-//   );
-// }
+import { useRouter } from "next/navigation";
 
 interface FriendButtonProps {
-  friendId: string;
-  isFriend: Boolean
+  friendId?: string;
 }
-export default function FriendsSheet({
-  friendId,
-  isFriend,
-}: FriendButtonProps) {
+export default function FriendsSheet({ friendId }: FriendButtonProps) {
   const [open, setOpen] = useState(false);
+  const [loadingaccept, setLoadingaccept] = useState<boolean | null>(false);
+  const [loadingreject, setLoadingreject] = useState<boolean | null>(false);
   const [friends, setFriends] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFriends = async () => {
       const user = await getSession();
       if (!user) return;
       const data = await GetFriends(user.user.id);
+      console.log(data.data);
       setFriends(data);
     };
 
@@ -86,6 +47,30 @@ export default function FriendsSheet({
       fetchFriends();
     }
   }, [open]);
+
+  const handleAccept = async (friendid:string) => {
+    try {
+      setLoadingaccept(true);
+      await AcceptFriendRequest(friendid);
+      router.refresh();
+      setLoadingaccept(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReject = async (friendid: string) => {
+    try {
+      setLoadingreject(true);
+      console.log(friendId);
+      await RemoveFriend(friendid);
+      router.refresh();
+      setLoadingreject(false);
+      console.log("deleted once");
+    } catch (error) {
+      console.log(error, "error deleting the friend");
+    }
+  };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -101,8 +86,8 @@ export default function FriendsSheet({
         </SheetHeader>
 
         {!friends ? (
-          <div className="p-6 text-center text-muted-foreground">
-            Loading...
+          <div className="p-6 flex w-full items-center justify-center text-center text-muted-foreground">
+            <LoaderIcon className="animate-spin h-4 w-4" />
           </div>
         ) : (
           <div className="py-4 overflow-y-auto max-h-[calc(100vh-6rem)]">
@@ -157,7 +142,11 @@ export default function FriendsSheet({
                             <span className="text-sm text-muted-foreground mr-2">
                               {f.sentAt}
                             </span>
-                            <Button variant="destructive" size="sm">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleReject(f.receiver.id)}
+                            >
                               Cancel
                             </Button>
                           </div>
@@ -200,14 +189,29 @@ export default function FriendsSheet({
                               {f.sender.receivedAt}
                             </span>
                             <div className="flex gap-2">
-                              <Button variant="destructive" size="sm">
-                                Decline
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleReject(f.sender.id)}
+                                disabled={loadingreject}
+                              >
+                                {loadingreject ? (
+                                  <Loader2 className="animate-spin mx-auto" />
+                                ) : (
+                                  "Decline"
+                                )}
                               </Button>
                               <Button
                                 className="bg-green-600 hover:bg-green-700"
                                 size="sm"
+                                onClick={() => handleAccept(f.sender.id)}
+                                disabled={loadingaccept}
                               >
-                                Accept
+                                {loadingaccept ? (
+                                  <Loader2 className="animate-spin mx-auto" />
+                                ) : (
+                                  "Accept"
+                                )}
                               </Button>
                             </div>
                           </div>
