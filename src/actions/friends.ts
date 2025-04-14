@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export default async function GetFriends(currentUserId: string) {
@@ -61,7 +62,7 @@ export async function AcceptFriendRequest(friendId: string) {
     console.log(error, "behenchod");
   }
 }
-export async function RemoveFriend(friendId: string) {
+export async function RemovePendingRequest(friendId: string) {
   try {
     const response = await fetch(
       `http://localhost:3000/api/friends/delete?friendId=${friendId}`,
@@ -73,6 +74,7 @@ export async function RemoveFriend(friendId: string) {
       }
     );
     console.log("DELETED")
+    
   } catch (error) {
     console.log(error, "error deleting the friend");
   }

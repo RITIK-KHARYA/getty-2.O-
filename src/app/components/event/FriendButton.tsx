@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Loader2, Loader2Icon, LoaderIcon, UserPlus } from "lucide-react";
 import GetFriends, {
   AcceptFriendRequest,
-  RemoveFriend,
+  RemovePendingRequest,
 } from "@/actions/friends";
 import { getSession } from "@/actions/session";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -48,7 +48,7 @@ export default function FriendsSheet({ friendId }: FriendButtonProps) {
     }
   }, [open]);
 
-  const handleAccept = async (friendid:string) => {
+  const handleAccept = async (friendid: string) => {
     try {
       setLoadingaccept(true);
       await AcceptFriendRequest(friendid);
@@ -63,9 +63,10 @@ export default function FriendsSheet({ friendId }: FriendButtonProps) {
     try {
       setLoadingreject(true);
       console.log(friendId);
-      await RemoveFriend(friendid);
+      await RemovePendingRequest(friendid);
       router.refresh();
       setLoadingreject(false);
+
       console.log("deleted once");
     } catch (error) {
       console.log(error, "error deleting the friend");
