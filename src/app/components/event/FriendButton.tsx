@@ -52,8 +52,8 @@ export default function FriendsSheet({ friendId }: FriendButtonProps) {
     try {
       setLoadingaccept(true);
       await AcceptFriendRequest(friendid);
-      router.refresh();
       setLoadingaccept(false);
+      router.refresh();
     } catch (error) {
       console.log(error);
     }
@@ -64,9 +64,8 @@ export default function FriendsSheet({ friendId }: FriendButtonProps) {
       setLoadingreject(true);
       console.log(friendId);
       await RemovePendingRequest(friendid);
-      router.refresh();
       setLoadingreject(false);
-
+      router.refresh();
       console.log("deleted once");
     } catch (error) {
       console.log(error, "error deleting the friend");
@@ -203,7 +202,7 @@ export default function FriendsSheet({ friendId }: FriendButtonProps) {
                                 )}
                               </Button>
                               <Button
-                                className="bg-green-600 hover:bg-green-700"
+                                className="bg-green-700 hover:bg-green-700/60 text-white"
                                 size="sm"
                                 onClick={() => handleAccept(f.sender.id)}
                                 disabled={loadingaccept}

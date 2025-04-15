@@ -11,7 +11,7 @@ import ClientModelContent from "./[spaceid]/ModelContent";
 
 export default async function Page() {
   const data = await GetSpace();
- 
+ console.log(data);
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl">
@@ -42,10 +42,10 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
               <DialogTitle className="hidden" />
               <ClientModelContent
                 spacename={item.title}
-                intialLikes={item.like}
                 spaceid={item.id}
                 description={item.description}
                 image={item.banner}
+                likesCount={item.likes}
                 spaceadmin={item.spaceAdmin?.[0]?.name || "Unknown Admin"}
                 adminimage={
                   item.spaceAdmin?.[0]?.image || "https://github.com/shadcn.png"

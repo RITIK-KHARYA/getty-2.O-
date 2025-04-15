@@ -10,7 +10,7 @@ import {
   AvatarImage,
 } from "@/app/components/ui/avatar";
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { Heart } from "lucide-react";
+import { ArrowBigRight, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useOptimistic, useState } from "react";
@@ -21,7 +21,7 @@ interface ClientModelContentProps {
   image?: string;
   adminimage: string;
   spaceadmin?: string;
-  intialLikes: number;
+  likesCount: number;
   spaceid: string;
 }
 
@@ -31,12 +31,12 @@ export default function ClientModelContent({
   description,
   image,
   spaceadmin,
-  intialLikes,
+  likesCount,
   adminimage,
 }: ClientModelContentProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [liked, setLiked] = useState<boolean>(false);
-  const [optimisticLikes, setOptimisticLikes] = useOptimistic(intialLikes);
+  const [liked, setLiked] = useState<boolean>();
+  const [optimisticLikes, setOptimisticLikes] = useOptimistic(likesCount);
   const router = useRouter();
 
   const handleJoin = async () => {
@@ -61,18 +61,21 @@ export default function ClientModelContent({
     if (liked) {
       setLiked(false);
       setOptimisticLikes((prev): number => prev - 1);
-      await DeleteLike(spaceid);
-    }
-
-    if (!liked) {
+      try {
+        await DeleteLike(spaceid);
+      } catch (error) {
+        setOptimisticLikes((prev: number) => prev + 1);
+        setLiked(true);
+        console.error("Error removing like:", error);
+      }
+    } else {
       setLiked(true);
       setOptimisticLikes((prev: number) => prev + 1);
-
       try {
         await AddLike(spaceid);
       } catch (error) {
-        setLiked(false);
         setOptimisticLikes((prev: number) => prev - 1);
+        setLiked(false);
         console.error("Error creating like:", error);
       }
     }
@@ -116,8 +119,10 @@ export default function ClientModelContent({
                   liked ? "fill-rose-500 text-rose-500" : ""
                 }`}
               />
-            
-              <span className="text-sm font-medium">{optimisticLikes}</span>
+
+              <span className="text-sm text-muted-foreground font-semibold pl-2">
+                {optimisticLikes}
+              </span>
             </button>
           </div>
         </div>
@@ -153,7 +158,7 @@ export default function ClientModelContent({
           <button
             onClick={handleJoin}
             disabled={loading}
-            className="px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-lg transition-colors relative overflow-hidden group"
+            className="px-6 py-2.5 bg-neutral-800 hover:bg-zinc-700 text-white font-medium rounded-none transition-colors relative overflow-hidden group"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -162,8 +167,13 @@ export default function ClientModelContent({
               </span>
             ) : (
               <>
-                <span className="relative z-10">Join Space</span>
-                <span className="absolute inset-0 w-0 bg-gradient-to-r from-zinc-700 to-zinc-600 transition-all duration-300 group-hover:w-full"></span>
+                <span className="relative z-10 text-sm">
+                  Join Space
+                  {/* <span className="opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                    →
+                  </span> */}
+                </span>
+                <span className="absolute inset-0 w-0 bg-gradient-to-r from-neutral-800/40 to-neutral-600/60 transition-all duration-300 group-hover:w-full"></span>
               </>
             )}
           </button>

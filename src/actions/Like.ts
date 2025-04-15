@@ -9,10 +9,14 @@ export async function AddLike(spaceid: string) {
       {
         headers: {
           cookie: (await headers()).get("cookie") || "",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }
     );
+    const data = await response.json();
+    console.log("LIKED")
+    return data;
   } catch (error) {
     console.log("error getting the like");
   }

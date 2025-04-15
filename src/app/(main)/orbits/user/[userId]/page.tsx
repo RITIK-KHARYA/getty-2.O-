@@ -27,8 +27,6 @@ import ChatArea from "./ChatArea";
 import SearchChat from "./SearchChat";
 
 export default function Orbits() {
-
-
   const user = useSession();
   const formSchema = z.object({
     name: z.string().min(2).max(10),
@@ -43,7 +41,7 @@ export default function Orbits() {
 
   return (
     <main className="flex flex-col sm:flex-row w-full h-full">
-      {" "}
+      {/* Left sidebar - full width on mobile, adjusts on larger screens */}
       <div className="w-full sm:w-1/3 md:w-1/4 flex flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/80 border space-y-2">
         <div className="w-full border border-neutral-800/80 rounded-lg p-2 bg-neutral-900 flex items-center justify-start">
           <>
@@ -58,7 +56,7 @@ export default function Orbits() {
             </Avatar>
             <span className="text-sm ml-3 flex flex-col items-center">
               {user.data?.user.name}
-              <p className="text-xs text-muted-foreground  w-full">my account</p>
+              <p className="text-xs text-muted-foreground w-full">my account</p>
             </span>
             <Link href={"/settings"} prefetch={true} className="ml-auto">
               <Settings2 className="size-5 ml-auto" />
@@ -67,17 +65,20 @@ export default function Orbits() {
         </div>
         <hr className="w-full border border-neutral-800" />
         <div className="w-full">
-         <SearchChat/>
+          <SearchChat />
         </div>
         <div>{/*here will be the users chats list */}</div>
       </div>
+
       {/* Main chat area - full width on mobile, adjusts on larger screens */}
-      <div className="w-full sm:w-2/3 md:w-3/4 lg:w-2/4 flex flex-col items-center justify-start p-2 bg-black">
-        {/* chat header containing the chatting user image name username  */}
+      <div className="w-full sm:w-2/3 md:w-3/4 flex flex-col items-center justify-start p-2 bg-black">
         <ChatArea />
       </div>
+
+      {/* Right sidebar - hidden on small/medium screens, visible on large screens */}
       <div className="hidden lg:flex lg:w-1/4 flex-col items-center justify-start p-2 bg-neutral-950 rounded-r-2xl border-neutral-800/60 border">
-      {/* active user right side bar */}
+        {/* active user right side bar */}
+        {/* <ActiveRightSidebar /> */}
       </div>
     </main>
   );

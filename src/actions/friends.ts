@@ -45,13 +45,13 @@ export async function AddFriendRequest(friendId: string) {
   }
 }
 export async function AcceptFriendRequest(friendId: string) {
-  //same case here id props needed to be managed
   try {
     const response = await fetch(
       `http://localhost:3000/api/friends/accept?friendId=${friendId}`,
       {
         headers: {
           cookie: (await headers()).get("cookie") || "",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }
