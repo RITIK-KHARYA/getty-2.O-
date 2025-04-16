@@ -11,6 +11,8 @@ import {
   SidebarMenuItem,
 } from "@/app/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import LinkStatus from "./event/LinkStatus";
 
 export function NavMain({
   items,
@@ -48,7 +50,7 @@ export function NavMain({
                     "group relative overflow-hidden rounded-md"
                   )}
                 >
-                  <a href={item.url}>
+                  <Link href={item.url} prefetch={true}>
                     {/* Animated background on hover */}
                     <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
 
@@ -64,18 +66,20 @@ export function NavMain({
 
                     <span
                       className={cn(
-                        "text-base font-normal",
+                        "text-base font-normal flex w-full justify-between",
                         isActive && "font-medium text-primary"
                       )}
                     >
                       {item.title}
+                      <LinkStatus />
                     </span>
 
                     {/* Active indicator */}
+
                     {isActive && (
                       <span className="absolute right-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-l-full bg-primary" />
                     )}
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </Collapsible>

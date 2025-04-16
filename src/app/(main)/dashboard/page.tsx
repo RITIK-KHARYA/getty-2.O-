@@ -9,19 +9,25 @@ import {
 } from "@/app/components/ui/dialog";
 import ClientModelContent from "./[spaceid]/ModelContent";
 
+import { useSession } from "@/app/lib/auth-client";
+import { getSession } from "@/actions/session";
+
 export default async function Page() {
   const data = await GetSpace();
- console.log(data);
+  const user = await getSession()
+  console.log(user)
+  console.log(data);
   return (
     <div className="w-full p-3">
       <div className=" backdrop-blur rounded-2xl shadow-xl">
-        <SpaceList data={data} classname="flex" />
+        <SpaceList data={data} classname="flex" user={user.user} />
       </div>
     </div>
   );
 }
 
-function SpaceList({ data, classname }: { data: any; classname: string }) {
+function SpaceList({ data, classname,user }: { data: any; classname: string;user:any }) {
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {data ? (
@@ -45,7 +51,8 @@ function SpaceList({ data, classname }: { data: any; classname: string }) {
                 spaceid={item.id}
                 description={item.description}
                 image={item.banner}
-                likesCount={item.likes}
+                userliked={item.likes.some((like:any)=> like.id === user.id)}
+                likesCount={item.likes.length}
                 spaceadmin={item.spaceAdmin?.[0]?.name || "Unknown Admin"}
                 adminimage={
                   item.spaceAdmin?.[0]?.image || "https://github.com/shadcn.png"
@@ -69,6 +76,3 @@ function SkeletonLoader() {
     </div>
   );
 }
-
-
-

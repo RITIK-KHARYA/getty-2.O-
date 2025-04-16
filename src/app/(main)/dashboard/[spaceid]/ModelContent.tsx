@@ -13,12 +13,13 @@ import { Skeleton } from "@/app/components/ui/skeleton";
 import { ArrowBigRight, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useOptimistic, useState } from "react";
+import { startTransition, useOptimistic, useState, useTransition } from "react";
 
 interface ClientModelContentProps {
   spacename: string;
   description: string;
   image?: string;
+  userliked: boolean;
   adminimage: string;
   spaceadmin?: string;
   likesCount: number;
@@ -30,13 +31,18 @@ export default function ClientModelContent({
   spaceid,
   description,
   image,
+  userliked,
   spaceadmin,
   likesCount,
   adminimage,
 }: ClientModelContentProps) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [liked, setLiked] = useState<boolean>();
-  const [optimisticLikes, setOptimisticLikes] = useOptimistic(likesCount);
+  const [liked, setLiked] = useState<boolean>(userliked);
+  const [isPending, startTransition] = useTransition();
+  const [likeCount, setLikeCount] = useState(likesCount);
+  const [optimisticLikes, setOptimisticLikes] = useOptimistic<number | null>(
+    likeCount
+  );
   const router = useRouter();
 
   const handleJoin = async () => {
@@ -54,27 +60,32 @@ export default function ClientModelContent({
     }
   };
 
+  console.log(userliked)
+
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (liked) {
-      setLiked(false);
-      setOptimisticLikes((prev): number => prev - 1);
       try {
+        setLiked(false);
+        startTransition(() => setOptimisticLikes((prev: number) => prev - 1));
         await DeleteLike(spaceid);
+        setLikeCount((prev: number) => prev - 1);
       } catch (error) {
-        setOptimisticLikes((prev: number) => prev + 1);
+        startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
         setLiked(true);
         console.error("Error removing like:", error);
       }
     } else {
       setLiked(true);
-      setOptimisticLikes((prev: number) => prev + 1);
+      startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
       try {
         await AddLike(spaceid);
+        setLikeCount((prev: number) => prev + 1);
       } catch (error) {
-        setOptimisticLikes((prev: number) => prev - 1);
+        startTransition(() => setOptimisticLikes((prev: number) => prev - 1));
+        setLikeCount((prev: number) => prev - 1);
         setLiked(false);
         console.error("Error creating like:", error);
       }
@@ -116,7 +127,7 @@ export default function ClientModelContent({
             >
               <Heart
                 className={`w-6 h-6 mx-auto ${
-                  liked ? "fill-rose-500 text-rose-500" : ""
+                  liked ? "fill-rose-500 text-rose-500" : "fill-transparent"
                 }`}
               />
 
