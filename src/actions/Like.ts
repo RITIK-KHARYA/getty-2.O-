@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function AddLike(spaceid: string) {
@@ -15,6 +16,7 @@ export async function AddLike(spaceid: string) {
       }
     );
     const data = await response.json();
+    revalidatePath("/dashboard")
     console.log("LIKED")
     return data;
   } catch (error) {
@@ -32,6 +34,7 @@ export async function DeleteLike(spaceid: string) {
         method: "DELETE",
       }
     );
+    revalidatePath("/dashboard")
   } catch (error) {
     console.log("error getting the like");
   }

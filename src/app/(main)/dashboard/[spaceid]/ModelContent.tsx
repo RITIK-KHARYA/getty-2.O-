@@ -13,7 +13,7 @@ import { Skeleton } from "@/app/components/ui/skeleton";
 import { ArrowBigRight, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { startTransition, useOptimistic, useState, useTransition } from "react";
+import { startTransition, useEffect, useOptimistic, useState, useTransition } from "react";
 
 interface ClientModelContentProps {
   spacename: string;
@@ -39,9 +39,10 @@ export default function ClientModelContent({
   const [loading, setLoading] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(userliked);
   const [isPending, startTransition] = useTransition();
-  const [likeCount, setLikeCount] = useState(likesCount);
-  const [optimisticLikes, setOptimisticLikes] = useOptimistic<number | null>(
-    likeCount
+
+  const [optimisticLikes, setOptimisticLikes] = useOptimistic(
+    likesCount
+
   );
   const router = useRouter();
 
@@ -66,9 +67,9 @@ export default function ClientModelContent({
     if (liked) {
       try {
         setLiked(false);
-        startTransition(() => setOptimisticLikes((prev: number) => prev - 1));
+        startTransition(() => setOptimisticLikes((prev)=> prev - 1));
         await DeleteLike(spaceid);
-        setLikeCount((prev: number) => prev - 1);
+
       } catch (error) {
         setLiked(true);
         console.error("Error removing like:", error);
@@ -76,17 +77,20 @@ export default function ClientModelContent({
     } else {
       try {
         setLiked(true);
-        startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
+        startTransition(() => setOptimisticLikes((prev) => prev + 1));
         await AddLike(spaceid);
-        setLikeCount((prev: number) => prev + 1);
+
       } catch (error) {
-        setLikeCount((prev: number) => prev - 1);
+
         setLiked(false);
         console.error("Error creating like:", error);
       }
     }
   };
+useEffect(() => {
 
+  console.log(optimisticLikes, "optimisticlikes");
+  }, [optimisticLikes]);
   return (
     <div className="w-full  rounded-none overflow-hidden border-none">
       <div className="relative w-full h-56 overflow-hidden bg-zinc-800">
@@ -113,6 +117,7 @@ export default function ClientModelContent({
 
           <div className="flex items-center gap-2">
             <button
+              disabled={isPending}
               className={`flex items-center  border-none border-0 transition-all p-2 focus:outline-none focus:ring-0 focus:ring-offset-0  ${
                 liked
                   ? "bg-transparent"
