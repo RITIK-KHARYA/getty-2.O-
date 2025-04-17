@@ -5,10 +5,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/app/components/ui/avatar";
-import { Input } from "@/app/components/ui/input";
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { useSession } from "@/app/lib/auth-client";
-import { Search, Settings2 } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import Link from "next/link";
 import {
   Form,
@@ -21,8 +20,7 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import ChatArea from "./ChatArea";
 import SearchChat from "./SearchChat";
 import { SidebarTrigger } from "@/app/components/ui/sidebar";

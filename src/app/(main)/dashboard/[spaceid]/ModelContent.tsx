@@ -60,12 +60,9 @@ export default function ClientModelContent({
     }
   };
 
-  console.log(userliked)
+  console.log(userliked);
 
-  const handleLike = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleLike = async () => {
     if (liked) {
       try {
         setLiked(false);
@@ -73,18 +70,16 @@ export default function ClientModelContent({
         await DeleteLike(spaceid);
         setLikeCount((prev: number) => prev - 1);
       } catch (error) {
-        startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
         setLiked(true);
         console.error("Error removing like:", error);
       }
     } else {
-      setLiked(true);
-      startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
       try {
+        setLiked(true);
+        startTransition(() => setOptimisticLikes((prev: number) => prev + 1));
         await AddLike(spaceid);
         setLikeCount((prev: number) => prev + 1);
       } catch (error) {
-        startTransition(() => setOptimisticLikes((prev: number) => prev - 1));
         setLikeCount((prev: number) => prev - 1);
         setLiked(false);
         console.error("Error creating like:", error);

@@ -29,7 +29,7 @@ export default function SpaceCard({
   spacename,
   description,
   spaceAdmin,
-  memberCount 
+  memberCount
 }: SpaceCardProps) {
   const router = useRouter();
   return (
@@ -81,7 +81,8 @@ export default function SpaceCard({
             </div>
             <div className="flex items-center p-1  ">
               <Users className="w-4 h-4 mr-2 " />
-              {memberCount} member
+              {memberCount + 1} member 
+              {/* pseudo membercount  */}
             </div>
           </div>
         </div>

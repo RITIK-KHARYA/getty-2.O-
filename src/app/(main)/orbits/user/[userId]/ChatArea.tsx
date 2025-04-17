@@ -1,12 +1,11 @@
 "use client";
 
 import { ConversationMessage, GetConversationMessage } from "@/actions/message";
-import { getSession } from "@/actions/session";
 import ChatHeader from "@/app/components/ChatHeader";
 import { useSession } from "@/app/lib/auth-client";
 import { useWebSocketStore } from "@/app/hooks/use-websocket";
 import Editor from "@/components/editor/Editor";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ChatArea() {
@@ -26,8 +25,8 @@ export default function ChatArea() {
           <div className="font-bold text-2xl">Please login to chat</div>
         </div>
       </div>
-    );  
-    
+    );
+
   useEffect(() => {}, []);
 
   const handleMessage = async () => {

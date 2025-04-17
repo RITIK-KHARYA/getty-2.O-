@@ -20,6 +20,6 @@ export default async function authMiddleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard','/dashboard/:spaceid*'
+    '/dashboard','/dashboard/:spaceid*','/orbits/:userid*,/notifications'
   ],
 };
