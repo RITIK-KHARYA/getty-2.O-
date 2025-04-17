@@ -1,5 +1,6 @@
 "use client";
 import UserNotFound from "@/app/components/event/Usernotfound";
+import { Button } from "@/app/components/ui/button";
 import { useSession } from "@/app/lib/auth-client";
 import { useParams, useSearchParams } from "next/navigation";
 
@@ -14,12 +15,21 @@ export default function UserPage() {
         <UserNotFound/>
     </div>
   }
-//  if(!currentuser){
-//     return <div>Unauthorized</div>
-//  }
+
+  //not found unauthorized page 
+
+  
   return (
-    <div>
-      <h1>currentuser : {userid} </h1>
-    </div>
+    <main>
+      <div>
+        <div></div>
+      </div>
+      <div>
+        <span className="flex items-center justify-between">
+            <p></p>
+            <Button></Button>
+        </span>
+      </div>
+    </main>
   );
 }

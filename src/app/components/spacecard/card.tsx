@@ -61,7 +61,12 @@ export default function SpaceCard({
           </div>
 
           <div className="mt-4 items-center justify-normal text-zinc-400 text-xs ">
-            <div className="mt-2">
+            <div className="flex items-center pt-1 justify-end ">
+              <Users className="w-4 h-4 mr-2 " />
+              {memberCount + 1}
+              {/* pseudo membercount  */}
+            </div>
+            <div className="mt-2 w-20">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -78,11 +83,6 @@ export default function SpaceCard({
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            </div>
-            <div className="flex items-center p-1  ">
-              <Users className="w-4 h-4 mr-2 " />
-              {memberCount + 1} member 
-              {/* pseudo membercount  */}
             </div>
           </div>
         </div>

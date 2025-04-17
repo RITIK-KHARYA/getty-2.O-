@@ -87,10 +87,10 @@ export default function ClientModelContent({
       }
     }
   };
-useEffect(() => {
+// useEffect(() => {
 
-  console.log(optimisticLikes, "optimisticlikes");
-  }, [optimisticLikes]);
+//   console.log(optimisticLikes, "optimisticlikes");
+//   }, [optimisticLikes]);
   return (
     <div className="w-full  rounded-none overflow-hidden border-none">
       <div className="relative w-full h-56 overflow-hidden bg-zinc-800">
