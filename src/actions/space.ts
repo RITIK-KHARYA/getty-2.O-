@@ -104,3 +104,29 @@ export async function FindSpaceById(id: string) {
     console.log(error);
   }
 }
+
+export async function UserSpace(userid: string) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/space?userid=${userid}`,
+      {
+        headers: {
+          cookie: (await headers()).get("cookie") || "",
+        },
+        method: "GET",
+        cache: "default",
+      }
+    );
+
+    const data = await response.json();
+    console.log(data);
+
+    if (!response.ok) {
+      console.log("chutiye");
+      return null;
+    }
+    return data.data;
+  } catch (error) {
+    console.log(error, "behenchod");
+  }
+}

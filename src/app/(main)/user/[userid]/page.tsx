@@ -1,25 +1,54 @@
 "use client";
+import { GetUserById } from "@/actions/user";
 import UserNotFound from "@/app/components/event/Usernotfound";
+import Profilespacecard from "@/app/components/spacecard/Profilespacecard";
 import { Button } from "@/app/components/ui/button";
+import { Skeleton } from "@/app/components/ui/skeleton";
 import { useSession } from "@/app/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { GeistMono } from "geist/font";
-import { Rss } from "lucide-react";
+import { Loader2, Loader2Icon, LoaderIcon, Rss } from "lucide-react";
 import Image from "next/image";
 import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
+type fetchedUser = {
+  name: string;
+  image: string;
+  bio: string;
+  email: string;
+  space: [id: string];
+};
 
 export default function UserPage() {
   const { userid } = useParams();
   const currentuser = useSession();
   const SearchParams = useSearchParams();
   const search = SearchParams.get("user");
+  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [searchresult, setSearchresult] = useState<fetchedUser | null>(null);
 
-  if (userid != currentuser.data?.user.id) {
-    return (
-      <div className="w-full h-full bg-black flex justify-center items-center">
-        <UserNotFound />
-      </div>
-    );
+  console.log(searchresult, "searchresult");
+
+  useEffect(() => {
+    const fetchuser = async () => {
+      try {
+        setisLoading(true);
+        const user = await GetUserById((userid as string) || "");
+        setSearchresult(user);
+        console.log(user, "user");
+        setisLoading(false);
+      } catch (error) {
+        console.log(error, "error bitch");
+      }
+    };
+    fetchuser();
+  }, [userid]);
+
+  if (!isLoading) {
+    <div className="w-full h-full">
+      <LoaderIcon className="animate-spin w-4 h-4" />
+    </div>;
   }
 
   return (
@@ -31,7 +60,7 @@ export default function UserPage() {
             {/* before yeha absolute tha */}
             <Image
               src={
-                currentuser.data?.user.image || "https://github.com/shadcn.png" //replace it with the params user one
+                searchresult?.image || "https://github.com/shadcn.png" //replace it with the params user one
               }
               alt="profile"
               className="object-cover h-24 w-24 rounded-md border border-black "
@@ -43,12 +72,20 @@ export default function UserPage() {
         {/* profile content here */}
         <div className="w-full h-[20%]">
           <div className="grid grid-cols-[6fr_1fr] gap-x-2 pt-20 p-5">
-            <div className="text-2xl font-semibold ">
-              {currentuser.data?.user.name}
-              <p className="text-muted-foreground text-sm ">
-                hello
-                {currentuser.data?.user.email}
-              </p>
+            <div className="text-2xl font-semibold space-y-2">
+              {searchresult?.name || (
+                <Skeleton className=" w-24 h-4 rounded-full" />
+              )}
+              <div className="text-muted-foreground text-sm ">
+                {searchresult?.email || (
+                  <Skeleton className="w-32 h-4 rounded-full" />
+                )}
+                {/* {!searchresult?.bio ? (
+                  <Skeleton className="w-32 h-4 rounded-full" />
+                ) : (
+                  searchresult?.bio
+                )} */}
+              </div>
             </div>
             <Button className="bg-neutral-800/70 text-white rounded-sm hover:bg-neutral-800">
               <Rss className="h-4 w-4" />
@@ -69,6 +106,14 @@ export default function UserPage() {
           </div>
           <div className="flex flex-col items-center justify-start">
             {/* space cards here map here */}
+            {searchresult?.space?.map((space) => {
+              return (
+                <Profilespacecard
+                  spaceid={space}
+                  classname="w-full h-full"
+                />
+              );
+            })}
           </div>
         </div>
       </div>

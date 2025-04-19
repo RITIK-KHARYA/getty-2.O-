@@ -51,7 +51,6 @@ export default function SpaceCorner() {
   }, [spaceid]);
 
   if (!space) return null;
-  console.log(space);
   return (
     <div className="space-x-2">
       <Sheet>

@@ -48,6 +48,34 @@ export async function SearchUser(data: any) {
     }
 
     const user = await response.json();
+    return user.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+  }
+}
+export async function GetUserById(userid: string) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error("Unauthorized");
+  }
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/user/userid/${userid}`,
+      {
+        method: "GET",
+        cache: "default",
+        headers: {
+          cookie: (await headers()).get("cookie") || "",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log("Error fetching user:", response.status);
+    }
+
+    const user = await response.json();
+    console.log(user, "user");
     return user.data
   } catch (error) {
     console.error("Error fetching user:", error);
