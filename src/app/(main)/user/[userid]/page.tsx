@@ -108,10 +108,9 @@ export default function UserPage() {
             {/* space cards here map here */}
             {searchresult?.space?.map((space) => {
               return (
-                <Profilespacecard
-                  spaceid={space}
-                  classname="w-full h-full"
-                />
+                <div className="w-full h-52 ">
+                  <Profilespacecard spaceid={space} />;
+                </div>
               );
             })}
           </div>
