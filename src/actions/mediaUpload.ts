@@ -65,8 +65,8 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
       },
       onUploadBegin: () => {
         toast({
-          variant: "destructive",
-          description: "upload has begun",
+          variant: "default",
+          description: "uploading",
         });
       },
     }

@@ -14,6 +14,7 @@ import {
 import { UserProfileDialog } from "./event/userdialogcard";
 import { cn } from "@/lib/utils";
 import { useSession } from "../lib/auth-client";
+import { Skeleton } from "./ui/skeleton";
 
 export default function NavUser() {
   const [open, setOpen] = React.useState(false);
@@ -42,7 +43,7 @@ const status = user.data?.user.name as keyof typeof statusColors;
                       alt={user.data?.user.name}
                     />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      AJ
+                      <Skeleton className="rounded-full h-full w-full" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background">
