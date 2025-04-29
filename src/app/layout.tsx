@@ -29,7 +29,7 @@ export default function RootLayout({
     <html lang="en" className="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning >
       <body className={`${geistSans.variable} ${geistMono.variable} `} suppressHydrationWarning>
         <ThemeProvider
-          attribute="class"
+          attribute="class" 
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange

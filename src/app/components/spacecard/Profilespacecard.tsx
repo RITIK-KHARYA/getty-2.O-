@@ -22,7 +22,7 @@ export default async function Profilespacecard({
       setisLoading(true);
       const Space = await FindSpaceById(spaceid);
       setSpace(Space);
-      console.log(Space,"space here ");
+      console.log(Space,"space here si");
       setisLoading(false);
     };
     fetchSpace();
