@@ -2,7 +2,7 @@ import useMediaUpload from "@/actions/mediaUpload";
 import { useDropzone } from "@uploadthing/react";
 import { File, Icon, Send, Smile } from "lucide-react";
 import { useEditor, EditorContent } from "@tiptap/react";
-import { useCallback, ClipboardEvent, useState } from "react";
+import { useCallback, ClipboardEvent, useState, useRef } from "react";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import Focus from "@tiptap/extension-focus";
 
@@ -22,6 +22,7 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 import StarterKit from "@tiptap/starter-kit";
 import EmojiPicker from "../EmojiPicker";
+import { set } from "zod";
 
 interface EditorProps {
   input: string;
@@ -74,6 +75,7 @@ export default function Editor({
     attachment,
     routeConfig,
     removeAttachment,
+    uploadProgress,
     isUploading,
   } = useMediaUpload(onchange);
 
@@ -107,6 +109,14 @@ export default function Editor({
   };
   const { onClick, ...rootProps } = getRootProps();
 
+  const fileinputref = useRef<HTMLInputElement>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+  const handleMediaClick = () => {
+    console.log("clicked");
+    return fileinputref.current?.click();
+  };
+
   return (
     <form
       className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
@@ -117,7 +127,9 @@ export default function Editor({
           {...getInputProps}
           className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
         >
-          <File className="opacity-90" size={20} />
+          <button onClick={() => handleMediaClick()}>
+            <File className="opacity-90" size={20} />
+          </button>
 
           <EmojiPicker
             onChange={(e) => {
@@ -126,17 +138,54 @@ export default function Editor({
             }}
           />
         </div>
+
+        <input
+          ref={fileinputref}
+          onChange={(e) => {
+            const files = Array.from(e.target.files || []);
+            if (files.length > 0) {
+              setSelectedFiles(files);
+              startUpload(files);
+              e.target.value = "";
+            }
+          }}
+          disabled={isUploading}
+          style={{ display: "none" }}
+          type="file"
+          accept="image/*,video/*"
+        />
+
         <div className="flex items-center gap-x-2">
-          {!!attachment.length &&
-            attachment.map((a) => (
+          <>
+            {!!attachment.length &&
+              attachment.map((a) => (
+                <div className="flex flex-row h-16 w-16 rounded-none">
+                  <AttachmentPreviews
+                    key={a.file.name}
+                    attachments={[a]}
+                    onremoveclick={removeAttachment}
+                  />
+                </div>
+              ))}
+            {isUploading && (
               <div className="flex flex-row h-16 w-16 rounded-none">
-                <AttachmentPreviews
-                  key={a.file.name}
-                  attachments={[a]}
-                  onremoveclick={removeAttachment}
-                />
+                {attachment.map((a) => (
+                  <>
+                    <div className="relative flex flex-row h-16 w-16 rounded-none opacity-50 ">
+                      <AttachmentPreviews
+                        key={a.file.name}
+                        attachments={[a]}
+                        onremoveclick={removeAttachment}
+                      />
+                    </div>
+                    <div className="absolute text-white rounded-full top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+                      {uploadProgress}%
+                    </div>
+                  </>
+                ))}
               </div>
-            ))}
+            )}
+          </>
         </div>
 
         <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
