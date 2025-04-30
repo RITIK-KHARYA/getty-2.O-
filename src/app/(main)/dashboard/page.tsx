@@ -8,8 +8,6 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 import ClientModelContent from "./[spaceid]/ModelContent";
-
-import { useSession } from "@/app/lib/auth-client";
 import { getSession } from "@/actions/session";
 
 export default async function Page() {
@@ -70,7 +68,7 @@ function SkeletonLoader() {
   return (
     <div className="flex flex-row items-center gap-x-3">
       {[...Array(4)].map((_, i) => (
-        <Skeleton key={i} className="w-full h-52 rounded-sm" />
+        <Skeleton key={i} className="w-[350px] h-52 rounded-sm" />
       ))}
     </div>
   );

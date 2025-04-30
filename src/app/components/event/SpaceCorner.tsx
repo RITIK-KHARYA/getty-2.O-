@@ -14,26 +14,27 @@ import { Users, LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import { FindSpaceById } from "@/actions/space";
 import Link from "next/link";
-import FriendButton from "./FriendButton";
 import { useSession } from "@/app/lib/auth-client";
 
 interface Space {
-  space: {
+  title: string;
+  banner: string;
+  description: string;
+  createdAt: Date;
+  users: {
     id: string;
-    title: string;
-    banner: string;
-    description: string;
-    _count: { users: number };
-    users: {
-      id: string;
-      image: string;
-      name: string;
-      isFriend: Boolean;
-    }[];
-    createdAt: Date;
+    name: string;
+    image: string;
+    isFriend: Boolean;
+  }[];
+  id: string;
+  updatedAt: Date;
+  _count: {
     likes: number;
+    users: number;
+    media: number;
   };
-  membersCount: number;
+  media: [];
 }
 
 export default function SpaceCorner() {
@@ -44,11 +45,12 @@ export default function SpaceCorner() {
   useEffect(() => {
     const fetchSpace = async () => {
       const data = await FindSpaceById(spaceid);
-
-      setSpace(data);
+      setSpace(data.spaces);
     };
     fetchSpace();
   }, [spaceid]);
+
+  console.log(space)
 
   if (!space) return null;
   return (
@@ -67,14 +69,14 @@ export default function SpaceCorner() {
           <SheetHeader>
             <div className="flex items-center gap-4">
               <Image
-                src={space.space.banner || "https://github.com/shadcn.png"}
-                alt={space.space.title}
+                src={space.banner || "https://github.com/shadcn.png"}
+                alt={space.title}
                 width={50}
                 height={50}
                 className="w-16 h-16 rounded-full border border-neutral-700 object-cover"
               />
               <div>
-                <SheetTitle>{space.space.title}</SheetTitle>
+                <SheetTitle>{space.title}</SheetTitle>
                 <p className="text-xs text-neutral-500">{spaceid}</p>
               </div>
             </div>
@@ -82,7 +84,7 @@ export default function SpaceCorner() {
 
           {/* Space Description */}
           <SheetDescription className="mt-3 text-sm text-neutral-400">
-            {space.space?.description || "No description available."}
+            {space.description || "No description available."}
           </SheetDescription>
 
           {/* Members Section */}
@@ -90,13 +92,13 @@ export default function SpaceCorner() {
             <h3 className="text-sm font-semibold text-neutral-300 mb-3 flex items-center justify-between">
               <span>Members</span>
               <span className="text-xs bg-neutral-800 px-2 py-0.5 rounded-full text-neutral-400">
-                {space.membersCount}
+                {space._count.users}
               </span>
             </h3>
 
             <div className="space-y-3 max-h-[calc(100vh-220px)] overflow-y-auto pr-2 custom-scrollbar">
-              {space.space.users && space.space.users.length > 0 ? (
-                space.space.users.map((member) => (
+              {space.users && space.users.length > 0 ? (
+                space.users.map((member) => (
                   <div
                     key={member.name}
                     className="flex justify-between items-center gap-3 p-2.5 bg-neutral-900  rounded-lg border border-neutral-800 transition-colors"
@@ -119,7 +121,7 @@ export default function SpaceCorner() {
                       friendId={member.id}
                       isFriend={member.isFriend}
                     /> */}
-                  </div> 
+                  </div>
                 ))
               ) : (
                 <div className="text-center py-6 text-neutral-500 text-sm">
