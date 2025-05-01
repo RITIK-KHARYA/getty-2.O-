@@ -16,6 +16,7 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
   const { toast } = useToast();
   const [uploadProgress, setuploadProgress] = useState<number>();
   const [attachment, setAttachment] = useState<attachment[]>([]);
+  console.log(attachment);
   const { startUpload, isUploading, routeConfig } = useUploadThing(
     "bannerUploader",
     {
@@ -27,13 +28,17 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
             `attachment_${crypto.randomUUID()}.${extension}`,
             {
               type: file.type,
+  
             }
           );
         });
+
         setAttachment((prev) => [
-          ...prev,
-          ...renamedfiles.map((file) => ({ file, isUploading: true })),
+           ...renamedfiles.map((file) => ({ file, isUploading: true})
+         ),
+         ...prev,
         ]);
+      
 
         return renamedfiles;
       },

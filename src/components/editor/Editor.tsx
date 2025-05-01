@@ -112,7 +112,8 @@ export default function Editor({
   const fileinputref = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const handleMediaClick = () => {
+  const handleMediaClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     console.log("clicked");
     return fileinputref.current?.click();
   };
@@ -127,7 +128,7 @@ export default function Editor({
           {...getInputProps}
           className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
         >
-          <button onClick={() => handleMediaClick()}>
+          <button onClick={(e) => handleMediaClick(e)}>
             <File className="opacity-90" size={20} />
           </button>
 
@@ -142,6 +143,7 @@ export default function Editor({
         <input
           ref={fileinputref}
           onChange={(e) => {
+            e.preventDefault();
             const files = Array.from(e.target.files || []);
             if (files.length > 0) {
               setSelectedFiles(files);
@@ -157,36 +159,34 @@ export default function Editor({
 
         <div className="flex items-center gap-x-2">
           <>
-            {!!attachment.length &&
-              attachment.map((a) => (
-                <div className="flex flex-row h-16 w-16 rounded-none">
-                  <AttachmentPreviews
-                    key={a.file.name}
-                    attachments={[a]}
-                    onremoveclick={removeAttachment}
-                  />
-                </div>
-              ))}
-            {isUploading && (
-              <div className="flex flex-row h-16 w-16 rounded-none">
-                {attachment.map((a) => (
-                  <>
-                    <div className="relative flex flex-row h-16 w-16 rounded-none opacity-50 ">
+            {isUploading
+              ? attachment.map((a) => (
+                  <div className="flex flex-row ">
+                    <div className="h-16 w-16">
                       <AttachmentPreviews
                         key={a.file.name}
                         attachments={[a]}
                         onremoveclick={removeAttachment}
                       />
                     </div>
-                    <div className="absolute text-white rounded-full top-0 left-0 right-0 bottom-0 flex items-center justify-center">
-                      {uploadProgress}%
+                  </div>
+                ))
+              : attachment.length > 0 &&
+                attachment.map((a) => (
+                  <div className="flex flex-row ">
+                    <div className="h-16 w-16">
+                      <AttachmentPreviews
+                        key={a.file.name}
+                        attachments={[a]}
+                        onremoveclick={removeAttachment}
+                      />
                     </div>
-                  </>
+                  </div>
                 ))}
-              </div>
-            )}
           </>
         </div>
+
+        {/* problem related to the image preview and uploading image on clicking the handleMediaClick */}
 
         <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
           <div className="flex-1 overflow-hidden">
@@ -207,8 +207,6 @@ export default function Editor({
               isUploading && "opacity-50 cursor-not-allowed"
             )}
             type="submit"
-            // onClick={(e) => e.stopPropagation()}
-
             disabled={!editor?.getText().trim() || !!isUploading}
           >
             <Send className="h-4 w-4" />

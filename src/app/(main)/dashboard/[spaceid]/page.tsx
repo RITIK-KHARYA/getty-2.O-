@@ -37,6 +37,7 @@ export default function SpacePage() {
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
   const handleSubmit = async (
     e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
   ) => {

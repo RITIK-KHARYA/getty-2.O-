@@ -120,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         <SidebarSeparator className="my-2" />
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="p-3 text-sm text-muted-foreground">
             Loading spaces...
           </div>
@@ -129,7 +129,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ) : (
           // <LikedSpaces spaces={spaces} />
           <></>
-        )}
+        )} */}
+
+        {/* either render the liked spaces or visited last space */}
 
         <div className="mt-auto px-2 py-4">
           <Button
