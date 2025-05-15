@@ -1,7 +1,7 @@
 import { Data } from "emoji-mart";
 import Picker from "@emoji-mart/react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Smile } from "lucide-react";
+import { Smile, SmileIcon } from "lucide-react";
 
 interface EmojiPickerProps {
   
@@ -20,7 +20,7 @@ export default function EmojiPicker({
     <Popover   defaultOpen={false}>
       <PopoverTrigger >
         <div className="hover:bg-neutral-900 box-shadow-md ">
-          <Smile size={20} className="text-neutral-300 opacity-90" />
+          <SmileIcon className="w-6 h-6 text-neutral-300" />
         </div>
       </PopoverTrigger>
       <PopoverContent className="bg-trasnparent border-none">

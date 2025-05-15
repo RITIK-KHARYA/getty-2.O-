@@ -1,6 +1,7 @@
 "use client";
 import { useToast } from "@/app/hooks/use-toast";
 import { useUploadThing } from "@/utils/uploadthing";
+import { set } from "better-auth/*";
 import { useState } from "react";
 import { UTApi } from "uploadthing/server";
 // import deleteAttachment from "./mediadeletion";
@@ -12,11 +13,11 @@ export interface attachment {
   url?: string;
 }
 
-export default function useMediaUpload(onChange:(value:string)=> void) {
+export default function useMediaUpload() {
   const { toast } = useToast();
   const [uploadProgress, setuploadProgress] = useState<number>();
   const [attachment, setAttachment] = useState<attachment[]>([]);
-  console.log(attachment);
+  console.log("attachment", attachment);
   const { startUpload, isUploading, routeConfig } = useUploadThing(
     "bannerUploader",
     {
@@ -59,7 +60,7 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
             };
           })
         );
-        onChange(res.map((r) => r.url).toString());
+        
       },
       onUploadError(e) {
         setAttachment((prev) => prev.filter((a) => !a.isUploading)); //this is for the checking so that no file is getting uploaded
@@ -98,7 +99,6 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
     const currentAttachment = attachment.find((a) => a.file.name === fileName);
     setAttachment((prev) => prev.filter((a) => a.file.name !== fileName));
     // await deleteAttachment(currentAttachment?.mediaId || "");
-    onChange("");
   }
     function reset() {
       setAttachment([]);
@@ -112,6 +112,7 @@ export default function useMediaUpload(onChange:(value:string)=> void) {
       uploadProgress,
       removeAttachment,
       reset,
+      setAttachment
     };
   
 }

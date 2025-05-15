@@ -16,65 +16,48 @@ import {
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { Textarea } from "@/app/components/ui/textarea";
 import Editor from "@/components/editor/Editor";
+import Image from "next/image";
+import MyEditor from "@/components/editor/Editor";
+import { attachment } from "@/actions/mediaUpload";
+import { MediaType } from "@prisma/client";
 
-const generateRandomId = (): string =>
-  Math.floor(100000 + Math.random() * 900000).toString();
 
-type Message = {
+
+export type Message = {
   id: string;
   content: string;
   createdAt?: Date;
   userId?: string;
-  image?: string;
+  media?: {
+    url: string;
+    Mediatype: MediaType;
+  }[],
   user?: { image?: string; name?: string };
 };
+
 
 export default function SpacePage() {
   const { spaceid } = useParams<{ spaceid: string }>();
   const [space, setSpace] = useState<any>(null);
-  const [input, setInput] = useState("");
+
   const [messages, setMessages] = useState<Message[]>([]);
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  const handleSubmit = async (
-    e?: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    e?.preventDefault();
-    if (!input) return;
-
-    const newMessage: Message = {
-      id: generateRandomId(),
-      content: input,
-      userId: user.data?.user.id,
-      image: user.data?.user.image || "https://github.com/shadcn.png",
-    };
-    setInput("");
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    socket?.emit("c", newMessage);
-    await SendMessage({
-      message: input,
-      spaceid: spaceid,
-      image: user.data?.user.image || "https://github.com/shadcn.png",
-      userId: user.data?.user.id ?? "",
-    });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
+ //TODO : move the handlesubmit to the editor state
+ 
 
   useEffect(() => {
     const fetchMessages = async () => {
       const data = await GetMessage(spaceid);
+      console.log(data);
       setMessages(
         data.messages.map((msg: Message) => ({
           ...msg,
-          image: msg.user?.image,
+          user: {
+            image: msg.user?.image,
+            name: msg.user?.name,
+          },
         }))
       );
     };
@@ -138,7 +121,7 @@ export default function SpacePage() {
               {m.userId !== user.data?.user.id && (
                 <Avatar className="h-9 w-9 shadow-md border border-neutral-700 flex-shrink-0 mt-7">
                   <AvatarImage
-                    src={m.image || "https://github.com/shadcn.png"}
+                    src={m.user.image || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
                     <Skeleton className="w-9 h-9 rounded-full" />
@@ -165,6 +148,34 @@ export default function SpacePage() {
                   } p-[8px] px-4 rounded-2xl shadow-sm break-words`}
                 >
                   <p className="whitespace-pre-wrap"> {m.content}</p>
+                  <div>
+                    {m.media && m.media.length > 0 && (
+                      <div className="flex gap-2 mt-2">
+                        {m.media.map((attachment) => {
+                          console.log(attachment);
+                          return (
+                            <div key={attachment.url}>
+                              {attachment.Mediatype === MediaType.IMAGE && (
+                                <Image
+                                  src={attachment.url}
+                                  width={200}
+                                  height={200}
+                                  alt="media"
+                                />
+                              )}
+                              {attachment.Mediatype === "VIDEO" && (
+                                <video controls>
+                                  <source
+                                    src={attachment.url}
+                                    type="video/mp4"
+                                  />
+                                </video>
+                              )}
+                            </div>
+                          );})}
+                      </div>
+                    )}
+                  </div>
                   <span
                     className={`text-[10px] flex items-center  text-neutral-500 mt-1 truncate px-0 ${
                       m.userId === user.data?.user.id
@@ -185,7 +196,7 @@ export default function SpacePage() {
               {m.userId === user.data?.user.id && (
                 <Avatar className="h-9 w-9 shadow-md border border-neutral-700 flex-shrink-0 mt-7">
                   <AvatarImage
-                    src={m.image || "https://github.com/shadcn.png"}
+                    src={m.user.image || "https://github.com/shadcn.png"}
                   />
                   <AvatarFallback>
                     <Skeleton className="w-9 h-9 rounded-full" />
@@ -204,11 +215,9 @@ export default function SpacePage() {
         <div ref={messagesEndRef} />
       </div>
       <>
-        <Editor
-          handleSubmit={handleSubmit}
-          onchange={(value) => setInput(value)}
-          setInput={setInput}
-          input={input}
+        <MyEditor
+        spaceId={spaceid}
+        setMessages = {setMessages}
           className="w-full"
         />
       </>

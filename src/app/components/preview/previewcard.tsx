@@ -17,16 +17,11 @@ export default function AttachmentPreview({
   const src = URL.createObjectURL(file);
   return (
     <>
-      <div
-        key={key}
-        className={cn(
-          "relative mx-auto size-fit ",
-        )}
-      >
+      <div key={key} className={cn("relative mx-auto size-fit ")}>
         {file.type.startsWith("image") ? (
           <Image
-            className={cn(" size-fit max-h-{30rem} rounded-2xl ",{
-              "animate-pulse": isUploading
+            className={cn(" size-fit rounded-lg ", {
+              "animate-pulse": isUploading,
             })}
             src={src}
             width={500}
@@ -34,7 +29,7 @@ export default function AttachmentPreview({
             alt="attachment preview"
           />
         ) : (
-          <video controls className="size-fit max-h-{30rem} rounded-2xl ">
+          <video controls className="size-fit  rounded-lg ">
             <source src={src} type={file.type} />
           </video>
         )}
@@ -43,7 +38,10 @@ export default function AttachmentPreview({
             className="absolute right-0 top-0 w-4 h-4 bg-neutral-600 hover:bg-transparent p-1 transition-colors"
             onClick={() => onRemoveclick(file.name)}
           >
-            <X size={20} className="hover:text-foreground text-white hover:bg-neutral-400 " />
+            <X
+              size={20}
+              className="hover:text-foreground text-white hover:bg-neutral-400 "
+            />
           </Button>
         )}
       </div>
@@ -61,7 +59,9 @@ export function AttachmentPreviews({
   return (
     <div className="flex flex-row gap-x-2">
       {attachments.length > 4 ? (
-        <div className="text-destructive text-red-400 text-xs font-semibold text-center">too many files</div>
+        <div className="text-destructive text-red-400 text-xs font-semibold text-center">
+          too many files
+        </div>
       ) : (
         attachments.map((attachment) => (
           <AttachmentPreview
