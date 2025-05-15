@@ -167,7 +167,7 @@ model Space {
   users        SpaceUser[]
   likes        Like[]
   messages     Message[]
-  media        Media[]
+
 
   @@map("space")
 }
@@ -183,6 +183,7 @@ model Message {
   space     Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   conversationId String?
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  media         Media[]
 
   @@map("message")
 }
@@ -209,7 +210,8 @@ model Media {
   originalurl String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime
-  space       Space     @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  message_id String 
+  message     Message  @relation(fields: [message_id], references: [id], onDelete: Cascade)
 
   @@unique([spaceId, Mediatype, url])
   @@map("media")

@@ -1,45 +1,49 @@
-import useMediaUpload from "@/actions/mediaUpload";
+import useMediaUpload, { attachment } from "@/actions/mediaUpload";
 import { useDropzone } from "@uploadthing/react";
-import { File, Icon, Send, Smile } from "lucide-react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import { useCallback, ClipboardEvent, useState } from "react";
+import { ArrowUp, File, PlusCircle, Send } from "lucide-react";
+import {
+  useEditor,
+  EditorContent,
+  useEditorState,
+  Editor,
+} from "@tiptap/react";
+import {
+  useCallback,
+  ClipboardEvent,
+  useState,
+  useRef,
+  SetStateAction,
+  Dispatch,
+} from "react";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import Focus from "@tiptap/extension-focus";
-
 import {
   generateClientDropzoneAccept,
   generatePermittedFileTypes,
 } from "uploadthing/client";
 import { cn } from "@/lib/utils";
-import AttachmentPreview, {
-  AttachmentPreviews,
-} from "@/app/components/preview/previewcard";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/app/components/ui/dropdown-menu";
+import { AttachmentPreviews } from "@/app/components/preview/previewcard";
 import StarterKit from "@tiptap/starter-kit";
 import EmojiPicker from "../EmojiPicker";
-
+import { useWebSocketStore } from "@/app/hooks/use-websocket";
+import { Message } from "@/app/(main)/dashboard/[spaceid]/page";
+import { useSession } from "@/app/lib/auth-client";
+import { SendMessage } from "@/actions/message";
+import { MediaType } from "@prisma/client";
+const generateRandomId = (): string =>
+  Math.floor(100000 + Math.random() * 900000).toString();
 interface EditorProps {
-  input: string;
-  setInput: (value: string) => void;
-  className: string;
-  onchange: (value: string) => void;
-  handleSubmit: () => void;
+  className?: string;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
+  spaceId: string;
 }
 
-export default function Editor({
-  className,
-  input,
-  setInput,
-  onchange,
-  handleSubmit,
-}: EditorProps) {
+export default function MyEditor({ className, setMessages,spaceId }: EditorProps) {
+  const [input, setInput] = useState("");
+  const { ConnectSocket, socket } = useWebSocketStore();
+  const user = useSession();
   const editor = useEditor({
-    immediatelyRender: false, //hydration mismatches
+    immediatelyRender: false,
     autofocus: true,
     extensions: [
       StarterKit.configure({
@@ -64,27 +68,26 @@ export default function Editor({
     },
     content: input,
 
+    onContentError: (err) => console.log(err),
+
     onUpdate: ({ editor }) => {
       setInput(editor.getText());
+      console.log("clicked",editor.getText());
     },
   });
-  const [open, setOpen] = useState(false);
+
+  const fileinputref = useRef<HTMLInputElement>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
   const {
     startUpload,
     attachment,
     routeConfig,
     removeAttachment,
+    uploadProgress,
     isUploading,
-  } = useMediaUpload(onchange);
-
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      startUpload(acceptedFiles);
-    },
-    [startUpload]
-  );
-
-  //the image is being upload now but preview is not working
+    setAttachment
+  } = useMediaUpload();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: startUpload,
@@ -93,12 +96,20 @@ export default function Editor({
     ),
   });
 
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      startUpload(acceptedFiles);
+    },
+    [startUpload]
+  );
+
   function onPaste(e: ClipboardEvent<HTMLInputElement>) {
     const files = Array.from(e.clipboardData.items)
       .filter((item) => item.kind === "file")
       .map((item) => item.getAsFile()) as File[];
     startUpload(files);
   }
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editor) return;
@@ -107,64 +118,151 @@ export default function Editor({
   };
   const { onClick, ...rootProps } = getRootProps();
 
+  const handleMediaClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log("clicked");
+    return fileinputref.current?.click();
+  };
+  const handleSubmit = async () => {
+    if (!input) return;
+
+    const newMessage: Message = {
+      id: generateRandomId(),
+      content: input,
+      userId: user.data?.user.id,
+      media: attachment.map((item) => {
+        return {
+          Mediatype: item.file.type.startsWith("image")
+            ? MediaType.IMAGE
+            : MediaType.VIDEO,
+          url: item.url,
+          filename: item.file.name,
+          originalurl: item.url,
+        };
+      }),
+      user: {
+        image: user.data?.user.image || "https://github.com/shadcn.png",
+        name: user.data?.user.name,
+      },
+    };
+    setInput("");
+    setAttachment([]);
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    socket?.emit("c", newMessage);
+    const message = {
+      message: input,
+      spaceid: spaceId,
+      media: attachment.map((item)=>{
+        return {
+          Mediatype: item.file.type.startsWith("image")?MediaType.IMAGE:MediaType.VIDEO,
+          url: item.url,
+          filename: item.file.name,
+          originalurl: item.url,
+        }
+      }),
+      user: {
+        name: user.data?.user.name,
+        image: user.data?.user.image,
+      },
+    };
+    console.log("befre",message);
+    await SendMessage(message);
+  };
+
   return (
     <form
-      className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md p-2 mb-2 h-52 flex items-end"
+      className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg mb-3 h-52 flex items-end"
       onSubmit={handleFormSubmit}
     >
       <div className={className} {...rootProps}>
         <div
           {...getInputProps}
-          className="fixed right-2 space-x-2 bg-neutral-800/90 p-1 rounded-tl-lg rounded-tr-lg rounded-bl-lg rounded-none top-[4.9rem] flex items-center justify-center"
+          className="fixed right-1 p-2 z-10 flex items-center bg-transparent shadow-lg rounded-xl"
         >
-          <File className="opacity-90" size={20} />
-
           <EmojiPicker
-            onChange={(e) => {
-              if (!editor) return;
-              editor.chain().focus().insertContent(e).run();
+            onChange={(emoji) => {
+              editor?.commands.insertContent(emoji);
             }}
           />
         </div>
-        <div className="flex items-center gap-x-2">
-          {!!attachment.length &&
-            attachment.map((a) => (
-              <div className="flex flex-row h-16 w-16 rounded-none">
-                <AttachmentPreviews
-                  key={a.file.name}
-                  attachments={[a]}
-                  onremoveclick={removeAttachment}
-                />
-              </div>
-            ))}
-        </div>
 
-        <div className="flex items-center bg-neutral-900 p-3 rounded-2xl shadow-lg w-full space-x-2">
+        <input
+          ref={fileinputref}
+          onChange={(e) => {
+            e.preventDefault();
+            const files = Array.from(e.target.files || []);
+            if (files.length > 0) {
+              setSelectedFiles(files);
+              startUpload(files);
+              e.target.value = "";
+            }
+          }}
+          disabled={isUploading}
+          style={{ display: "none" }}
+          type="file"
+          accept="image/*,video/*"
+        />
+
+        <div className="flex items-stretch justify-end bg-neutral-800 p-3 h-full rounded-2xl shadow-lg w-full space-x-2">
+          <div className="h-full flex items-center">
+            <button onClick={handleMediaClick} className="flex items-center ">
+              {" "}
+              <PlusCircle className="w-6 h-6 font-bold opacity-80 text-neutral-400" />
+            </button>
+          </div>
+
           <div className="flex-1 overflow-hidden">
             <EditorContent
               editor={editor}
+              onError={(e) => console.log(e)}
               data-placeholder="Write something..."
               className={cn(
-                "text-white w-full rounded-none border-none focus-outline-none focus:ring-0 max-h-[400px] overflow-y-auto",
+                "relative text-white w-[93%] rounded-none border-none focus-outline-none focus:ring-0 overflow-y-auto",onerror ? "border-red-600" : "",
                 isDragActive ? "border-violet-600" : ""
               )}
               onPaste={onPaste}
             />
+            <div className="flex items-center gap-x-2">
+              <>
+                {isUploading
+                  ? attachment.map((a) => (
+                      <div className="flex-row ">
+                        <div className=" flex h-16 w-16 items-center justify-center">
+                          <AttachmentPreviews
+                            key={a.file.name}
+                            attachments={[a]}
+                            onremoveclick={removeAttachment}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  : attachment.length > 0 &&
+                    attachment.map((a) => (
+                      <div className=" flex-row ">
+                        <div className=" flex items-center justify-center h-16 w-16">
+                          <AttachmentPreviews
+                            key={a.file.name}
+                            attachments={[a]}
+                            onremoveclick={removeAttachment}
+                          />
+                        </div>
+                      </div>
+                    ))}
+              </>
+            </div>
           </div>
-
-          <button
-            className={cn(
-              ` bg-blue-800 text-white flex items-center justify-center h-8 w-8 rounded-full`,
-              isUploading && "opacity-50 cursor-not-allowed"
-            )}
-            type="submit"
-            // onClick={(e) => e.stopPropagation()}
-
-            disabled={!editor?.getText().trim() || !!isUploading}
-          >
-            <Send className="h-4 w-4" />
-          </button>
         </div>
+
+        <button
+          className={cn(
+            `absolute right-2 bottom-2 bg-neutral-700/90 text-white flex items-center justify-center h-8 w-8 rounded-full`,
+            isUploading && "opacity-50 cursor-not-allowed"
+          )}
+          type="submit"
+          disabled={!editor?.getText().trim() || isUploading}
+        >
+          <ArrowUp className="w-4 h-4" />
+        </button>
       </div>
     </form>
   );
