@@ -38,7 +38,11 @@ interface EditorProps {
   spaceId: string;
 }
 
-export default function MyEditor({ className, setMessages,spaceId }: EditorProps) {
+export default function MyEditor({
+  className,
+  setMessages,
+  spaceId,
+}: EditorProps) {
   const [input, setInput] = useState("");
   const { ConnectSocket, socket } = useWebSocketStore();
   const user = useSession();
@@ -72,7 +76,7 @@ export default function MyEditor({ className, setMessages,spaceId }: EditorProps
 
     onUpdate: ({ editor }) => {
       setInput(editor.getText());
-      console.log("clicked",editor.getText());
+      console.log("clicked", editor.getText());
     },
   });
 
@@ -86,7 +90,7 @@ export default function MyEditor({ className, setMessages,spaceId }: EditorProps
     removeAttachment,
     uploadProgress,
     isUploading,
-    setAttachment
+    setAttachment,
   } = useMediaUpload();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -152,26 +156,30 @@ export default function MyEditor({ className, setMessages,spaceId }: EditorProps
     const message = {
       message: input,
       spaceid: spaceId,
-      media: attachment.map((item)=>{
+      media: attachment.map((item) => {
         return {
-          Mediatype: item.file.type.startsWith("image")?MediaType.IMAGE:MediaType.VIDEO,
+          Mediatype: item.file.type.startsWith("image")
+            ? MediaType.IMAGE
+            : MediaType.VIDEO,
           url: item.url,
           filename: item.file.name,
           originalurl: item.url,
-        }
+        };
       }),
       user: {
         name: user.data?.user.name,
         image: user.data?.user.image,
       },
     };
-    console.log("befre",message);
+    console.log("befre", message);
     await SendMessage(message);
   };
 
   return (
     <form
-      className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg mb-3 h-52 flex items-end"
+      className={cn(
+        `fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-3 h-52 flex items-end`, {className}
+      )}
       onSubmit={handleFormSubmit}
     >
       <div className={className} {...rootProps}>
@@ -217,7 +225,8 @@ export default function MyEditor({ className, setMessages,spaceId }: EditorProps
               onError={(e) => console.log(e)}
               data-placeholder="Write something..."
               className={cn(
-                "relative text-white w-[93%] rounded-none border-none focus-outline-none focus:ring-0 overflow-y-auto",onerror ? "border-red-600" : "",
+                "relative text-white w-[93%] rounded-none border-none focus-outline-none focus:ring-0 overflow-y-auto",
+                onerror ? "border-red-600" : "",
                 isDragActive ? "border-violet-600" : ""
               )}
               onPaste={onPaste}

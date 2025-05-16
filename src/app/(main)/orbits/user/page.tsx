@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ChatArea from "./ChatArea";
 import SearchChat from "./SearchChat";
 import { SidebarTrigger } from "@/app/components/ui/sidebar";
+import Leftsidebar from "@/app/components/Leftsidebar";
 
 export default function Orbits() {
   const user = useSession();
@@ -70,7 +71,9 @@ export default function Orbits() {
         <div className="w-full">
           <SearchChat />
         </div>
-        <div>{/*here will be the users chats list */}</div>
+        <div>{/*here will be the users chats list */}
+          <Leftsidebar />
+        </div>
       </div>
 
       {/* Main chat area - full width on mobile, adjusts on larger screens */}

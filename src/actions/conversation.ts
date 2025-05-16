@@ -33,7 +33,7 @@ export async function CreateConversation(data: any) {
     method: "POST",
     body: JSON.stringify({ onBoardinguser, currentUser }),
   });
-
+  
   if (!response.ok) {
     console.log("error unable to create the conversation");
     return null;
