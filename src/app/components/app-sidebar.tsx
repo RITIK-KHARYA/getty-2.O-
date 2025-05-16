@@ -61,25 +61,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: [
       {
         title: "Home",
-        url: "/dashboard",
+        url: "http://localhost:3002/dashboard",
         isActive: false,
         icon: Home,
       },
       {
         title: "Notifications",
-        url: "/notifications",
+        url: "http://localhost:3002/notifications",
         isActive: false,
         icon: Bell,
       },
       {
         title: "Orbits",
         isActive: false,
-        url: `orbits/user/${user?.data?.user.id}`,
+        url: `http://localhost:3002/orbits/user`,
         icon: GalleryVerticalEnd,
       },
       {
         title: "Settings",
-        url: "/settings",
+        url: "http://localhost:3002/settings",
         isActive: false,
         icon: Settings,
       },
