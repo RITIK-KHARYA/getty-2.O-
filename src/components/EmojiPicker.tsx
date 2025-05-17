@@ -20,7 +20,8 @@ export default function EmojiPicker({
     <Popover   defaultOpen={false}>
       <PopoverTrigger >
         <div className="hover:bg-neutral-900 box-shadow-md ">
-          <SmileIcon className="w-6 h-6 text-neutral-300" />
+          {/* <SmileIcon className="w-6 h-6 text-neutral-300" /> */}
+          🦁
         </div>
       </PopoverTrigger>
       <PopoverContent className="bg-trasnparent border-none">

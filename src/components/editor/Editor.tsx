@@ -177,22 +177,14 @@ export default function MyEditor({
 
   return (
     <form
-      className={cn(
-        `fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-3 h-52 flex items-end`, {className}
-      )}
+      className={cn(`mt-auto mb-3 mx-auto h-52 flex items-end`, { className })}
       onSubmit={handleFormSubmit}
     >
       <div className={className} {...rootProps}>
         <div
           {...getInputProps}
-          className="fixed right-1 p-2 z-10 flex items-center bg-transparent shadow-lg rounded-xl"
-        >
-          <EmojiPicker
-            onChange={(emoji) => {
-              editor?.commands.insertContent(emoji);
-            }}
-          />
-        </div>
+          className=" p-2 z-10 flex items-center bg-transparent shadow-lg rounded-xl"
+        ></div>
 
         <input
           ref={fileinputref}
@@ -225,7 +217,7 @@ export default function MyEditor({
               onError={(e) => console.log(e)}
               data-placeholder="Write something..."
               className={cn(
-                "relative text-white w-[93%] rounded-none border-none focus-outline-none focus:ring-0 overflow-y-auto",
+                "relative text-white w-full rounded-none border-none focus-outline-none focus:ring-0 overflow-y-auto",
                 onerror ? "border-red-600" : "",
                 isDragActive ? "border-violet-600" : ""
               )}
@@ -260,18 +252,27 @@ export default function MyEditor({
               </>
             </div>
           </div>
-        </div>
+          <div className="flex flex-col space-y-2 ">
+            <button className="bg-neutral-700 h-8 rounded-lg shadow-lg "> 
+              <EmojiPicker
+                onChange={(emoji) => {
+                  editor?.commands.insertContent(emoji);
+                }}
+              />
+            </button>
 
-        <button
-          className={cn(
-            `absolute right-2 bottom-2 bg-neutral-700/90 text-white flex items-center justify-center h-8 w-8 rounded-full`,
-            isUploading && "opacity-50 cursor-not-allowed"
-          )}
-          type="submit"
-          disabled={!editor?.getText().trim() || isUploading}
-        >
-          <ArrowUp className="w-4 h-4" />
-        </button>
+            <button
+              className={cn(
+                `flex bg-neutral-700/90 text-white items-center justify-center h-8 w-8 rounded-full`,
+                isUploading && "opacity-50 cursor-not-allowed"
+              )}
+              type="submit"
+              disabled={!editor?.getText().trim() || isUploading}
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );
