@@ -187,7 +187,7 @@ export function SignInForm() {
             />
             <Button
               type="submit"
-              className="w-full py-6 bg-white text-black hover:bg-gray-200 transition-colors duration-300 mt-2 flex items-center justify-center gap-2"
+              className="w-full py-6 bg-[#d1d3ce] text-black hover:bg-gray-200 transition-colors duration-300 mt-2 flex items-center justify-center gap-2"
               disabled={isLoading}
             >
               <span className="font-medium">Login</span>

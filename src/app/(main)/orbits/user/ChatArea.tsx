@@ -8,6 +8,7 @@ import Editor from "@/components/editor/Editor";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Message } from "../../dashboard/[spaceid]/page";
+import { GetConversationById } from "@/actions/conversation";
 
 export default function ChatArea() {
   const user = useSession();
@@ -26,7 +27,7 @@ export default function ChatArea() {
     );
 
   const handleMessage = async () => {
-    const data = await GetConversationMessage(conversationId ?? "");
+    const data = await GetConversationById(conversationId || "");
     if (!data) return <div>No Messages</div>;
     setmessageList(data);
   };
@@ -73,11 +74,11 @@ export default function ChatArea() {
           </div>
         )}
       </div>
-      <Editor
-        setMessages={setmessageList}
-        className="w-[500px] ml-10"  
-        spaceId={"conversation id here"}
-      />
+        <Editor
+          setMessages={setmessageList}
+          className="w-[500px]"
+          spaceId={"conversation id here"}
+        />
     </div>
   );
 }

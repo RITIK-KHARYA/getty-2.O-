@@ -31,6 +31,7 @@ import { cn } from "../lib/utils";
 import { getSession } from "@/actions/session";
 import { useSession } from "../lib/auth-client";
 import { title } from "process";
+import Image from "next/image";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [spaces, setSpaces] = useState<any>([]);
@@ -102,17 +103,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="flex items-center justify-between :">
           <h1
             className={cn(
-              "text-2xl font-bold text-primary group-data-[collapsible=icon]:hidden",
+              "text-xl font-semibold group-data-[collapsible=icon]:hidden",
               GeistMono.className
             )}
           >
             Getty
           </h1>
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-primary/40 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-            <Ghost className="relative size-10 text-primary transition-all duration-300 ease-in-out" />
-          </div>
+            <Image src="/ganother.png" alt="logo" className="object-cover" width={50} height={50} />
         </div>
       </SidebarHeader>
       <SidebarContent className="px-2">

@@ -21,6 +21,23 @@ export default async function GetConversation() {
   return data;
 }
 
+export async function GetConversationById(id: string) {
+  const response = await fetch(`http://localhost:3000/api/conversation/${id}`, {
+    headers: {
+      cookie: (await headers()).get("cookie") || "",
+    },
+    method: "GET",
+  });
+  
+  if (!response.ok) {
+    console.log("unable to fetch the conversation");
+    return null;
+  }
+
+  const data = await response.json();
+  return data;
+}
+
 export async function CreateConversation(data: any) {
   const currentUser = await getSession();
   const onBoardinguser = data; //consider the userid2
@@ -33,7 +50,7 @@ export async function CreateConversation(data: any) {
     method: "POST",
     body: JSON.stringify({ onBoardinguser, currentUser }),
   });
-  
+
   if (!response.ok) {
     console.log("error unable to create the conversation");
     return null;
@@ -54,7 +71,7 @@ export async function DeleteConversation(ConversationId: string) {
       method: "DELETE",
     }
   );
-   if (!response.ok) {
-     console.error("Error deleting conversation:", await response.text());
-   }
+  if (!response.ok) {
+    console.error("Error deleting conversation:", await response.text());
+  }
 }

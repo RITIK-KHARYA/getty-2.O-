@@ -87,7 +87,7 @@ export function SignUpForm() {
           />
           <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-medium rounded-lg mt-2"
+            className="w-full bg-[#d1d3ce] text-black font-medium rounded-lg mt-2"
           >
             Create Account
             <ArrowRight className="ml-2 h-4 w-4" />
@@ -99,7 +99,7 @@ export function SignUpForm() {
         <span className="text-zinc-500">Already have an account?</span>{" "}
         <Link
           href="/login"
-          className="font-medium text-violet-400 hover:text-violet-300 transition-colors"
+          className="font-medium text-white transition-colors"
         >
           Sign in
         </Link>
